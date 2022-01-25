@@ -65,4 +65,22 @@ public class UserController {
         return new ResponseEntity<Boolean>(checkflag,HttpStatus.OK);
 
     }
+
+    @ApiOperation(value ="회원정보 수정", notes = "간단한 회원정보 수정 category는 따로 수정")
+    @PutMapping
+    public ResponseEntity<String> modifyUserInfo(@RequestBody @ApiParam(value ="수정한 회원정보", required = true) UserDto userDto) throws Exception{
+        userService.modifyUserInfo(userDto);
+
+        return new ResponseEntity<String>(SUCCESS,HttpStatus.OK);
+    }
+
+    @ApiOperation(value ="회원전보 삭제", notes = "회원정보 삭제")
+    @DeleteMapping
+    public ResponseEntity<String> deleteUserInfo(@RequestParam @ApiParam(value = "삭제할 유저 id", required = true)String userId)throws Exception{
+
+        userService.deleteUserInfo(userId);
+
+        return new ResponseEntity<String>(SUCCESS,HttpStatus.OK);
+    }
+
 }

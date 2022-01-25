@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -74,6 +75,27 @@ public class UserServiceImpl implements UserService{
         }else{//이메일이 없는경우
             return true;
         }
+    }
+
+    @Override
+    public void modifyUserInfo(UserDto userDto) throws Exception{
+        User user =User.builder()
+                .uid(userDto.getUid())
+                .userId(userDto.getUserId())
+                .userNickname(userDto.getUserNickname())
+                .userEmail(userDto.getUserEmail())
+                .userBirthday(userDto.getUserBirthday())
+                .userSex(userDto.getUserSex())
+                .build();
+        // User에 user 정보 저장
+        userRepository.save(user);
+    }
+
+    @Override
+    public void deleteUserInfo(String userId) throws Exception {
+        Optional<User> user = userRepository.findByUserId(userId);
+//        String uid = user.get().getUid();
+        userRepository.delete(user.get());
     }
 
 
