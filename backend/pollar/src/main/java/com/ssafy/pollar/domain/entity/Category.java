@@ -8,15 +8,15 @@ import java.util.List;
 public class Category {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "categoryId")
     private long categoryId;
 
     @OneToMany(mappedBy = "userCategory")
-    private List<userCategory> userCategorys = new ArrayList<>();
+    private List<UserCategory> UserCategories = new ArrayList<>();
 
     @OneToMany(mappedBy = "voteCategory")
-    private List<voteCategory> voteCategories = new ArrayList<>();
+    private List<VoteCategory> voteCategories = new ArrayList<>();
 
     @Column(name = "categoryName" ,length = 20)
     private String categoryName;

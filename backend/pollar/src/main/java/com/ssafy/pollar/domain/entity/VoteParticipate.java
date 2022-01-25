@@ -3,10 +3,10 @@ package com.ssafy.pollar.domain.entity;
 import javax.persistence.*;
 
 @Entity
-public class voteParticipate {
+public class VoteParticipate {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "voteParticipateId")
     private long voteParticipateId;
 

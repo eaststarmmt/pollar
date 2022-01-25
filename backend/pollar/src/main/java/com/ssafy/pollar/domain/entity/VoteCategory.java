@@ -3,7 +3,7 @@ package com.ssafy.pollar.domain.entity;
 import javax.persistence.*;
 
 @Entity
-public class voteCategory {
+public class VoteCategory {
     @Id
     @GeneratedValue
     @Column(name = "voteCategoryId")

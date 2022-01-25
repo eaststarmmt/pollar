@@ -3,9 +3,9 @@ package com.ssafy.pollar.domain.entity;
 import javax.persistence.*;
 
 @Entity
-public class voteSelect {
+public class VoteSelect {
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "voteSelectId")
     private long voteSelectId;
 

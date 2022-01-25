@@ -1,5 +1,7 @@
 package com.ssafy.pollar.domain.entity;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.hibernate.annotations.GenericGenerator;
@@ -12,6 +14,8 @@ import java.util.List;
 @Entity
 @Getter
 @RequiredArgsConstructor
+@AllArgsConstructor
+@Builder
 public class User {
     @Id
     @GeneratedValue(generator = "uuid2")
@@ -21,6 +25,9 @@ public class User {
 
     @Column(length = 16 , name = "userId")
     private String userId;
+
+    @Column(length = 16, name = "password")
+    private String password;
 
     @Column(length = 16 , name = "userNickname")
     private String userNickname;
@@ -44,17 +51,19 @@ public class User {
     private List<Following> followee = new ArrayList<>();
 
     @OneToMany(mappedBy = "userCategory")
-    private List<userCategory> userCategorys = new ArrayList<>();
+    private List<UserCategory> UserCategories = new ArrayList<>();
 
     @OneToMany(mappedBy = "userPariticipate")
-    private List<voteParticipate> userParticipates = new ArrayList<>();
+    private List<VoteParticipate> userParticipates = new ArrayList<>();
 
     @OneToMany(mappedBy = "userVoteLike")
-    private  List<voteLike> userVoteLikes = new ArrayList<>();
+    private  List<VoteLike> userVoteLikes = new ArrayList<>();
 
     @OneToMany(mappedBy = "replyUser")
     private List<Reply> userReplys = new ArrayList<>();
 
+    @OneToMany(mappedBy = "author")
+    private List<Vote> voteCreates = new ArrayList<>();
     // user안에 update메소드를 만들어서 request를 param으로 바꿔서
     // setter => update
 

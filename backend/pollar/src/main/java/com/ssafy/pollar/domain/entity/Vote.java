@@ -9,7 +9,7 @@ import java.util.List;
 @Entity
 public class Vote {
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "voteId")
     private long voteId;
 
@@ -35,25 +35,25 @@ public class Vote {
     private LocalDateTime voteCreateTime;
 
     @OneToMany(mappedBy = "voteCategory")
-    private List<voteCategory> voteCategories = new ArrayList<>();
+    private List<VoteCategory> voteCategories = new ArrayList<>();
 
     @OneToMany(mappedBy = "voteParticipate")
-    private List<voteParticipate> voteParticipates = new ArrayList<>();
+    private List<VoteParticipate> VoteParticipates = new ArrayList<>();
 
     @OneToMany(mappedBy = "voteLike")
-    private List<voteLike> voteLikes = new ArrayList<>();
+    private List<VoteLike> VoteLikes = new ArrayList<>();
 
     @OneToMany(mappedBy = "voteReply")
     private List<Reply> voteReplys = new ArrayList<>();
 
     @OneToMany(mappedBy = "voteSelect")
-    private List<voteSelect> voteSelects =new ArrayList<>();
+    private List<VoteSelect> VoteSelects =new ArrayList<>();
 
 //    @OneToMany(mappedBy = "voteselectId")
 //    private List<voteSelect> voteSelects = new ArrayList<>();
 
     @ManyToOne
     @JoinColumn(name = "userId")
-    private User user;
+    private User author;
 
 }
