@@ -69,6 +69,7 @@ public class UserController {
     @ApiOperation(value ="회원정보 수정", notes = "간단한 회원정보 수정 category는 따로 수정")
     @PutMapping
     public ResponseEntity<String> modifyUserInfo(@RequestBody @ApiParam(value ="수정한 회원정보", required = true) UserDto userDto) throws Exception{
+        logger.info(userDto.getUserId()+" " +userDto.getUid());
         userService.modifyUserInfo(userDto);
 
         return new ResponseEntity<String>(SUCCESS,HttpStatus.OK);

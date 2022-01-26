@@ -29,7 +29,7 @@ public class UserServiceImpl implements UserService{
 
 //        List<UserCategory> temp = new ArrayList<>();
         User user = User.builder()
-                .uid(userDto.getUid())
+//                .uid(userDto.getUid())
                 .userId(userDto.getUserId())
                 .password(userDto.getPassword())
                 .userNickname(userDto.getUserNickname())
@@ -79,14 +79,26 @@ public class UserServiceImpl implements UserService{
 
     @Override
     public void modifyUserInfo(UserDto userDto) throws Exception{
-        User user =User.builder()
-                .uid(userDto.getUid())
-                .userId(userDto.getUserId())
-                .userNickname(userDto.getUserNickname())
-                .userEmail(userDto.getUserEmail())
-                .userBirthday(userDto.getUserBirthday())
-                .userSex(userDto.getUserSex())
+        User usercur = userRepository.findByUserId(userDto.getUserId()).get();
+
+        User user = User.builder()
+                .uid(usercur.getUid())
+                .userId(usercur.getUserId())
+                .password(usercur.getPassword())
+                .userNickname((userDto.getUserNickname()))
+                .userEmail((userDto.getUserEmail()))
+                .userBirthday((userDto.getUserBirthday()))
+                .userSex((userDto.getUserSex()))
+                .userProfilePhoto(userDto.getUserProfilePhoto())
                 .build();
+//        User user =User.builder()
+//                .uid(userDto.getUid())
+//                .userId(userDto.getUserId())
+//                .userNickname(userDto.getUserNickname())
+//                .userEmail(userDto.getUserEmail())
+//                .userBirthday(userDto.getUserBirthday())
+//                .userSex(userDto.getUserSex())
+//                .build();
         // User에 user 정보 저장
         userRepository.save(user);
     }
