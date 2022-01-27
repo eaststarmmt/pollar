@@ -1,5 +1,10 @@
 package com.ssafy.pollar.domain.entity;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+
 import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -7,6 +12,10 @@ import java.util.Date;
 import java.util.List;
 
 @Entity
+@Getter
+@RequiredArgsConstructor
+@AllArgsConstructor
+@Builder
 public class Vote {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -22,7 +31,7 @@ public class Vote {
     @Column(name = "voteType")
     private boolean voteType;
 
-    @Column(name = "voteExpirationTime")
+    @Column(name = "voteExpirationTime", columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
     private Date voteExpirationTime;
 
     @Column(name = "userAnonymouseType")
@@ -31,7 +40,7 @@ public class Vote {
     @Column(name = "voteAnonymouseType")
     private boolean voteAnonymouseType;
 
-    @Column(name = "voteCreateTime")
+    @Column(name = "voteCreateTime", columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
     private LocalDateTime voteCreateTime;
 
     @OneToMany(mappedBy = "voteCategory")
