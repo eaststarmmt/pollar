@@ -10,6 +10,10 @@ import com.ssafy.pollar.model.repository.UserCategoryRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+
 @Service
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService{
@@ -18,14 +22,14 @@ public class UserServiceImpl implements UserService{
     private final UserCategoryRepository userCategoryRepository;
     private final CategoryRepository categoryRepository;
 
-    //sts guestbook5  mysql ssafyweb 참고해서 category list로 dto에 넣기
+
 
     @Override
     public void signup(UserDto userDto) throws Exception {
 
-//        List<UserCategory> temp = new ArrayList<>();
+
         User user = User.builder()
-                .uid(userDto.getUid())
+//                .uid(userDto.getUid())
                 .userId(userDto.getUserId())
                 .password(userDto.getPassword())
                 .userNickname(userDto.getUserNickname())
@@ -71,6 +75,47 @@ public class UserServiceImpl implements UserService{
         }else{//이메일이 없는경우
             return true;
         }
+    }
+
+    //회원정보 수정
+    @Override
+    public void modifyUserInfo(UserDto userDto) throws Exception{
+        User usercur = userRepository.findByUserId(userDto.getUserId()).get();
+
+        User user = User.builder()
+                .uid(usercur.getUid())
+                .userId(usercur.getUserId())
+                .password(usercur.getPassword())
+                .userNickname((userDto.getUserNickname()))
+                .userEmail((userDto.getUserEmail()))
+                .userBirthday((userDto.getUserBirthday()))
+                .userSex((userDto.getUserSex()))
+                .userProfilePhoto(userDto.getUserProfilePhoto())
+                .build();
+
+        // User에 user 정보 저장
+        userRepository.save(user);
+    }
+
+    @Override
+    public void deleteUserInfo(String userId) throws Exception {
+        Optional<User> user = userRepository.findByUserId(userId);
+
+        userRepository.delete(user.get());
+    }
+
+    @Override
+    public boolean login(UserDto userDto) throws Exception {
+        if(userDto.getUserId() == null || userDto.getPassword()==null){
+            return false;
+        }else{
+            if(!userRepository.findByUserIdAndPassword(userDto.getUserId(),userDto.getPassword()).isPresent()){
+                return false;
+            }else{
+                return true;
+            }
+        }
+
     }
 
 
