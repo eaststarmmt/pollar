@@ -9,6 +9,6 @@ public interface CategoryService {
     List<CategoryDto> getUserCategories(String userId)throws Exception;
     void deleteUserCategories(String userId) throws Exception;
     void insertUserCategory(String userId , long categoryId )throws Exception;
-//    List<CategoryDto> getVoteCategories(long voteId)throws Exception;
-//    void insertVoteCategory(long voteId , long categoryId )throws Exception;
+    List<CategoryDto> getVoteCategories(long voteId)throws Exception;
+
 }

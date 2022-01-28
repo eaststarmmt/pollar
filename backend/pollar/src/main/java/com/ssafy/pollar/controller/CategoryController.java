@@ -62,4 +62,14 @@ public class CategoryController {
         return new ResponseEntity<String> (SUCCESS,HttpStatus.OK);
     }
 
+    @ApiOperation(value ="투표에 설정한 카테고리 id 리스트 반환")
+    @GetMapping("/vote/{voteId}")
+    public ResponseEntity<List<CategoryDto> > getVoteCategories(@PathVariable("voteId") @ApiParam(value="투표아이디") long voteId) throws Exception{
+        logger.info("투표 카테고리목록");
+        return new ResponseEntity<List<CategoryDto>> (categoryService.getVoteCategories(voteId),HttpStatus.OK);
+
+    }
+
+
+
 }
