@@ -1,11 +1,10 @@
 import axios from 'axios';
-import { logout } from '../actions/auth';
 
 // TODO http-common.js or config
 const API_URL = 'http://localhost:8080/user/';
 
 /* 아이디 중복검사 */
-const checkId = (userId) => {
+export const checkId = (userId) => {
   return axios
     .get(API_URL + 'idcheck', {
       params: {
@@ -67,7 +66,6 @@ const deleteUserInfo = (userId) => {
       if (response.status === 'success') {
         // TODO 로그아웃 처리 및 re-directing (이렇게 import해서 호출해도 정상작동하는지 테스트 필요)
         console.log('확인필요!');
-        logout();
       }
       return response.data;
     });
