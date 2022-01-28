@@ -1,13 +1,16 @@
 import React, { useState, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { Navigate } from 'react-router-dom';
+import { Navigate, useNavigate } from 'react-router-dom';
+import { useSetRecoilState } from 'recoil';
 
 import Form from 'react-validation/build/form';
 import Input from 'react-validation/build/input';
-import CheckButton from 'react-validation/build/button';
 
-import { login } from '../../actions/auth';
+import { login } from '../../api/authAPI';
 import { LoginContainer } from './Login.elements';
+import { userState } from '../../atom';
+
+// useSetRecoilState를 활용하여 atom에 userId 저장 
 
 const required = (value) => {
   if (!value) {
@@ -21,21 +24,15 @@ const required = (value) => {
 
 const Login = (props) => {
   const form = useRef();
-  const checkBtn = useRef();
 
-  // TODO username -> userid
-  const [username, setUsername] = useState('');
+  const [userId, setUserId] = useState('');
   const [password, setPassword] = useState('');
-  const [loading, setLoading] = useState(false);
+  const [message, setMessage] = useState('');
+  const navigate = useNavigate();
 
-  const { isLoggedIn } = useSelector((state) => state.auth);
-  const { message } = useSelector((state) => state.message);
-
-  const dispatch = useDispatch();
-
-  const onChangeUsername = (e) => {
-    const username = e.target.value;
-    setUsername(username);
+  const onChangeUserId = (e) => {
+    const userId = e.target.value;
+    setUserId(userId);
   };
 
   const onChangePassword = (e) => {
@@ -43,30 +40,26 @@ const Login = (props) => {
     setPassword(password);
   };
 
-  const handleLogin = (e) => {
+  const setUserIdState = useSetRecoilState(userState)
+
+  const handleLogin = async (e) => {
     e.preventDefault();
 
-    setLoading(true);
-
     form.current.validateAll();
-
-    if (checkBtn.current.context._errors.length === 0) {
-      dispatch(login(username, password))
-        .then(() => {
-          props.history.push('/profile');
-          window.location.reload();
-        })
-        .catch(() => {
-          setLoading(false);
-        });
-    } else {
-      setLoading(false);
+    try {
+      const result = await login(userId, password);
+      // 실패는 "fail"
+      if (result.message == 'success') {
+        // navigate로 보내기 전에 atom에 userId 저장 
+        setUserIdState(userId)
+        navigate('/');
+      } else {
+        setMessage('로그인에 실패하였습니다.');
+      }
+    } catch (error) {
+      setMessage('로그인에 실패하였습니다.');
     }
   };
-
-  if (isLoggedIn) {
-    return <Navigate to="/profile" />;
-  }
 
   return (
     <LoginContainer>
@@ -76,22 +69,35 @@ const Login = (props) => {
 
           <Form onSubmit={handleLogin} ref={form}>
             <div className="form-group">
-              <label htmlFor="username">Username</label>
-              <Input type="text" className="form-control" name="username" value={username} onChange={onChangeUsername} validations={[required]} />
+              <label htmlFor="userId">UserId</label>
+              <Input
+                type="text"
+                className="form-control"
+                name="userId"
+                value={userId}
+                onChange={onChangeUserId}
+                validations={[required]}
+              />
             </div>
 
             <div className="form-group">
               <label htmlFor="password">Password</label>
-              <Input type="password" className="form-control" name="password" value={password} onChange={onChangePassword} validations={[required]} />
+              <Input
+                type="password"
+                className="form-control"
+                name="password"
+                value={password}
+                onChange={onChangePassword}
+                validations={[required]}
+              />
             </div>
 
             <div className="form-group">
-              <button className="btn btn-primary btn-block" disabled={loading}>
-                {loading && <span className="spinner-border spinner-border-sm"></span>}
+              <button className="btn btn-primary btn-block">
+                <span className="spinner-border spinner-border-sm"></span>
                 <span>Login</span>
               </button>
             </div>
-
             {message && (
               <div className="form-group">
                 <div className="alert alert-danger" role="alert">
@@ -99,7 +105,6 @@ const Login = (props) => {
                 </div>
               </div>
             )}
-            <CheckButton style={{ display: 'none' }} ref={checkBtn} />
           </Form>
           {/* Social Login */}
           {/* <LoginWith>OR LOGIN WITH</LoginWith>

@@ -3,23 +3,27 @@ import '../../assets/styles/neumorphism.css';
 
 import React, { useState, useEffect } from 'react';
 
-import UserService from '../../services/user.service';
-import PollService from '../../services/poll.service';
+// import UserService from '../../services/user.service';
+// import PollService from '../../services/poll.service';
 
 function Home() {
   const [content, setContent] = useState('');
 
-  useEffect(() => {
-    PollService.getTrendingPoll().then(
-      (response) => {
-        setContent(response.data);
-      },
-      (error) => {
-        const _content = (error.response && error.response.data) || error.message || error.toString();
-        setContent(_content);
-      }
-    );
-  }, []);
+
+  // user에 accessToken가져와서 return할 때 조건을 달아서 return 해주면 됨 
+  
+  
+  // useEffect(() => {
+  //   PollService.getTrendingPoll().then(
+  //     (response) => {
+  //       setContent(response.data);
+  //     },
+  //     (error) => {
+  //       const _content = (error.response && error.response.data) || error.message || error.toString();
+  //       setContent(_content);
+  //     }
+  //   );
+  // }, []);
 
   return (
     <>

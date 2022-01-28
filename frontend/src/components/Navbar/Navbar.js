@@ -5,15 +5,26 @@ import { Nav, NavbarContainer, NavLogo, NavIcon, MobileIcon, NavMenu, NavItem, N
 import { Searchbar } from '../index';
 import { Button } from '../../assets/styles/globalStyles';
 
+import { useRecoilState } from "recoil";
+import { userState } from '../../atom';
+
 // import './style.scss';
 
 function Navbar() {
   const [click, setClick] = useState(false);
   const [button, setButton] = useState(true);
 
-  const handleClick = () => setClick(!click);
+  // const handleClick = () => setClick(!click);
   const closeMobileMenu = () => setClick(false);
 
+  const [userId, setUserId] = useRecoilState(userState)
+  
+  const userLogout = () => {
+    setUserId([]);
+    localStorage.removeItem('user');
+    
+  }
+  
   const showButton = () => {
     if (window.innerWidth <= 960) {
       setButton(false);
@@ -21,10 +32,16 @@ function Navbar() {
       setButton(true);
     }
   };
-
+  
   useEffect(() => {
     showButton();
   }, []);
+
+  // userId 값이 변경될 때마다 useEffect가 실행되어 렌더링 됨 
+  // testcode
+  useEffect(()=> {
+    console.log("recoilUserId : ", userId)
+  }, [userId])
 
   window.addEventListener('resize', showButton);
 
@@ -37,9 +54,9 @@ function Navbar() {
               <NavIcon />
               Pollar
             </NavLogo>
-            <MobileIcon onClick={handleClick}>{click ? <FaTimes /> : <FaBars />}</MobileIcon>
+            <MobileIcon >{click ? <FaTimes /> : <FaBars />}</MobileIcon>
 
-            <NavMenu onClick={handleClick} click={click}>
+            <NavMenu  click={click}>
               <NavItem>
                 <NavLinks to="/about" onClick={closeMobileMenu}>
                   About
@@ -58,22 +75,23 @@ function Navbar() {
             </NavMenu>
             <Searchbar />
             <NavMenu>
-              <NavItem>
-                <NavLinks to="/login" onClick={closeMobileMenu}>
-                  Login
-                </NavLinks>
-              </NavItem>
+              {/* user */}
+              {userId.length == 0 && (
+                <NavItem>
+                  <NavLinks to="/login" onClick={closeMobileMenu}>
+                    Login
+                  </NavLinks>
+                </NavItem>
+              )}
               <NavItemBtn>
-                {button ? (
+                {userId.length == 0 ? (
                   <NavBtnLink to="/signup">
                     <Button primary>Sign Up</Button>
                   </NavBtnLink>
-                ) : (
-                  <NavBtnLink to="/signup">
-                    <Button onClick={closeMobileMenu} fontBig primary>
-                      Sign Up
+                ) : ( 
+                    <Button primary onClick={userLogout}>
+                      Logout
                     </Button>
-                  </NavBtnLink>
                 )}
               </NavItemBtn>
             </NavMenu>
@@ -85,3 +103,4 @@ function Navbar() {
 }
 
 export default Navbar;
+

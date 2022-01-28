@@ -10,6 +10,8 @@ import Polls from './pages/Polls/Polls';
 import Login from './pages/Login/Login';
 import Signup from './pages/Signup/Signup';
 
+
+
 function App() {
   // const { user: currentUser } = useSelector((state) => state.auth);
   // const dispatch = useDispatch();

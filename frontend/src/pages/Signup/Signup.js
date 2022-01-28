@@ -5,8 +5,8 @@ import Form from 'react-validation/build/form';
 import CheckButton from 'react-validation/build/button';
 import { isEmail } from 'validator';
 
-import { signup } from '../../actions/auth';
-import { checkId } from '../../actions/user';
+// import { signup } from '../../actions/auth';
+// import { checkId } from '../../actions/user';
 
 // material-ui
 import Radio from '@mui/material/Radio';
@@ -114,17 +114,17 @@ const Signup = () => {
 
   const dispatch = useDispatch();
 
-  const onChangeUsername = (e) => {
-    console.log(e);
-    const username = e.target.value;
-    setUsername(username);
-    // 아이디 중복검사 (이 코드의 위치가 맞는지는 의문)
-    dispatch(checkId(username))
-      .then(() => {
-        console.log(username + '    ' + isValidId);
-      })
-      .catch(() => {});
-  };
+  // const onChangeUsername = (e) => {
+  //   console.log(e);
+  //   const username = e.target.value;
+  //   setUsername(username);
+  //   // 아이디 중복검사 (이 코드의 위치가 맞는지는 의문)
+  //   dispatch(checkId(username))
+  //     .then(() => {
+  //       console.log(username + '    ' + isValidId);
+  //     })
+  //     .catch(() => {});
+  // };
 
   const onChangeNickname = (event) => {
     const nickname = event.target.nickname;
@@ -161,13 +161,13 @@ const Signup = () => {
     form.current.validateAll();
 
     // TODO
-    dispatch(signup(username, password, nickname, email, birthday, gender, []))
-      .then(() => {
-        setSuccessful(true);
-      })
-      .catch(() => {
-        setSuccessful(false);
-      });
+    // dispatch(signup(username, password, nickname, email, birthday, gender, []))
+    //   .then(() => {
+    //     setSuccessful(true);
+    //   })
+    //   .catch(() => {
+    //     setSuccessful(false);
+    //   });
   };
 
   // TODO 지우자
@@ -195,7 +195,7 @@ const Signup = () => {
                     name="username"
                     value={username}
                     // onChange={onChangeUsername}
-                    onFocus={onChangeUsername}
+                    // onFocus={onChangeUsername}
                     validations={[required, validateUsername]}
                   />
                 </div>
@@ -269,7 +269,6 @@ const Signup = () => {
                 </Fab> */}
               </div>
             )}
-
             {message && (
               <div className="form-group">
                 <div className={successful ? 'alert alert-success' : 'alert alert-danger'} role="alert">

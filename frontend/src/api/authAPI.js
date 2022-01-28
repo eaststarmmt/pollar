@@ -26,14 +26,16 @@ const signup = (userId, password, userNickname, userEmail, userBirthday, userSex
 
 /* 로그인 */
 // POST {username, password} & save JWT to local storage
-const login = (userId, password) => {
+// access-token -> acessToken 
+export const login = (userId, password) => {
   return axios
-    .post(API_URL + 'signin', {
+    .post(API_URL + 'login', {
       userId,
       password,
     })
     .then((response) => {
-      if (response.data.accessToken) {
+      // console.log(response.data['access-token'])
+      if (response.data['access-token']) {
         // JWT token 저장
         localStorage.setItem('user', JSON.stringify(response.data));
       }
@@ -43,12 +45,14 @@ const login = (userId, password) => {
 
 /* 로그아웃 */
 // remove JWT from LocalStorage
-const logout = () => {
-  localStorage.removeItem('user');
-};
+// const logout = () => {
+//   localStorage.removeItem('user');
+// };
 
-export default {
-  signup,
-  login,
-  logout,
-};
+// export default {
+//   signup,
+//   login,
+//   logout,
+// };
+
+
