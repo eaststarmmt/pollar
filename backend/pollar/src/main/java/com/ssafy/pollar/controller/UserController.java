@@ -2,16 +2,10 @@ package com.ssafy.pollar.controller;
 
 import com.ssafy.pollar.jwt.JwtTokenProvider;
 import com.ssafy.pollar.model.dto.UserDto;
-import com.ssafy.pollar.model.dto.VoteDto;
 import com.ssafy.pollar.model.service.EmailConfirmationService;
 import com.ssafy.pollar.model.service.UserService;
-import com.sun.org.apache.xpath.internal.operations.Bool;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
-import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.Parameter;
-import io.swagger.v3.oas.annotations.enums.ParameterIn;
-import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -43,9 +37,8 @@ public class UserController {
         return new ResponseEntity<String>(SUCCESS, HttpStatus.OK);
     }
 
-    @Operation(summary="중복된 아이디가 있는지 확인.", parameters = {@Parameter(name = "userId", in = ParameterIn.PATH, schema = @Schema(implementation = String.class))})
     @GetMapping("/idcheck")
-    public ResponseEntity<Boolean> idcheck(@RequestParam String userId) throws Exception{
+    public ResponseEntity<Boolean> idcheck(@RequestParam @ApiParam(value = "중복된 아이디가 있는지 확인") String userId) throws Exception{
         boolean checkflag = false;
         if(userService.idCheck((userId))){
             checkflag= true;
