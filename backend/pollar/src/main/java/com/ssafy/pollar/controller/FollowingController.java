@@ -29,9 +29,10 @@ public class FollowingController {
         String result = "";
         HttpStatus status = null;
         try {
-            String followeeUser = followingDto.getFollowee().getUserId();
-            String followerUser = followingDto.getFollower().getUserId();
+            String followeeUser = followingDto.getFolloweeId();
+            String followerUser = followingDto.getFollowerId();
             followingService.followsend(followeeUser,followerUser);
+            result = SUCCESS;
             status = HttpStatus.ACCEPTED;
         }catch (Exception e){
             result = FAIL;
@@ -46,9 +47,10 @@ public class FollowingController {
         String result = "";
         HttpStatus status = null;
         try {
-            String followeeUser = followingDto.getFollowee().getUserId();
-            String followerUser = followingDto.getFollower().getUserId();
+            String followeeUser = followingDto.getFolloweeId();
+            String followerUser = followingDto.getFollowerId();
             followingService.unfollow(followeeUser,followerUser);
+            result = SUCCESS;
             status = HttpStatus.ACCEPTED;
         }catch (Exception e){
             result = FAIL;
@@ -60,16 +62,16 @@ public class FollowingController {
     // follower 유저들을 통신하는기능
     @GetMapping("/followerlist")
     public ResponseEntity<List<?>> followerlist(@RequestParam String userId) throws Exception {
-        List<FollowingDto> followingDtoList= null;
-        followingDtoList = followingService.followerlist(userId);
-        return new ResponseEntity<>(followingDtoList,HttpStatus.OK);
+        List<FollowingDto> followerlist= null;
+        followerlist = followingService.followerlist(userId);
+        return new ResponseEntity<>(followerlist,HttpStatus.OK);
     }
 
     // followee 유저들을 통신하는 기능
     @GetMapping("/followeelist")
     public ResponseEntity<List<?>> followeelist(@RequestParam String userId) throws Exception {
-        List<FollowingDto> followingDtoList= null;
-        followingDtoList = followingService.followeelist(userId);
-        return new ResponseEntity<>(followingDtoList,HttpStatus.OK);
+        List<FollowingDto> followeelist= null;
+        followeelist = followingService.followeelist(userId);
+        return new ResponseEntity<>(followeelist,HttpStatus.OK);
     }
 }

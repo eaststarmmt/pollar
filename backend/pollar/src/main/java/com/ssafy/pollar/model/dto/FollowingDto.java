@@ -14,6 +14,8 @@ import java.util.List;
 public class FollowingDto{
 
     private Long followId;
+    private String followerId;
+    private String followeeId;
     private User follower;
     private User followee;
 
