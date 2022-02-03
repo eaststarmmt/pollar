@@ -15,7 +15,6 @@ import NotificationsPopover from './NotificationsPopover';
 import { useRecoilState } from 'recoil';
 import { loggedUserState } from '../../atoms/atoms';
 
-import NavbarMenu from './NavbarMenu';
 import { NavLogo } from './Logo';
 
 import sidebarConfig from './SidebarConfig';
@@ -71,10 +70,6 @@ export default function Navbar({ onOpenSidebar }) {
                 {/* <NavIcon /> */}
                 Pollar
               </NavLogo>
-              {/* <Typography variant="h4" color="inherit">
-                Pollar
-              </Typography> */}
-              <NavbarMenu />
               <NavSection navConfig={sidebarConfig} />
 
               <Searchbar />
@@ -89,10 +84,10 @@ export default function Navbar({ onOpenSidebar }) {
                   {/* <Button component={Link} to="/users/login" variant="contained" color="primary">
                     Login
                   </Button> */}
-                  <Button href="/login" variant="text" color="primary">
+                  <Button href="/users/login" variant="text" color="primary">
                     Login
                   </Button>
-                  <Button href="/signup" variant="contained">
+                  <Button href="/users/signup" variant="contained">
                     Sign Up
                   </Button>
                 </>

@@ -86,14 +86,14 @@ export default function SignupPage() {
 
           <SelectInterests />
 
-          <MobileHidden width="smUp">
+          {/* <MobileHidden width="smUp">
             <Typography variant="subtitle2" sx={{ mt: 3, textAlign: 'center' }}>
               Already have an account?&nbsp;
               <Link to="/login" component={RouterLink}>
                 Login
               </Link>
             </Typography>
-          </MobileHidden>
+          </MobileHidden> */}
           <Typography variant="subtitle2" sx={{ mt: 3, textAlign: 'center' }}>
             Already have an account?&nbsp;
             <Link to="/login" component={RouterLink}>
