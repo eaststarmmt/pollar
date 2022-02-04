@@ -7,10 +7,10 @@ import { Box, Card, Link, Container, Typography } from '@mui/material';
 // components
 import Page from '../components/Page';
 import AuthSocial from '../components/login/AuthSocial';
-import RegisterForm from '../components/signup/RegisterForm';
 import MobileHidden from '../components/common/MobileHidden';
-import SelectInterests from '../components/signup/SelectInterests';
-
+// import RegisterForm from '../components/signup/RegisterForm';
+// import SelectInterests from '../components/signup/SelectInterests';
+import Index from '../components/signup/Index'
 // ----------------------------------------------------------------------
 
 const RootStyle = styled(Page)(({ theme }) => ({
@@ -68,9 +68,10 @@ export default function SignupPage() {
             <Typography sx={{ color: 'text.secondary' }}>Join us in Pollar!</Typography>
           </Box>
 
-          <AuthSocial />
+          {/* <AuthSocial /> */}
 
-          <RegisterForm />
+          {/* <RegisterForm /> */}
+          <Index/>
 
           <Typography variant="body2" align="center" sx={{ color: 'text.secondary', mt: 3 }}>
             By registering, I agree to Minimal&nbsp;
@@ -84,7 +85,7 @@ export default function SignupPage() {
             .
           </Typography>
 
-          <SelectInterests />
+          {/* <SelectInterests /> */}
 
           {/* <MobileHidden width="smUp">
             <Typography variant="subtitle2" sx={{ mt: 3, textAlign: 'center' }}>
