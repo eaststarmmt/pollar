@@ -8,12 +8,16 @@ import com.ssafy.pollar.model.repository.CategoryRepository;
 import com.ssafy.pollar.model.repository.UserRepository;
 import com.ssafy.pollar.model.repository.UserCategoryRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 
-import java.util.ArrayList;
-import java.util.List;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Optional;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -23,6 +27,8 @@ public class UserServiceImpl implements UserService{
     private final UserCategoryRepository userCategoryRepository;
     private final CategoryRepository categoryRepository;
 
+    @Value("${file.path}")
+    private String uploadFolder;
 
 
     @Override
@@ -116,6 +122,49 @@ public class UserServiceImpl implements UserService{
                 return true;
             }
         }
+
+    }
+
+    @Override
+    public void modifyProfile(UserDto userDto, MultipartFile userProfilePhoto) throws Exception {
+        UUID uuid = UUID.randomUUID();
+        System.out.println("-----------------------------------");
+        System.out.println(userProfilePhoto);
+        String imageFileName = uuid + "_" + userProfilePhoto.getOriginalFilename();
+        System.out.println("-----------------------------------");
+        System.out.println("이미지 파일 이름: " + imageFileName);
+
+        Path imageFilePath = Paths.get(uploadFolder + imageFileName);
+
+//        String user = userRepository.findByUserId(userId).get().getUid();
+//        String uid = userDto.getUserId().substring(1);
+//        System.out.println(uid);
+
+//        User user = userRepository.findByUserId(userId).get();
+//        Optional<User> user = userRepository.findByUserId(userDto.getUserId());
+        User usercur = userRepository.findByUserId(userDto.getUserId()).get();
+        // 통신 I/O
+        try {
+            Files.write(imageFilePath, userProfilePhoto.getBytes());
+            System.out.println("사진은 저장 완료");
+            User user = User.builder()
+                    .uid(usercur.getUid())
+                    .userId(usercur.getUserId())
+                    .password(usercur.getPassword())
+                    .userNickname((usercur.getUserNickname()))
+                    .userEmail((usercur.getUserEmail()))
+                    .userBirthday((usercur.getUserBirthday()))
+                    .userSex((usercur.getUserSex()))
+                    .userProfilePhoto(String.valueOf(imageFilePath))
+                    .build();
+
+            System.out.println("저장전?");
+            userRepository.save(user);
+        } catch(Exception e) {
+            e.printStackTrace();
+        }
+
+
 
     }
 

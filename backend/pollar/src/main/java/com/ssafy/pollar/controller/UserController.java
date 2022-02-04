@@ -1,5 +1,6 @@
 package com.ssafy.pollar.controller;
 
+import com.ssafy.pollar.domain.entity.User;
 import com.ssafy.pollar.jwt.JwtTokenProvider;
 import com.ssafy.pollar.model.dto.UserDto;
 import com.ssafy.pollar.model.service.EmailConfirmationService;
@@ -12,6 +13,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -126,5 +128,18 @@ public class UserController {
         }
         return null;
     }
+
+    @ApiOperation(value ="회원 프로필 수정", notes = "프로필 이미지 사진 수정")
+    @PutMapping("/photo")
+    public ResponseEntity<String> profileImageUrlUpdate(@RequestPart(value = "userDto") UserDto userDto, @RequestPart(value = "userProfilePhoto", required = false) MultipartFile userProfilePhoto) throws Exception {
+        System.out.println("컨트롤러단: " + " 아이디 확인 : " + userDto.getUserId());
+        System.out.println("사진 확인 : " + userProfilePhoto.toString());
+        logger.info(userDto.getUserId());
+        userService.modifyProfile(userDto, userProfilePhoto);
+        return new ResponseEntity<String>(SUCCESS, HttpStatus.OK);
+    }
+
+
+
 
 }
