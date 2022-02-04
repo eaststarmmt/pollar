@@ -30,16 +30,16 @@ public class Vote {
     private String voteContent;
 
     @Column(name = "voteType")      // 투표 익명성 여부
-    private boolean voteType;
+    private Boolean voteType;
 
     @Column(name = "voteExpirationTime", columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")  // 투표 마감 시간. 일단 현재시간을 기본값으로 줌. 그러나 들어가지 않음
     private LocalDateTime voteExpirationTime;
 
     @Column(name = "userAnonymouseType")    // 투표 작성자 익명성 여부
-    private boolean userAnonymouseType;
+    private Boolean userAnonymouseType;
 
     @Column(name = "voteAnonymouseType")    // 투표 참여자 익명성 여부
-    private boolean voteAnonymouseType;
+    private Boolean voteAnonymouseType;
 
     @CreationTimestamp  // 현재시간 입력
     private LocalDateTime voteCreateTime;

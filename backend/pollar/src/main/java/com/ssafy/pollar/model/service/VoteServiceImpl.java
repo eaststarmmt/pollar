@@ -35,4 +35,10 @@ public class VoteServiceImpl implements VoteService {
         Optional<Vote> vote = voteRepository.findById(voteId);  // 파라미터로 받아온 id를 이용해서 삭제할 vote 가져오기
         voteRepository.delete(vote.get());  // 해당 피드 DB에서 삭제
     }
+
+    @Override
+    public VoteDto detail(Long voteId) throws Exception {   // 피드 상세보기
+        Optional<Vote> vote = voteRepository.findById(voteId);  // 아이디로 해당 투표 찾기
+        return new VoteDto(vote.get());     // 해당 투표를 dto로 변환 후 리턴
+    }
 }

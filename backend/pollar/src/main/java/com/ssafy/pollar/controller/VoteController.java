@@ -31,4 +31,10 @@ public class VoteController {
         voteService.delete(voteId);
         return new ResponseEntity<String>(SUCCESS, HttpStatus.OK);
     }
+
+    @ApiOperation(value = "피드 상세 페이지", notes = "해당 피드 상세정보를 불러온다.")
+    @GetMapping("/{voteId}")
+    public ResponseEntity<VoteDto> detailVote(@PathVariable @ApiParam(value = "피드의 id", required = true) Long voteId) throws Exception {
+        return new ResponseEntity<VoteDto>(voteService.detail(voteId), HttpStatus.OK);
+    }
 }

@@ -1,9 +1,6 @@
 package com.ssafy.pollar.model.dto;
 
-import com.ssafy.pollar.domain.entity.Reply;
-import com.ssafy.pollar.domain.entity.VoteCategory;
-import com.ssafy.pollar.domain.entity.VoteLike;
-import com.ssafy.pollar.domain.entity.VoteSelect;
+import com.ssafy.pollar.domain.entity.*;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
@@ -19,6 +16,18 @@ import java.util.List;
 @AllArgsConstructor
 @ApiModel(value = "VoteDto : 피드정보", description = "피드의 상세 정보를 나타낸다.")
 public class VoteDto {
+
+    public VoteDto(Vote vote) {     // vote entity 받아와서 vote dto로 변환. list로 딸려있는 애들은 따로 요청해서 보내야 될거 같음
+        this.voteId = vote.getVoteId();
+        this.voteName = vote.getVoteName();
+        this.voteContent = vote.getVoteContent();
+        this.voteType = vote.getVoteType();
+        this.voteExpirationTime = vote.getVoteExpirationTime();
+        this.userAnonymouseType = vote.getUserAnonymouseType();
+        this.voteAnonymouseType = vote.getVoteAnonymouseType();
+        this.voteCreateTime = vote.getVoteCreateTime();
+    }
+
     @ApiModelProperty(position = 1, value = "피드 아이디", notes="자동으로 생성되므로 작성 보내지 않는다")
     private Long voteId;
     @ApiModelProperty(position = 2, value = "피드 작성자 이름")
@@ -28,7 +37,7 @@ public class VoteDto {
     @ApiModelProperty(position = 4, value = "투표 타입")
     private Boolean voteType;
     @ApiModelProperty(position = 5, value = "투표 마감 시간.")
-    private Date voteExpirationTime;
+    private LocalDateTime voteExpirationTime;
     @ApiModelProperty(position = 6, value = "작성자 익명 여부.")
     private Boolean userAnonymouseType;
     @ApiModelProperty(position = 7, value = "투표 익명 여부.")
@@ -36,12 +45,12 @@ public class VoteDto {
     @ApiModelProperty(position = 8, value = "투표 생성 시간.")
     private LocalDateTime voteCreateTime;
     @ApiModelProperty(position = 9, value = "투표에 해당하는 카테고리 리스트.")
-    private List<VoteCategory> voteCategories;
+    private List<Long> voteCategories;
     @ApiModelProperty(position = 10, value = "좋아요 받은 투표.")
-    private List<VoteLike> iked;
+    private List<Long> iked;
     @ApiModelProperty(position = 11, value = "피드에 달린 댓글들.")
-    private List<Reply> voteReplys;
+    private List<Long> voteReplys;
     @ApiModelProperty(position = 12, value = "참여한 투표.")
-    private List<VoteSelect> VoteSelects;
+    private List<Long> VoteSelects;
 
 }
