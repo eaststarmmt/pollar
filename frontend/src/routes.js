@@ -6,9 +6,12 @@ import ErrorPage from './pages/ErrorPage';
 //
 import HomePage from './pages/HomePage';
 import LoginPage from './pages/LoginPage';
+import PollCreatePage from './pages/PollCreatePage';
 import PollsPage from './pages/PollsPage';
+import ProfilePage from './pages/ProfilePage';
 import SignupPage from './pages/SignupPage';
 import TrendingPage from './pages/TrendingPage';
+import SettingsPage from './pages/SettingsPage';
 
 export default function Router() {
   // The useRoutes hook is the functional equivalent of <Routes>, but it uses JavaScript objects instead of <Route> elements to define your routes. These objects have the same properties as normal <Route> elements, but they don't require JSX.
@@ -19,32 +22,19 @@ export default function Router() {
       children: [
         { path: 'signup', element: <SignupPage /> },
         { path: 'login', element: <LoginPage /> },
+        { path: 'profile', element: <ProfilePage /> },
+        { path: 'profile/:userId', element: <ProfilePage /> },
+        { path: 'settings', element: <SettingsPage /> },
       ],
     },
     {
       path: '/polls',
       element: <NavLayout />,
       children: [
-        { element: <Navigate to="/" replace /> },
-        { path: 'interests/:interest', element: <SignupPage /> },
-        { path: 'following', element: <TrendingPage /> },
+        { path: '', element: <PollsPage /> },
+        { path: ':type', element: <PollsPage /> },
+        { path: 'create', element: <PollCreatePage /> },
       ],
-    },
-    {
-      path: '/login',
-      element: <LoginPage />,
-    },
-    {
-      path: '/signup',
-      element: <SignupPage />,
-    },
-    {
-      path: '/trending',
-      element: <TrendingPage />,
-    },
-    {
-      path: '/about',
-      element: <AboutPage />,
     },
     {
       path: '/error',
@@ -54,9 +44,10 @@ export default function Router() {
       path: '/',
       element: <NavLayout />,
       children: [
-        // { element: <Navigate to="/" replace /> },
         { path: '/', element: <HomePage /> },
-        // { path: '*', element: <Navigate to="/404" replace /> },
+        { path: 'profile', element: <ProfilePage /> },
+        { path: 'about', element: <AboutPage /> },
+        { path: 'trending', element: <TrendingPage /> },
       ],
     },
     { path: '*', element: <Navigate to="/error" replace /> },

@@ -28,20 +28,15 @@ import { logout } from '../../services/api/AuthApi';
 // ----------------------------------------------------------------------
 
 const MENU_OPTIONS = [
-  // {
-  //   label: 'Home',
-  //   icon: homeFill,
-  //   linkTo: '/',
-  // },
   {
     label: 'Profile',
     icon: personFill,
-    linkTo: '/profile',
+    linkTo: '/users/profile',
   },
   {
     label: 'Settings',
     icon: settings2Fill,
-    linkTo: '/settings',
+    linkTo: '/users/settings',
   },
 ];
 

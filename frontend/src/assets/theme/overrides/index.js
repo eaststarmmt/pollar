@@ -9,8 +9,9 @@ import Backdrop from './Backdrop';
 import Typography from './Typography';
 import IconButton from './IconButton';
 import Autocomplete from './Autocomplete';
-// @eazae
+// @ziu974
 import Toolbar from './Toolbar';
+import Tab from './Tab';
 
 // ----------------------------------------------------------------------
 
@@ -26,6 +27,7 @@ export default function ComponentsOverrides(theme) {
     Typography(theme),
     IconButton(theme),
     Autocomplete(theme),
-    Toolbar(theme)
+    Toolbar(theme),
+    Tab(theme)
   );
 }
