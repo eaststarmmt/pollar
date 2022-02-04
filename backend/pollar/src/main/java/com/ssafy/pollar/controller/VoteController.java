@@ -1,13 +1,17 @@
 package com.ssafy.pollar.controller;
 
+import com.ssafy.pollar.domain.entity.Vote;
 import com.ssafy.pollar.model.dto.VoteDto;
 import com.ssafy.pollar.model.service.VoteService;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 //@Tag(name = "VoteController")
@@ -37,4 +41,12 @@ public class VoteController {
     public ResponseEntity<VoteDto> detailVote(@PathVariable @ApiParam(value = "피드의 id", required = true) Long voteId) throws Exception {
         return new ResponseEntity<VoteDto>(voteService.detail(voteId), HttpStatus.OK);
     }
+
+    @ApiOperation(value = "피드 전체목록")
+    @GetMapping
+    public ResponseEntity<List<VoteDto>> getVoteList() throws Exception{
+        List<VoteDto> list = voteService.getVoteList();
+        return new ResponseEntity<>(list,HttpStatus.OK);
+    }
+
 }
