@@ -22,6 +22,7 @@ public class VoteServiceImpl implements VoteService {
     private final VoteRepository voteRepository;
     private final VoteCategoryRepository voteCategoryRepository;
     private final VoteSelectRepository voteSelectRepository;
+    private final VoteLikeRepository voteLikeRepository;
 
     @Override
     public void create(VoteDto voteDto) throws Exception {  // 피드 생성
@@ -89,4 +90,27 @@ public class VoteServiceImpl implements VoteService {
         }
         return dtoList;
     }
+
+    @Override
+    public void insertLike(String userId, Long voteId) {
+        User user = userRepository.findByUserId(userId).get();
+        Vote vote = voteRepository.findById(voteId).get();
+        voteLikeRepository.save( VoteLike.builder().userVoteLike(user).voteLike(vote).build());
+    }
+    @Override
+    public void cancelLike(String userId, Long voteId) {
+        User user = userRepository.findByUserId(userId).get();
+        Vote vote = voteRepository.findById(voteId).get();
+        voteLikeRepository.delete(voteLikeRepository.findByUserVoteLikesAndVoteLikesByQuery(user,vote).get());
+    }
+
+    @Override
+    public int countLike(Long voteId) {
+        return voteLikeRepository.countLike(voteId);
+    }
+    @Override
+    public List<String> getLikeList(Long voteId){
+        return voteLikeRepository.getLikeListByQuery(voteId);
+    }
+
 }

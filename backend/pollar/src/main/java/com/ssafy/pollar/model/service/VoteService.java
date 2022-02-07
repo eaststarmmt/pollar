@@ -9,4 +9,8 @@ public interface VoteService {
     void delete(Long voteId) throws Exception;  // 게시글 삭제
     VoteDto detail(Long voteId) throws Exception;                // 게시글 상세보기
     List<VoteDto> getVoteList() throws Exception;
+    void insertLike(String userId, Long voteId);
+    void cancelLike(String userId , Long voteId);
+    int countLike(Long voteId);
+    List<String> getLikeList(Long voteId);
 }

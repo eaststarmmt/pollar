@@ -12,6 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 //@Tag(name = "VoteController")
@@ -47,6 +48,38 @@ public class VoteController {
     public ResponseEntity<List<VoteDto>> getVoteList() throws Exception{
         List<VoteDto> list = voteService.getVoteList();
         return new ResponseEntity<>(list,HttpStatus.OK);
+    }
+
+    @ApiOperation(value = "좋아요 누르기")
+    @PostMapping("/like")
+    public ResponseEntity<String> likeVote(@RequestBody @ApiParam(value ="좋아요 누른 유저 id , 피드 id")Map<String,Object> map){
+        String userId =(String) map.get("userId");
+        int voteId = (int) map.get("voteId");
+        voteService.insertLike(userId, (long)voteId);
+        return new ResponseEntity<>(SUCCESS,HttpStatus.OK);
+    }
+
+    @ApiOperation(value = "좋아요 취소")
+    @DeleteMapping("/like")
+    public ResponseEntity<String> cancelLikeVote(@RequestBody @ApiParam(value ="좋아요 누른 유저 id , 피드 id")Map<String,Object> map){
+        String userId =(String) map.get("userId");
+        int voteId = (int) map.get("voteId");
+        voteService.cancelLike(userId, (long)voteId);
+        return new ResponseEntity<>(SUCCESS,HttpStatus.OK);
+    }
+
+    @ApiOperation(value="좋아요 개수 반환")
+    @GetMapping("like/{voteId}")
+    public ResponseEntity<Integer> countLike(@PathVariable @ApiParam(value = "피드 id") Long voteId){
+
+        return new ResponseEntity<>(voteService.countLike(voteId),HttpStatus.OK);
+    }
+
+    @ApiOperation(value="좋아요 id 리스트 반환")
+    @GetMapping("likelist/{voteId}")
+    public ResponseEntity<List<String> > getLikeList(@PathVariable @ApiParam(value = "피드 id") Long voteId){
+
+        return new ResponseEntity<>(voteService.getLikeList(voteId),HttpStatus.OK);
     }
 
 }
