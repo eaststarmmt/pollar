@@ -6,14 +6,13 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface FollowingRepository extends JpaRepository<Following,Long> {
     // getFollower join query
-    @Query(value="select u from User u join u.follower where u.userId=?1")
-    List<Following> getFollower(String userId);
-
+    Optional<List<Following>> findAllByFollower(User user);
     // getFollowee join query
-    @Query(value="select u from User u join u.followee where u.userId=?1")
-    List<Following> getFollowee(String userId);
-
+    Optional<List<Following>> findAllByFollowee(User user);
+    Optional<User> findByFollower(User user);
+    Optional<User> findByFollowee(User user);
 }

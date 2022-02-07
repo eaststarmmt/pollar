@@ -19,8 +19,7 @@ export default function HomePage() {
                 Anywhere
               </Typography>
               <Typography variant="inherit" color="primary.light">
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nisi, nunc a in vel
-                feugiat.
+                프로젝트 CICD 테스트
               </Typography>
             </Stack>
             <Button variant="contained" color="info">

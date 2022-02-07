@@ -28,7 +28,7 @@ public class User implements UserDetails {
     @Column(length = 36)
     private String uid;
 
-    @Column(length = 16 , name = "userId")
+    @Column(length = 16 , name = "userId", unique = true)
     private String userId;
 
     @Column(length = 16, name = "password")
@@ -43,17 +43,11 @@ public class User implements UserDetails {
     @Column(name = "userBirthday")
     private Date userBirthday;
 
-    @Column(name = "userSex")
-    private Boolean userSex;
+    @Column(name = "userGender")
+    private Boolean userGender;
 
     @Column(name = "userProfilePhoto" ,length = 1000)
     private String userProfilePhoto;
-
-    @OneToMany(mappedBy = "follower")
-    private List<Following> follower = new ArrayList<>();
-
-    @OneToMany(mappedBy = "followee")
-    private List<Following> followee = new ArrayList<>();
 
     @OneToMany(mappedBy = "userCategory")
     private List<UserCategory> UserCategories = new ArrayList<>();
@@ -69,16 +63,14 @@ public class User implements UserDetails {
 
     @OneToMany(mappedBy = "author")
     private List<Vote> voteCreates = new ArrayList<>();
+
     // user안에 update메소드를 만들어서 request를 param으로 바꿔서
     // setter => update
-
     private void update(User user){// builder와 사용 목적이 같다.
         this.uid = user.uid;
     }
 
-
     // Jwt 토큰을 위해 UserDetails
-
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

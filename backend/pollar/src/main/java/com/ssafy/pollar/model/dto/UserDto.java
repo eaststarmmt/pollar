@@ -1,6 +1,7 @@
 package com.ssafy.pollar.model.dto;
 
 import com.ssafy.pollar.domain.entity.Category;
+import com.ssafy.pollar.domain.entity.User;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -14,15 +15,13 @@ import java.util.List;
 @AllArgsConstructor
 public class UserDto {
 
-
-
     private String uid;
     private String userId;
     private String password;
     private String userNickname;
     private String userEmail;
     private Date userBirthday;
-    private Boolean userSex;
+    private Boolean userGender;
     private String userProfilePhoto;
     @ApiModelProperty(value = "유저가 선택한 카테고리 id목록", notes="id를 이용해서 Category 테이블에서 검색")
     private List<Long> categories;
@@ -39,6 +38,8 @@ public class UserDto {
     @ApiModelProperty(value = "유저가 작성한 reply id목록", notes="id를 이용해서 Reply 테이블에서 검색")
     private List<Long> replies;
 
-
-
+    public UserDto(User user){
+        this.userId = user.getUserId();
+        this.userNickname = user.getUserNickname();
+    }
 }
