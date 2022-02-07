@@ -35,14 +35,14 @@ public class UserController {
 
     @ApiOperation(value = "회원가입",notes="회원 정보를 입력한다.")
     @PostMapping("/signup")
-    public ResponseEntity<String> signup (@RequestBody @ApiParam(value = "회원가입시 필요한 회원정보", required = true) UserDto userDto )throws Exception {
+    public ResponseEntity<String> signUp (@RequestBody @ApiParam(value = "회원가입시 필요한 회원정보", required = true) UserDto userDto )throws Exception {
         userService.signup(userDto);
         return new ResponseEntity<String>(SUCCESS, HttpStatus.OK);
     }
 
     @ApiOperation(value ="아이디 중복검사")
     @GetMapping("/idcheck")
-    public ResponseEntity<Boolean> idcheck(@RequestParam @ApiParam(value = "중복된 아이디가 있는지 확인") String userId) throws Exception{
+    public ResponseEntity<Boolean> idCheck(@RequestParam @ApiParam(value = "중복된 아이디가 있는지 확인") String userId) throws Exception{
         boolean checkflag = false;
         if(userService.idCheck((userId))){
             checkflag= true;
@@ -52,7 +52,7 @@ public class UserController {
 
     @ApiOperation(value = "닉네임중복체크")
     @GetMapping("/nickcheck")
-    public ResponseEntity<Boolean> nicknamecheck(@RequestParam @ApiParam(value = "중복된 닉네임이 있는지 확인") String userNickname) throws Exception{
+    public ResponseEntity<Boolean> nicknameCheck(@RequestParam @ApiParam(value = "중복된 닉네임이 있는지 확인") String userNickname) throws Exception{
         boolean checkflag = false;
         if(userService.nicknameCheck((userNickname))){
             checkflag= true;
@@ -62,7 +62,7 @@ public class UserController {
 
     @ApiOperation(value = "이메일중복체크")
     @PostMapping("/emailcheck")
-    public ResponseEntity<Boolean> emailcheck(@RequestParam @ApiParam(value = "중복된 이메일이 있는지 확인") String userEmail) throws Exception {
+    public ResponseEntity<Boolean> emailCheck(@RequestParam @ApiParam(value = "중복된 이메일이 있는지 확인") String userEmail) throws Exception {
         boolean checkflag = false;
         if(userService.emailCheck(userEmail)){
             checkflag= true;
@@ -73,7 +73,7 @@ public class UserController {
     // 사용자 회원가입중 이메일 인증 버튼 클릭시 링크를 사용자 이메일로 보내준다.
     @ApiOperation(value = "회원가입 이메일 인증")
     @PostMapping("/confirm-email")
-    public ResponseEntity<Map<String,Object>> sendemail(@RequestParam @ApiParam(value = "이메일 정보") String userEmail)throws Exception{
+    public ResponseEntity<Map<String,Object>> sendEmail(@RequestParam @ApiParam(value = "이메일 정보") String userEmail)throws Exception{
         Map<String,Object> resultMap = new HashMap<>();
         String emailToken = "";
         HttpStatus status = null;
@@ -95,7 +95,7 @@ public class UserController {
 
     @ApiOperation(value = "이메일 인증 Token검사")
     @GetMapping("/emailtoken")
-    public ResponseEntity<Boolean> confirmemail(@RequestParam @ApiParam(value = "이메일 인증 토큰 정보") String token)throws Exception{
+    public ResponseEntity<Boolean> confirmEmail(@RequestParam @ApiParam(value = "이메일 인증 토큰 정보") String token)throws Exception{
         boolean checkflag = false;
         if(emailConfirmationService.isValidToken(token)){
             checkflag= true;
@@ -145,7 +145,7 @@ public class UserController {
 
     @ApiOperation(value = "아이디 찾기")
     @PostMapping("/findid")
-    public ResponseEntity<Map<String,Object>> findid(@RequestParam @ApiParam(value = "이메일 정보") String userEmail) throws Exception {
+    public ResponseEntity<Map<String,Object>> findId(@RequestParam @ApiParam(value = "이메일 정보") String userEmail) throws Exception {
         Map<String,Object> resultMap = new HashMap<>();
         String emailToken = "";
         HttpStatus status = null;
@@ -154,7 +154,7 @@ public class UserController {
                 emailToken = emailConfirmationService.createEmailConfirmationToken(userEmail);
                 resultMap.put("confirmToken",emailToken);
                 resultMap.put("message",SUCCESS);
-                resultMap.put("userId",userService.findid(userEmail));
+                resultMap.put("userId",userService.findId(userEmail));
             }else{
                 resultMap.put("message", FAIL);
             }

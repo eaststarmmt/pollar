@@ -19,6 +19,7 @@ import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.security.InvalidParameterException;
 
 @RequiredArgsConstructor
 @Component
@@ -30,7 +31,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     // 프론트에서 보내준 토큰을 헤더로 확인하여 필터링하는 메서드
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
-        final String requestTokenHeader = request.getHeader("Authorization"); // 헤더의 Authorization 확인
+        final String requestTokenHeader = request.getHeader("accessToken"); // 헤더의 accessToken 확인
         System.out.println(requestTokenHeader); // 현재 헤더 확인
         String username = null;
         String jwtToken = null;
@@ -45,7 +46,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 System.out.println("JWT Token has expired");
             }
         } else {
-            logger.warn("JWT Token does not begin with Bearer String");
+//            throw new InvalidParameterException("토큰 시작이 Bearer가 아닙니다.");
         }
 
         if(username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
@@ -57,6 +58,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
                 authenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
                 SecurityContextHolder.getContext().setAuthentication(authenticationToken);
+                System.out.println("asdf");
             }
         }
         filterChain.doFilter(request,response);

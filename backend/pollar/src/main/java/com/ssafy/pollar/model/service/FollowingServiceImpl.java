@@ -20,13 +20,18 @@ public class FollowingServiceImpl implements FollowingService {
 
     // 팔로우 요청 보내기
     @Override
-    public void followsend(String myId, String sendId) throws Exception {
+    public void followSend(String myId, String sendId) throws Exception {
         User followee = userRepository.findByUserId(myId).orElseThrow(IllegalAccessError::new);
         User follower = userRepository.findByUserId(sendId).orElseThrow(IllegalAccessError::new);
         Following following = Following.builder()
                         .followee(followee)
                         .follower(follower)
                         .build();
+        String checkUid = followingRepository.findByFollowee(followee).get().getUid();
+        String checkUid2 = followingRepository.findByFollower(follower).get().getUid();
+        if(followee.getUid().equals(checkUid) && follower.getUid().equals(checkUid2)){//이미 팔로우 하고 있는 경우
+            return;
+        }
         followingRepository.save(following);
     }
 
@@ -45,23 +50,58 @@ public class FollowingServiceImpl implements FollowingService {
 
     // follower List 보여주기
     @Override
-    public List<FollowingDto> followerlist(String userId) throws Exception {
-        List<Following> follower = followingRepository.getFollower(userId);
+    public List<FollowingDto> followerList(String userId) throws Exception {
+        User user = userRepository.findByUserId(userId).get();
+        List<Following> followee = followingRepository.findAllByFollower(user).get();  // 팔로워 리스트
+        List<Following> anotherFollower = followingRepository.findAllByFollowee(user).get(); // 맞 팔로우 확인용 리스트
         List<FollowingDto> followingDtoList = new ArrayList<>();
-        for(int i=0;i<follower.size();i++){
-            followingDtoList.add(new FollowingDto(follower.get(i)));
+        for(int i = 0 ; i < followee.size() ; i++){
+            String followerUserId = followee.get(i).getFollower().getUserId(); // 나를 팔로우하는 아이디
+            String followeeUserId = followee.get(i).getFollowee().getUserId(); // 현재 프로필 아이디
+            String followerUserNickname = followee.get(i).getFollower().getUserNickname();
+            String followeeUserNickname = followee.get(i).getFollowee().getUserNickname();
+            Boolean isFollow = false;
+            for(int j=0; j < anotherFollower.size() ; j++){
+                String anotherFollowerUserId = anotherFollower.get(j).getFollower().getUserId();
+                if(anotherFollowerUserId.equals(followerUserId)){
+                    isFollow = true;
+                    break;
+                }
+            }
+            FollowingDto followingDto = new FollowingDto(followerUserId,followeeUserId,followerUserNickname,followeeUserNickname,isFollow);
+            followingDtoList.add(followingDto);
         }
         return followingDtoList;
     }
 
-    // followee List 보여주기
+    // following  List 보여주기
     @Override
-    public List<FollowingDto> followeelist(String userId) throws Exception {
-        List<Following> followee = followingRepository.getFollowee(userId);
+    public List<FollowingDto> followingList(String userId) throws Exception {
+        User user = userRepository.findByUserId(userId).get();
+        List<Following> follower = followingRepository.findAllByFollowee(user).get();
         List<FollowingDto> followingDtoList = new ArrayList<>();
-        for(int i=0;i<followee.size();i++){
-            followingDtoList.add(new FollowingDto(followee.get(i)));
+        for(int i = 0; i < follower.size() ; i++){
+            String followerUserId = follower.get(i).getFollower().getUserId(); // 나를 팔로우하는 아이디
+            String followeeUserId = follower.get(i).getFollowee().getUserId(); // 현재 프로필 아이디
+            String followerUserNickname = follower.get(i).getFollower().getUserNickname();
+            String followeeUserNickname = follower.get(i).getFollowee().getUserNickname();
+            FollowingDto followingDto = new FollowingDto(followerUserId,followeeUserId,followerUserNickname,followeeUserNickname,true);
+            followingDtoList.add(followingDto);
         }
         return followingDtoList;
     }
+
+    @Override
+    public Boolean isFollow(String myId, String profileId) throws Exception {
+        User loginUser = userRepository.findByUserId(myId).get();
+        List<Following> loginfollowing = followingRepository.findAllByFollowee(loginUser).get();
+        for(int i = 0 ; i < loginfollowing.size() ; i++){
+            String followerUserId = loginfollowing.get(i).getFollower().getUserId(); // 내가 팔로우 하는 아이디
+            if(followerUserId.equals(profileId)){
+                return true;
+            }
+        }
+        return false;
+    }
+
 }

@@ -41,7 +41,7 @@ public class UserServiceImpl implements UserService{
                 .userNickname(userDto.getUserNickname())
                 .userEmail(userDto.getUserEmail())
                 .userBirthday(userDto.getUserBirthday())
-                .userSex(userDto.getUserSex())
+                .userGender(userDto.getUserGender())
                 .build();
         // User에 user 정보 저장
         userRepository.save(user);
@@ -95,7 +95,7 @@ public class UserServiceImpl implements UserService{
                 .userNickname((userDto.getUserNickname()))
                 .userEmail((userDto.getUserEmail()))
                 .userBirthday((userDto.getUserBirthday()))
-                .userSex((userDto.getUserSex()))
+                .userGender((userDto.getUserGender()))
                 .userProfilePhoto(userDto.getUserProfilePhoto())
                 .build();
 
@@ -153,7 +153,7 @@ public class UserServiceImpl implements UserService{
                     .userNickname((usercur.getUserNickname()))
                     .userEmail((usercur.getUserEmail()))
                     .userBirthday((usercur.getUserBirthday()))
-                    .userSex((usercur.getUserSex()))
+                    .userGender((usercur.getUserGender()))
                     .userProfilePhoto(String.valueOf(imageFilePath))
                     .build();
 
@@ -165,7 +165,7 @@ public class UserServiceImpl implements UserService{
     }
 
     @Override
-    public String findid(String userEmail) throws Exception {
+    public String findId(String userEmail) throws Exception {
         String userId = userRepository.findByUserEmail(userEmail).get().getUserId();
         return userId;
     }
@@ -183,12 +183,19 @@ public class UserServiceImpl implements UserService{
                 .userNickname((usercur.getUserNickname()))
                 .userEmail((usercur.getUserEmail()))
                 .userBirthday((usercur.getUserBirthday()))
-                .userSex((usercur.getUserSex()))
+                .userGender((usercur.getUserGender()))
                 .userProfilePhoto(usercur.getUserProfilePhoto())
                 .build();
 
         // User에 user 정보 저장
         userRepository.save(user);
+    }
+
+    @Override
+    public UserDto getUserInfo(String userId) throws Exception {
+        User user = userRepository.findByUserId(userId).get();
+        UserDto userDto = new UserDto(user);
+        return userDto;
     }
 
 }

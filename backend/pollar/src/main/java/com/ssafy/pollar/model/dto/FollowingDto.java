@@ -12,23 +12,22 @@ import java.util.List;
 
 @Getter
 @NoArgsConstructor
-@AllArgsConstructor
 @ApiModel(value = "FollowingDto : 팔로우정보", description = "팔로우의 현 상황을 나타낸다.")
 public class FollowingDto{
 
-    private Long followId;
     @ApiModelProperty(value = "나를 팔로우하는 유저 아이디")
     private String followerId;
     @ApiModelProperty(value = "내가 팔로우하는 유저 아이디")
-    private String followeeId;
-    @ApiModelProperty(value = "나를 팔로우하는 유저")
-    private User follower;
-    @ApiModelProperty(value = "내가 팔로우하는 유저")
-    private User followee;
+    private String followingId;
+    private String followerNickname;
+    private String followingNickname;
+    private Boolean isFollow;
 
-    // following Table toDto
-    public FollowingDto(Following following) {
-        this.follower = following.getFollower();
-        this.followee = following.getFollowee();
+    public FollowingDto(String followerId,String followingId,String followerNickname,String followingNickname,Boolean isFollow){
+        this.followerId = followerId;
+        this.followingId = followingId;
+        this.followerNickname = followerNickname;
+        this.followingNickname = followingNickname;
+        this.isFollow = isFollow;
     }
 }
