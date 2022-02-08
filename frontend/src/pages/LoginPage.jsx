@@ -42,13 +42,13 @@ const ContentStyle = styled('div')(({ theme }) => ({
 export default function Login() {
   return (
     <>
-      <Page title="Login | Minimal-UI">
+      <Page title="Login">
         <Container maxWidth="sm">
           <ContentStyle>
             <Card
               sx={{
                 px: 8,
-                py: 10,
+                py: 8,
                 backgroundColor: '#fffd',
                 backdropFilter: 'saturate(200%) blur(30px)',
                 boxShadow: '2px 2px 20px 10px rgba(0, 0, 0, 0.1)',
@@ -59,10 +59,10 @@ export default function Login() {
                 <Typography variant="h3" gutterBottom color="primary">
                   Login
                 </Typography>
-                <Typography sx={{ color: 'text.secondary' }}>Enter your details below.</Typography>
+                <Typography sx={{ color: 'text.secondary' }}>Welcome back!</Typography>
               </Stack>
-              <AuthSocial />
               <LoginForm />
+              <AuthSocial />
               <Typography variant="body2" align="center" sx={{ mt: 3 }}>
                 Don’t have an account?&nbsp;
                 <Link variant="subtitle2" component={RouterLink} to="../signup">

@@ -41,5 +41,6 @@ public class UserDto {
     public UserDto(User user){
         this.userId = user.getUserId();
         this.userNickname = user.getUserNickname();
+        this.userProfilePhoto = user.getUserProfilePhoto();
     }
 }

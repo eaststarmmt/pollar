@@ -33,6 +33,31 @@ public class UserController {
     private static final String SUCCESS = "success";
     private static final String FAIL = "fail";
 
+    // 사용자 로그인 Jwt토큰 api 통신
+    @ApiOperation(value = "로그인")
+    @PostMapping("/login")
+    public ResponseEntity<Map<String,Object>> login(@RequestBody UserDto userDto){
+        Map<String,Object> resultMap = new HashMap<>();
+        HttpStatus status = null;
+        try {
+            if(userService.login(userDto)){
+                String token = jwtTokenProvider.createToken("userId",userDto.getUserId());
+                resultMap.put("accessToken",token);
+                resultMap.put("userId",userDto.getUserId());
+                resultMap.put("userNickname",userService.getUserInfo(userDto.getUserId()).getUserNickname());
+                resultMap.put("userProfilePhoto",userService.getUserInfo(userDto.getUserId()).getUserProfilePhoto());
+                resultMap.put("message",SUCCESS);
+            }else{
+                resultMap.put("message",FAIL);
+            }
+            status = HttpStatus.ACCEPTED;
+        }catch (Exception e){
+            resultMap.put("message", e.getMessage());
+            status = HttpStatus.INTERNAL_SERVER_ERROR;
+        }
+        return new ResponseEntity<Map<String,Object>>(resultMap,status);
+    }
+
     @ApiOperation(value = "회원가입",notes="회원 정보를 입력한다.")
     @PostMapping("/signup")
     public ResponseEntity<String> signUp (@RequestBody @ApiParam(value = "회원가입시 필요한 회원정보", required = true) UserDto userDto )throws Exception {
@@ -121,27 +146,27 @@ public class UserController {
         return new ResponseEntity<String>(SUCCESS,HttpStatus.OK);
     }
 
-    // 사용자 로그인 Jwt토큰 api 통신
-    @ApiOperation(value = "로그인")
-    @PostMapping("/login")
-    public ResponseEntity<Map<String,Object>> login(@RequestBody UserDto userDto){
-        Map<String,Object> resultMap = new HashMap<>();
-        HttpStatus status = null;
-        try {
-            if(userService.login(userDto)){
-                String token = jwtTokenProvider.createToken("userId",userDto.getUserId());
-                resultMap.put("accessToken",token);
-                resultMap.put("message",SUCCESS);
-            }else{
-                resultMap.put("message",FAIL);
-            }
-            status = HttpStatus.ACCEPTED;
-        }catch (Exception e){
-            resultMap.put("message", e.getMessage());
-            status = HttpStatus.INTERNAL_SERVER_ERROR;
-        }
-        return new ResponseEntity<Map<String,Object>>(resultMap,status);
-    }
+//    // 사용자 로그인 Jwt토큰 api 통신
+//    @ApiOperation(value = "로그인")
+//    @PostMapping("/login")
+//    public ResponseEntity<Map<String,Object>> login(@RequestBody UserDto userDto){
+//        Map<String,Object> resultMap = new HashMap<>();
+//        HttpStatus status = null;
+//        try {
+//            if(userService.login(userDto)){
+//                String token = jwtTokenProvider.createToken("userId",userDto.getUserId());
+//                resultMap.put("accessToken",token);
+//                resultMap.put("message",SUCCESS);
+//            }else{
+//                resultMap.put("message",FAIL);
+//            }
+//            status = HttpStatus.ACCEPTED;
+//        }catch (Exception e){
+//            resultMap.put("message", e.getMessage());
+//            status = HttpStatus.INTERNAL_SERVER_ERROR;
+//        }
+//        return new ResponseEntity<Map<String,Object>>(resultMap,status);
+//    }
 
     @ApiOperation(value = "아이디 찾기")
     @PostMapping("/findid")

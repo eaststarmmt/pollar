@@ -33,8 +33,8 @@ public class ProfileController {
     private static final String FAIL = "fail";
 
     @ApiOperation(value = "유저 프로필 정보")
-    @GetMapping("/{userId}")
-    public ResponseEntity<Map<String,Object>> profileInfo(@RequestHeader String accessToken, @RequestBody ProfileDto profileDto){
+    @PostMapping("/{userId}")
+    public ResponseEntity<Map<String,Object>> profileInfo(@RequestBody ProfileDto profileDto){
         Map<String,Object> resultMap = new HashMap<>();
         HttpStatus status = null;
         try {
