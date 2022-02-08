@@ -4,13 +4,6 @@ import { instance, instanceWithAuth } from '../../services/axios';
 const USER = '/user/';
 
 /* 회원가입 */
-// export const signup = (userData) => {
-//   // return instance.post('/user/sign')
-//   return instance.post(USER + 'signup', userData).then((response) => {
-//     console.log(response);
-//   });
-// };
-
 export const signup = async (user) => {
   const response = await instance.post(USER + 'signup', {
     userId: user.userId,
