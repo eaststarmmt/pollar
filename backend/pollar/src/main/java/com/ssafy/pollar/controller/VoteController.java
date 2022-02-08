@@ -1,14 +1,18 @@
 package com.ssafy.pollar.controller;
 
 import com.ssafy.pollar.domain.entity.Vote;
+import com.ssafy.pollar.model.dto.ParticipateDto;
+import com.ssafy.pollar.model.dto.SelectionDto;
 import com.ssafy.pollar.model.dto.VoteDto;
 import com.ssafy.pollar.model.service.VoteService;
+import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.parameters.P;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -52,7 +56,7 @@ public class VoteController {
 
     @ApiOperation(value = "좋아요 누르기")
     @PostMapping("/like")
-    public ResponseEntity<String> likeVote(@RequestBody @ApiParam(value ="좋아요 누른 유저 id , 피드 id")Map<String,Object> map){
+    public ResponseEntity<String> likeVote(@RequestBody @ApiParam(value ="좋아요 누른 유저 id , 피드 id")Map<String,Object> map)throws Exception{
         String userId =(String) map.get("userId");
         int voteId = (int) map.get("voteId");
         voteService.insertLike(userId, (long)voteId);
@@ -61,7 +65,7 @@ public class VoteController {
 
     @ApiOperation(value = "좋아요 취소")
     @DeleteMapping("/like")
-    public ResponseEntity<String> cancelLikeVote(@RequestBody @ApiParam(value ="좋아요 누른 유저 id , 피드 id")Map<String,Object> map){
+    public ResponseEntity<String> cancelLikeVote(@RequestBody @ApiParam(value ="좋아요 누른 유저 id , 피드 id")Map<String,Object> map)throws Exception{
         String userId =(String) map.get("userId");
         int voteId = (int) map.get("voteId");
         voteService.cancelLike(userId, (long)voteId);
@@ -70,16 +74,52 @@ public class VoteController {
 
     @ApiOperation(value="좋아요 개수 반환")
     @GetMapping("like/{voteId}")
-    public ResponseEntity<Integer> countLike(@PathVariable @ApiParam(value = "피드 id") Long voteId){
+    public ResponseEntity<Integer> countLike(@PathVariable @ApiParam(value = "피드 id") Long voteId)throws Exception{
 
         return new ResponseEntity<>(voteService.countLike(voteId),HttpStatus.OK);
     }
 
     @ApiOperation(value="좋아요 id 리스트 반환")
     @GetMapping("likelist/{voteId}")
-    public ResponseEntity<List<String> > getLikeList(@PathVariable @ApiParam(value = "피드 id") Long voteId){
+    public ResponseEntity<List<String> > getLikeList(@PathVariable @ApiParam(value = "피드 id") Long voteId)throws Exception{
 
         return new ResponseEntity<>(voteService.getLikeList(voteId),HttpStatus.OK);
     }
 
+    @ApiOperation(value = "해당 투표의 선택지 불러오기")
+    @GetMapping("{voteId}/selectionlist")
+    public ResponseEntity<List<SelectionDto>> getVoteSelectionList(@PathVariable @ApiParam(value = "투표 아이디") Long voteId) throws Exception{
+
+        return new ResponseEntity<>(voteService.getVoteSelectionList(voteId),HttpStatus.OK);
+    }
+
+    @ApiOperation(value = "유저가 선택지에 투표")
+    @PostMapping("{userId}/{selectionId}")
+    public ResponseEntity<String> userVoteSelection(@PathVariable @ApiParam(value = "유저아이디") String userId, @PathVariable @ApiParam(value = "투표할 선택지 아이디")Long selectionId) throws Exception{
+        voteService.userVoteSelection(userId,selectionId);
+        return new ResponseEntity<>(SUCCESS,HttpStatus.OK);
+    }
+
+    @ApiOperation(value = "유저가 선택지에 투표 취소")
+    @DeleteMapping("{userId}/{selectionId}")
+    public ResponseEntity<String> cancelUserVoteSelection(@PathVariable @ApiParam(value = "유저아이디") String userId, @PathVariable @ApiParam(value = "투표할 선택지 아이디")Long selectionId) throws Exception{
+        voteService.cancelUserVoteSelection(userId,selectionId);
+        return new ResponseEntity<>(SUCCESS,HttpStatus.OK);
+    }
+
+    @ApiOperation(value = "투표에서 누가 어디에 투표했는지 리스트")
+    @GetMapping("{voteId}/parlist")
+    public ResponseEntity<List<ParticipateDto>> getVoteUserList(@PathVariable @ApiParam(value = "투표아이디") Long voteId)throws Exception{
+        List<ParticipateDto> list = voteService.getVoteUserList(voteId);
+        return new ResponseEntity<>(list,HttpStatus.OK);
+    }
+//    @PostMapping("/test")
+//    public ResponseEntity<List<SelectionDto>> getlisttest(@RequestBody List<SelectionDto> list) throws Exception{
+//
+//        for (SelectionDto sdto: list ) {
+//
+//            System.out.println(sdto);
+//        }
+//        return new ResponseEntity<>(list,HttpStatus.OK);
+//    }
 }

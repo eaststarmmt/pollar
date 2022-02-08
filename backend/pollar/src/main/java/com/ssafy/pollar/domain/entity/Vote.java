@@ -47,8 +47,8 @@ public class Vote {
     @OneToMany(mappedBy = "voteCategory")   // 투표에 포함된 카테고리 리스트
     private List<VoteCategory> voteCategories = new ArrayList<>();
 
-    @OneToMany(mappedBy = "voteParticipate")    // 투표 참여자 리스트
-    private List<VoteParticipate> voteParticipates = new ArrayList<>();
+//    @OneToMany(mappedBy = "voteParticipate")    // 투표 참여자 리스트
+//    private List<VoteParticipate> voteParticipates = new ArrayList<>();
 
     @OneToMany(mappedBy = "voteLike")   // 좋아요 한 사람 리스트
     private List<VoteLike> voteLikes = new ArrayList<>();

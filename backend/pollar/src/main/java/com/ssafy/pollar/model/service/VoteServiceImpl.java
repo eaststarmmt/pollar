@@ -1,6 +1,8 @@
 package com.ssafy.pollar.model.service;
 
 import com.ssafy.pollar.domain.entity.*;
+import com.ssafy.pollar.model.dto.ParticipateDto;
+import com.ssafy.pollar.model.dto.SelectionDto;
 import com.ssafy.pollar.model.dto.VoteDto;
 import com.ssafy.pollar.model.repository.*;
 import lombok.RequiredArgsConstructor;
@@ -23,6 +25,7 @@ public class VoteServiceImpl implements VoteService {
     private final VoteCategoryRepository voteCategoryRepository;
     private final VoteSelectRepository voteSelectRepository;
     private final VoteLikeRepository voteLikeRepository;
+    private final VoteParticipateRepository voteParticipateRepository;
 
     @Override
     public void create(VoteDto voteDto) throws Exception {  // 피드 생성
@@ -49,13 +52,18 @@ public class VoteServiceImpl implements VoteService {
         voteRepository.save(vote);  // DB에 전달 받은 vote 정보 저장
 
         // 투표 선택지 등록
-        for (String selection : voteDto.getVoteSelects() ) {
+        //글
+        for (SelectionDto selection : voteDto.getVoteSelects() ) {
             VoteSelect voteSelect = VoteSelect.builder()
                     .voteSelect(vote)
-                    .content(selection)
+                    .selectionTitle(selection.getSelectionTitle())
+                    .content(selection.getContent())
                     .build();
             voteSelectRepository.save(voteSelect);
         }
+
+        //사진
+
 
         //투표 카테고리 등록
         for (Long cate: voteDto.getVoteCategories()) {
@@ -92,25 +100,81 @@ public class VoteServiceImpl implements VoteService {
     }
 
     @Override
-    public void insertLike(String userId, Long voteId) {
+    public void insertLike(String userId, Long voteId) throws Exception{
         User user = userRepository.findByUserId(userId).get();
         Vote vote = voteRepository.findById(voteId).get();
         voteLikeRepository.save( VoteLike.builder().userVoteLike(user).voteLike(vote).build());
     }
     @Override
-    public void cancelLike(String userId, Long voteId) {
+    public void cancelLike(String userId, Long voteId) throws Exception{
         User user = userRepository.findByUserId(userId).get();
         Vote vote = voteRepository.findById(voteId).get();
         voteLikeRepository.delete(voteLikeRepository.findByUserVoteLikesAndVoteLikesByQuery(user,vote).get());
     }
 
     @Override
-    public int countLike(Long voteId) {
+    public int countLike(Long voteId) throws Exception{
         return voteLikeRepository.countLike(voteId);
     }
     @Override
-    public List<String> getLikeList(Long voteId){
+    public List<String> getLikeList(Long voteId)throws Exception{
         return voteLikeRepository.getLikeListByQuery(voteId);
     }
+
+    @Override
+    public List<SelectionDto> getVoteSelectionList(Long voteId) throws Exception {
+
+        Vote vote = voteRepository.findById(voteId).get();
+
+        List<VoteSelect> entityList = voteSelectRepository.getAllByVoteSelect(vote);
+
+        List<SelectionDto> dtoList = new ArrayList<>();
+        for (VoteSelect entity: entityList) {
+            SelectionDto dto = new SelectionDto(entity);
+            dtoList.add(dto);
+        }
+        return dtoList;
+    }
+
+    @Override
+    public void userVoteSelection(String userId, Long selectionId) throws Exception {
+        VoteParticipate voteParticipate = VoteParticipate.builder()
+                .userPariticipate(userRepository.findByUserId(userId).get())
+                .voteParticipate(voteSelectRepository.findById(selectionId).get())
+                .build();
+        voteParticipateRepository.save(voteParticipate);
+    }
+
+    @Override
+    public void cancelUserVoteSelection(String userId, Long selectionId) throws Exception {
+
+        voteParticipateRepository.delete(voteParticipateRepository.findByUserPariticipateAndVoteParticipate(userRepository.findByUserId(userId).get(),voteSelectRepository.findById(selectionId).get()).get());
+
+    }
+
+    @Override
+    public List<ParticipateDto> getVoteUserList(Long voteId) throws Exception {
+        //해당 selection id들 찾고
+        //거기에 해당하는 user들
+        //list로 반환
+        List<ParticipateDto> dtoList = new ArrayList<>();
+
+        List<VoteSelect> selectList = voteSelectRepository.getAllByVoteSelect(voteRepository.findById(voteId).get());
+
+        for (VoteSelect select: selectList) {
+            List<User> userList = voteParticipateRepository.getUserList(select);
+            for (User user :userList) {
+                ParticipateDto dto = ParticipateDto.builder()
+                        .userId(user.getUserId())
+                        .userNickname(user.getUserNickname())
+                        .selectionTitle(select.getSelectionTitle())
+                        .build();
+                dtoList.add(dto);
+            }
+        }
+
+        return dtoList;
+    }
+
 
 }

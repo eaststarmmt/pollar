@@ -43,18 +43,18 @@ public class CategoryController {
         return new ResponseEntity<List<CategoryDto> >(list,HttpStatus.OK);
     }
 
-    @ApiOperation(value = "유저가 선택한 카테고리 목록 모두 삭제")
-    @DeleteMapping("/user/{userId}")
-    public ResponseEntity<String> deleteUserCategories(@PathVariable("userId") @ApiParam(value = "카테고리 삭제할 유저아이디") String userId)throws Exception{
-        logger.info("유저 카테고리 삭제");
-        categoryService.deleteUserCategories(userId);
-        return new ResponseEntity<String> (SUCCESS,HttpStatus.OK);
-    }
+//    @ApiOperation(value = "유저가 선택한 카테고리 목록 모두 삭제")
+//    @DeleteMapping("/user/{userId}")
+//    public ResponseEntity<String> deleteUserCategories(@PathVariable("userId") @ApiParam(value = "카테고리 삭제할 유저아이디") String userId)throws Exception{
+//        logger.info("유저 카테고리 삭제");
+//        return new ResponseEntity<String> (SUCCESS,HttpStatus.OK);
+//    }
 
     @ApiOperation(value="유저가 선택한 카테고리 목록 등록")
     @PostMapping("/user")
     public ResponseEntity<String> insertUserCategories(@RequestBody @ApiParam(value = "선택한 카테고리목록 등록")UserCategoryDto userCategoryDto)throws Exception{
-        logger.info("유저 카테고리 입력");
+        logger.info("유저 카테고리 삭제 후 입력");
+        categoryService.deleteUserCategories(userCategoryDto.getUserId());
         for (Long cateId : userCategoryDto.getCategoryList()) {
             categoryService.insertUserCategory(userCategoryDto.getUserId(),cateId);
         }

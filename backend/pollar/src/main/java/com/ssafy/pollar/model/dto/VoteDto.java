@@ -50,7 +50,7 @@ public class VoteDto {
     @ApiModelProperty(position = 9, value = "투표에 해당하는 카테고리 리스트.")
     private List<Long> voteCategories;
     @ApiModelProperty(position = 10, value = "투표 선택지 리스트")
-    private List<String> voteSelects;
+    private List<SelectionDto> voteSelects;
     @ApiModelProperty(position = 11, value="투표 참여 유저 id 리스트")
     private List<String> voteParticipates;
     @ApiModelProperty(position = 12, value = "좋아요 누른 유저 id 리스트.")

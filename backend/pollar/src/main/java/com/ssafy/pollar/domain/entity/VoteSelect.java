@@ -19,6 +19,9 @@ public class VoteSelect {
     @JoinColumn(name = "voteId")
     private Vote voteSelect;
 
+    @Column(name= "selectionTitle")
+    private String selectionTitle;
+
     @Column(name = "selectionContents")
     private String content;
 

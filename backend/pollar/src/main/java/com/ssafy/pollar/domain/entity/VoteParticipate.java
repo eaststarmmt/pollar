@@ -1,8 +1,15 @@
 package com.ssafy.pollar.domain.entity;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.RequiredArgsConstructor;
+
 import javax.persistence.*;
 
 @Entity
+@Builder
+@RequiredArgsConstructor
+@AllArgsConstructor
 public class VoteParticipate {
 
     @Id
@@ -15,6 +22,6 @@ public class VoteParticipate {
     private User userPariticipate;
 
     @ManyToOne
-    @JoinColumn(name = "voteId")
-    private Vote voteParticipate;
+    @JoinColumn(name = "voteSelectId")
+    private VoteSelect voteParticipate;
 }
