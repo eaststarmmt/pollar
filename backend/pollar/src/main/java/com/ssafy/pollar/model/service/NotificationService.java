@@ -7,7 +7,7 @@ import java.util.List;
 
 public interface NotificationService {
     void feedCreateNotification(String sendId,long voteId) throws Exception;
-    void feedFinishNotification(NotificationDto notificationDto) throws Exception;
+    void feedFinishNotification(long voteId) throws Exception;
     void feedLikeNotification(long voteId, String sendId, String receiveId) throws Exception;
     void feedReplyNotification(NotificationDto notificationDto) throws Exception;
     void followNotification(String sendId,String receiveId) throws Exception;

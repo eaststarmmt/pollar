@@ -207,4 +207,18 @@ public class UserController {
         return new ResponseEntity<String>(SUCCESS,status);
     }
 
+    @GetMapping("/info/{userId}")
+    public ResponseEntity<Map<String,Object>> getInfoUser(@PathVariable String userId)throws Exception{
+        Map<String,Object> resultMap = new HashMap<>();
+        HttpStatus status = null;
+        try {
+            UserDto userDto = userService.getUserInfo(userId);
+
+        }catch (Exception e){
+            resultMap.put("message",FAIL);
+            status = HttpStatus.INTERNAL_SERVER_ERROR;
+        }
+        return new ResponseEntity<>(resultMap,status);
+    }
+
 }

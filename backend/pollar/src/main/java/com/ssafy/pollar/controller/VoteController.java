@@ -4,6 +4,7 @@ import com.ssafy.pollar.model.dto.ParticipateDto;
 import com.ssafy.pollar.model.dto.SelectionDto;
 
 import com.ssafy.pollar.model.dto.VoteDto;
+import com.ssafy.pollar.model.service.NotificationService;
 import com.ssafy.pollar.model.service.VoteService;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
@@ -24,6 +25,7 @@ import java.util.Map;
 public class VoteController {
 
     private final VoteService voteService;
+    private final NotificationService notificationService; // 알람 서비스
     private static final String SUCCESS = "success";
     @ApiOperation(value = "피드생성", notes = "피드 정보를 입력한다.")
     @PostMapping("/create")
@@ -58,6 +60,9 @@ public class VoteController {
         String userId =(String) map.get("userId");
         int voteId = (int) map.get("voteId");
         voteService.insertLike(userId, (long)voteId);
+        // 좋아요 알림
+        String receiveId = voteService.detail((long)map.get("voteId")).getAuthor();
+        notificationService.feedLikeNotification((long)map.get("voteId"),(String)map.get("userId"),receiveId);
         return new ResponseEntity<>(SUCCESS,HttpStatus.OK);
     }
 
