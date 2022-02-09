@@ -1,7 +1,7 @@
 import { instance, instanceWithAuth } from '../../services/axios';
 
 // 공통되는 경로는 다음과 같이 별도로 정의해둠? (is this nesassary)
-const USER = '/user/';
+const USER = '/user';
 
 /* 회원가입 */
 // export const signup = (userData) => {
@@ -12,7 +12,7 @@ const USER = '/user/';
 // };
 
 export const signup = async (user) => {
-  const response = await instance.post(USER + 'signup', {
+  const response = await instance.post(USER + '/signup', {
     userId: user.userId,
     password: user.password,
     userNickname: user.userNickname,
@@ -27,7 +27,7 @@ export const signup = async (user) => {
 
 /* 로그인 */
 export const login = async (userData) => {
-  const response = await instance.post('/user/login', userData);
+  const response = await instance.post(USER + '/login', userData);
   if (response.data.accessToken) {
     // save JWT token
     localStorage.setItem('user', JSON.stringify(response.data));

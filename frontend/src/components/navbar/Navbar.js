@@ -62,10 +62,10 @@ export default function Navbar({ onOpenSidebar, isFullLayout }) {
   const [loggedUserInfo, setLoggedUserInfo] = useState();
 
   useEffect(() => {
-    console.log(loggedUser);
     const localStorageUserInfo = getLoggedUserInfo();
     setLoggedUserInfo(localStorageUserInfo);
   }, [loggedUser]); //? 로그아웃 시, 감지를 하기 위해서 recoil을 deps에 추가하는 방식으로 설계함
+
   return (
     <RootStyle sx={isFullLayout ? { backgroundColor: 'transparent' } : null}>
       <Container maxWidth="lg">
@@ -100,7 +100,7 @@ export default function Navbar({ onOpenSidebar, isFullLayout }) {
                 {loggedUserInfo ? (
                   <>
                     <NotificationsPopover />
-                    <AccountPopover account={loggedUserInfo} />
+                    <AccountPopover account={loggedUserInfo} setLoggedUser={setLoggedUser} />
                   </>
                 ) : (
                   <>

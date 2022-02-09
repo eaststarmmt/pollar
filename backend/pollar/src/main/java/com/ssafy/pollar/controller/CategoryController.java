@@ -62,17 +62,6 @@ public class CategoryController {
         return new ResponseEntity<String> (SUCCESS,HttpStatus.OK);
     }
 
-    @ApiOperation(value="유저가 선택한 카테고리 목록 등록")
-    @PutMapping("/user")
-    public ResponseEntity<String> updateUserCategories(@RequestBody @ApiParam(value = "선택한 카테고리목록 수정")UserCategoryDto userCategoryDto)throws Exception{
-        logger.info("유저 카테고리 입력");
-        for (Long cateId : userCategoryDto.getCategoryList()) {
-            categoryService.insertUserCategory(userCategoryDto.getUserId(),cateId);
-        }
-
-        return new ResponseEntity<String> (SUCCESS,HttpStatus.OK);
-    }
-
     @ApiOperation(value ="투표에 설정한 카테고리 id 리스트 반환")
     @GetMapping("/vote/{voteId}")
     public ResponseEntity<List<CategoryDto> > getVoteCategories(@PathVariable("voteId") @ApiParam(value="투표아이디") long voteId) throws Exception{

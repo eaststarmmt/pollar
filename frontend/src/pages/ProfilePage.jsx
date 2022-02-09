@@ -4,7 +4,7 @@ import { Box, Card } from '@mui/material';
 import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 
-// import FeedTabs from '../components/profile/FeedTabs';
+import FeedTabs from '../components/profile/FeedTabs';
 import Profile from '../components/profile/Profile';
 import { getProfileInfo } from '../services/api/ProfileApi';
 import { getLoggedUserId } from '../utils/loggedUser';
@@ -65,7 +65,7 @@ export default function ProfilePage() {
             {/* isOwnerAccount - 사용자 본인의 프로필: true, 다른 사용자의 프로필: false */}
             <Profile profileInfo={profileInfo} isOwnerAccount={isOwnerAccount} />
             <Box bgColor="white" minHeight="60vh">
-              {/* <FeedTabs /> */}
+              <FeedTabs />
             </Box>
           </Card>
         </Container>

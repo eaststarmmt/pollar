@@ -1,10 +1,11 @@
-import { instanceWithAuth } from '../../services/axios';
+// import { instance, createIntstanceWithAuth } from '../axios';
+import { createIntstanceWithAuth } from '../axios';
 
 const COMMON = '/follow';
 
 /* 유저 팔로우 요청 */
 export const requestFollow = async (followInfo) => {
-  const response = await instanceWithAuth.post(COMMON + '/following', followInfo);
+  const response = await createIntstanceWithAuth().post(COMMON + '/following', followInfo);
   console.log(response);
 
   return response.data === 'success';
@@ -12,17 +13,18 @@ export const requestFollow = async (followInfo) => {
 
 /* 유저 언팔로우 요청 */
 export const requestUnfollow = async (followInfo) => {
-  const response = await instanceWithAuth.post(COMMON + '/unfollow', followInfo);
+  const response = await createIntstanceWithAuth().post(COMMON + '/unfollow', followInfo);
   console.log(response);
 
   return response.data === 'success';
 };
 
 /* 팔로워 목록 */
-export const getFollowerList = async (userId) => {
-  const response = await instanceWithAuth.get(COMMON + '/followerlist', {
+export const getFollowerList = async (loginUserId, profileUserId) => {
+  const response = await createIntstanceWithAuth().get(COMMON + '/followerlist', {
     params: {
-      userId,
+      loginUserId,
+      profileUserId,
     },
   });
   console.log(response);
@@ -31,10 +33,11 @@ export const getFollowerList = async (userId) => {
 };
 
 /* 팔로잉 목록 */
-export const getFollowingList = async (userId) => {
-  const response = await instanceWithAuth.get(COMMON + '/followinglist', {
+export const getFollowingList = async (loginUserId, profileUserId) => {
+  const response = await createIntstanceWithAuth().get(COMMON + '/followinglist', {
     params: {
-      userId,
+      loginUserId,
+      profileUserId,
     },
   });
   console.log(response);

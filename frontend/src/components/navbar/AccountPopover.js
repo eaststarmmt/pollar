@@ -1,6 +1,5 @@
 import { Icon } from '@iconify/react';
 import { useEffect, useRef, useState } from 'react';
-import homeFill from '@iconify/icons-eva/home-fill';
 import personFill from '@iconify/icons-eva/person-fill';
 import settings2Fill from '@iconify/icons-eva/settings-2-fill';
 import { Link as RouterLink, useNavigate } from 'react-router-dom';
@@ -71,7 +70,7 @@ const StyledBadge = styled(Badge)(({ theme }) => ({
 
 // ----------------------------------------------------------------------
 
-export default function AccountPopover({ account }) {
+export default function AccountPopover({ account, setLoggedUser }) {
   const anchorRef = useRef(null);
   const [open, setOpen] = useState(false);
   const navigate = useNavigate();
@@ -94,6 +93,8 @@ export default function AccountPopover({ account }) {
     logout();
     // redirect to 'HomePage'
     navigate('/', { replace: true });
+    setOpen(false);
+    setLoggedUser();
   };
 
   return (

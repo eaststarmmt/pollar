@@ -7,11 +7,7 @@ import messageCircleFill from '@iconify/icons-eva/message-circle-fill';
 // material
 import { alpha, styled } from '@mui/material/styles';
 import { Box, Link, Card, Grid, Avatar, Typography, CardContent } from '@mui/material';
-// utils
-import { fDate } from '../../utils/formatTime';
-// import { fShortenNumber } from '../../utils/formatNumber';
-//
-// import SvgIconStyle from '../../SvgIconStyle';
+import SvgIconStyle from '../common/SvgIconStyle';
 
 // ----------------------------------------------------------------------
 
@@ -55,12 +51,12 @@ const CoverImgStyle = styled('img')({
 
 // ----------------------------------------------------------------------
 
-PollItem.propTypes = {
+PollVoteCard.propTypes = {
   post: PropTypes.object.isRequired,
   index: PropTypes.number,
 };
 
-export default function PollItem({ post, index }) {
+export default function PollVoteCard({ post, index }) {
   const { cover, title, view, comment, share, author, createdAt } = post;
   const latestPostLarge = index === 0;
   const latestPost = index === 1 || index === 2;
@@ -95,7 +91,7 @@ export default function PollItem({ post, index }) {
             }),
           }}
         >
-          {/* <SvgIconStyle
+          <SvgIconStyle
             color="paper"
             src="/static/icons/shape-avatar.svg"
             sx={{
@@ -106,7 +102,7 @@ export default function PollItem({ post, index }) {
               position: 'absolute',
               ...((latestPostLarge || latestPost) && { display: 'none' }),
             }}
-          /> */}
+          />
           <AvatarStyle
             alt={author.name}
             src={author.avatarUrl}
@@ -121,7 +117,7 @@ export default function PollItem({ post, index }) {
             }}
           />
 
-          <CoverImgStyle alt={title} src={cover} />
+          <CoverImgStyle alt={title} src={cover} sx={{ backgroundColor: 'blue' }} />
         </CardMediaStyle>
 
         <CardContent
@@ -139,7 +135,7 @@ export default function PollItem({ post, index }) {
             variant="caption"
             sx={{ color: 'text.disabled', display: 'block' }}
           >
-            {fDate(createdAt)}
+            {/* {fDate(createdAt)} */}
           </Typography>
 
           <TitleStyle

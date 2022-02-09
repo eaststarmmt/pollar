@@ -12,6 +12,7 @@ import ProfilePage from './pages/ProfilePage';
 import SignupPage from './pages/SignupPage';
 import TrendingPage from './pages/TrendingPage';
 import SettingsPage from './pages/SettingsPage';
+import PollDetailPage from './pages/PollDetailPage';
 
 export default function Router() {
   // The useRoutes hook is the functional equivalent of <Routes>, but it uses JavaScript objects instead of <Route> elements to define your routes. These objects have the same properties as normal <Route> elements, but they don't require JSX.
@@ -28,11 +29,6 @@ export default function Router() {
       ],
     },
     {
-      path: '/settings',
-      element: <NavLayout />,
-      children: [{ path: '', element: <SettingsPage /> }],
-    },
-    {
       path: '/polls',
       element: <NavLayout />,
       children: [
@@ -40,6 +36,21 @@ export default function Router() {
         { path: ':type', element: <PollsPage /> },
         { path: 'create', element: <PollCreatePage /> },
       ],
+    },
+    {
+      path: '/poll',
+      element: <FullLayout />,
+      children: [{ path: '', element: <PollDetailPage /> }],
+    },
+    {
+      path: '/settings',
+      element: <NavLayout />,
+      children: [{ path: '', element: <SettingsPage /> }],
+    },
+    {
+      path: '/about',
+      element: <FullLayout />,
+      children: [{ path: '', element: <AboutPage /> }],
     },
     {
       path: '/error',
@@ -50,7 +61,6 @@ export default function Router() {
       element: <NavLayout />,
       children: [
         { path: '/', element: <HomePage /> },
-        { path: 'about', element: <AboutPage /> },
         { path: 'trending', element: <TrendingPage /> },
       ],
     },

@@ -25,7 +25,7 @@ export default function HomePage() {
                 feugiat.
               </Typography>
             </Stack>
-            <GradAnimatedButton href="/users/profile">
+            <GradAnimatedButton href="/users/signup">
               <Typography variant="body1" color="inline">
                 Get Started
               </Typography>

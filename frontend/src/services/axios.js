@@ -11,7 +11,7 @@ function createInstance() {
 }
 
 // header에 jwt가 있는 axios 객체 생성
-function createIntstanceWithAuth() {
+export function createIntstanceWithAuth() {
   const user = JSON.parse(localStorage.getItem('user'));
   if (user && user.accessToken) {
     return axios.create({
@@ -29,4 +29,5 @@ function createIntstanceWithAuth() {
 }
 
 export const instance = createInstance();
-export const instanceWithAuth = createIntstanceWithAuth();
+//? ERROR: localStorage에 'user'가 없을 경우, 아래 방식처럼 하면 처음에 함수가 무조건 실행되며 초기화되기 때문에 else{...} 부분에 걸린다
+//// export const instanceWithAuth = createIntstanceWithAuth();
