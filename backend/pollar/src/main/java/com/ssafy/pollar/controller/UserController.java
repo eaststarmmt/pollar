@@ -15,7 +15,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.lang.reflect.Field;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -61,7 +60,7 @@ public class UserController {
     }
 
     @ApiOperation(value = "이메일중복체크")
-    @PostMapping("/emailcheck")
+    @GetMapping("/emailcheck")
     public ResponseEntity<Boolean> emailCheck(@RequestParam @ApiParam(value = "중복된 이메일이 있는지 확인") String userEmail) throws Exception {
         boolean checkflag = false;
         if(userService.emailCheck(userEmail)){
@@ -72,7 +71,7 @@ public class UserController {
 
     // 사용자 회원가입중 이메일 인증 버튼 클릭시 링크를 사용자 이메일로 보내준다.
     @ApiOperation(value = "회원가입 이메일 인증")
-    @PostMapping("/confirm-email")
+    @GetMapping("/confirmemail")
     public ResponseEntity<Map<String,Object>> sendEmail(@RequestParam @ApiParam(value = "이메일 정보") String userEmail)throws Exception{
         Map<String,Object> resultMap = new HashMap<>();
         String emailToken = "";
@@ -95,12 +94,25 @@ public class UserController {
 
     @ApiOperation(value = "이메일 인증 Token검사")
     @GetMapping("/emailtoken")
-    public ResponseEntity<Boolean> confirmEmail(@RequestParam @ApiParam(value = "이메일 인증 토큰 정보") String token)throws Exception{
-        boolean checkflag = false;
-        if(emailConfirmationService.isValidToken(token)){
-            checkflag= true;
+    public ResponseEntity<Map<String,Object>> confirmEmail(@RequestParam @ApiParam(value = "이메일 인증 토큰 정보") String token, @RequestParam @ApiParam(value = "유저 이메일") String userEmail)throws Exception{
+        HashMap<String,Object> resultMap = new HashMap<>();
+        HttpStatus status = null;
+        try {
+            if(emailConfirmationService.isValidToken(token) && emailConfirmationService.isValidEmail(token,userEmail)){
+                resultMap.put("isValid",true);
+            }else if(emailConfirmationService.isValidToken(token)){
+                resultMap.put("isValid",false);
+            }else{
+                resultMap.put("isValid",false);
+            }
+            resultMap.put("userEmail",userEmail);
+            resultMap.put("message",SUCCESS);
+            status = HttpStatus.OK;
+        }catch (Exception e){
+            resultMap.put("message",FAIL);
+            status = HttpStatus.INTERNAL_SERVER_ERROR;
         }
-        return new ResponseEntity<Boolean>(checkflag,HttpStatus.OK);
+        return new ResponseEntity<>(resultMap,status);
     }
 
     @ApiOperation(value ="회원정보 수정", notes = "간단한 회원정보 수정 category는 따로 수정")
@@ -131,6 +143,9 @@ public class UserController {
             if(userService.login(userDto)){
                 String token = jwtTokenProvider.createToken("userId",userDto.getUserId());
                 resultMap.put("accessToken",token);
+                resultMap.put("userId",userDto.getUserId());
+                resultMap.put("userNickname",userService.getUserInfo(userDto.getUserId()).getUserNickname());
+                resultMap.put("userProfilePhoto",userService.getUserInfo(userDto.getUserId()).getUserProfilePhoto());
                 resultMap.put("message",SUCCESS);
             }else{
                 resultMap.put("message",FAIL);
@@ -144,7 +159,7 @@ public class UserController {
     }
 
     @ApiOperation(value = "아이디 찾기")
-    @PostMapping("/findid")
+    @GetMapping("/findid")
     public ResponseEntity<Map<String,Object>> findId(@RequestParam @ApiParam(value = "이메일 정보") String userEmail) throws Exception {
         Map<String,Object> resultMap = new HashMap<>();
         String emailToken = "";

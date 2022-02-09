@@ -31,8 +31,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     // 프론트에서 보내준 토큰을 헤더로 확인하여 필터링하는 메서드
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
-        final String requestTokenHeader = request.getHeader("accessToken"); // 헤더의 accessToken 확인
-        System.out.println(requestTokenHeader); // 현재 헤더 확인
+        final String requestTokenHeader = request.getHeader("Authorization"); // 헤더의 Authorization 확인
         String username = null;
         String jwtToken = null;
 
@@ -41,9 +40,9 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             try {
                 username = jwtTokenProvider.getUserPk(jwtToken);
             } catch (IllegalArgumentException e) {
-                System.out.println("Unable to get JWT Token");
+//                throw new InvalidParameterException("Unable to get JWT Token");
             } catch (ExpiredJwtException e) {
-                System.out.println("JWT Token has expired");
+//                throw new InvalidParameterException("JWT Token has expired");
             }
         } else {
 //            throw new InvalidParameterException("토큰 시작이 Bearer가 아닙니다.");
@@ -58,7 +57,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
                 authenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
                 SecurityContextHolder.getContext().setAuthentication(authenticationToken);
-                System.out.println("asdf");
             }
         }
         filterChain.doFilter(request,response);

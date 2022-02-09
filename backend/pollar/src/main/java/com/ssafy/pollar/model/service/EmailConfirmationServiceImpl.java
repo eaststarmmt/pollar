@@ -31,7 +31,7 @@ public class EmailConfirmationServiceImpl implements EmailConfirmationService {
         SimpleMailMessage mailMessage = new SimpleMailMessage();
         mailMessage.setTo(userEmail);
         mailMessage.setSubject("Pollar 회원가입 이메일 인증");
-        mailMessage.setText("인증 번호는 :"+emailConfirmationToken.getEmailTokenId());
+        mailMessage.setText("인증 번호: "+emailConfirmationToken.getEmailTokenId());
         emailSenderService.sendEmail(mailMessage);
 
         return emailConfirmationToken.getEmailTokenId();
@@ -42,7 +42,7 @@ public class EmailConfirmationServiceImpl implements EmailConfirmationService {
     public boolean isValidToken(String token) throws Exception {
         Optional<EmailConfirmationToken> emailConfirmationToken = emailConfirmationTokenRepository.findById(token);
         EmailTokenDto emailTokenDto = null;
-        if(emailConfirmationToken !=null){
+        if(emailConfirmationToken.isPresent()){
             emailTokenDto = new EmailTokenDto(emailConfirmationToken.get());
             if(emailTokenDto.getExpired()){// 이미 만료됨
                return false;
@@ -59,7 +59,19 @@ public class EmailConfirmationServiceImpl implements EmailConfirmationService {
                 return false;
             }
             if(token.equals(emailTokenDto.getEmailTokenId())){// 토큰이 유효하다.
-                emailConfirmationTokenRepository.save(emailConfirmationTokenExpired);
+                return true;
+            }
+        }
+        return false;
+    }
+
+    @Override
+    public boolean isValidEmail(String token,String userEmail) throws Exception {
+        Optional<EmailConfirmationToken> emailConfirmationToken = emailConfirmationTokenRepository.findById(token);
+        EmailTokenDto emailTokenDto = null;
+        if(emailConfirmationToken.isPresent()){
+            emailTokenDto = new EmailTokenDto(emailConfirmationToken.get());
+            if(emailTokenDto.getUserEmail().equals(userEmail)){ // 이메일유저와 토큰 정보가 일치하는지
                 return true;
             }
         }

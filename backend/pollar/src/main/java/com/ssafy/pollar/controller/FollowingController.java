@@ -1,11 +1,9 @@
 package com.ssafy.pollar.controller;
 
-import com.ssafy.pollar.domain.entity.Following;
-import com.ssafy.pollar.jwt.service.JwtUserDetailsService;
 import com.ssafy.pollar.model.dto.FollowingDto;
 import com.ssafy.pollar.model.service.FollowingService;
+import com.ssafy.pollar.model.service.NotificationService;
 import io.swagger.annotations.ApiOperation;
-import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -22,20 +20,25 @@ import java.util.Map;
 public class FollowingController {
 
     private final FollowingService followingService;
+    private final NotificationService notificationService;
     private static final String SUCCESS = "success";
     private static final String FAIL = "fail";
 
     // User follow 요청 통신
     @ApiOperation(value = "팔로우 하기")
     @PostMapping("/following")
-    public ResponseEntity<String> followSend(@RequestHeader String accessToken, @RequestBody FollowingDto followingDto){
+    public ResponseEntity<String> followSend(@RequestBody FollowingDto followingDto){
         String result = "";
         HttpStatus status = null;
         try {
             String followeeUser = followingDto.getFollowingId();
             String followerUser = followingDto.getFollowerId();
-            followingService.followSend(followeeUser,followerUser);
-            result = SUCCESS;
+            if(followingService.followSend(followeeUser,followerUser)){
+                notificationService.followNotification(followeeUser,followerUser); // 팔로우 알림
+                result = SUCCESS;
+            }else{
+                result = FAIL;
+            }
             status = HttpStatus.ACCEPTED;
         }catch (Exception e){
             result = FAIL;
@@ -47,7 +50,7 @@ public class FollowingController {
     // User unfollow 요청 통신 아직 비활성
     @ApiOperation(value = "언팔로우 하기")
     @PostMapping("/unfollow")
-    public ResponseEntity<String> unfollow(@RequestHeader String accessToken ,@RequestBody FollowingDto followingDto){
+    public ResponseEntity<String> unfollow(@RequestBody FollowingDto followingDto){
         String result = "";
         HttpStatus status = null;
         try {
@@ -66,7 +69,7 @@ public class FollowingController {
     // follower 유저들을 통신하는기능
     @ApiOperation(value = "팔로워 목록을 확인")
     @GetMapping("/followerlist")
-    public ResponseEntity<Map<String,List>> followerList(@RequestHeader String accessToken , @RequestParam String userId) throws Exception {
+    public ResponseEntity<Map<String,List>> followerList(@RequestParam String userId) throws Exception {
         Map<String,List> resultMap = new HashMap<>();
         List<FollowingDto> followerList = followingService.followerList(userId);
         resultMap.put("followerList",followerList);
@@ -76,7 +79,7 @@ public class FollowingController {
     // followee 유저들을 통신하는 기능
     @ApiOperation(value = "팔로잉 목록을 확인")
     @GetMapping("/followinglist")
-    public ResponseEntity<Map<String,List>> followeeList(@RequestHeader String accessToken , @RequestParam String userId) throws Exception {
+    public ResponseEntity<Map<String,List>> followeeList(@RequestParam String userId) throws Exception {
         Map<String,List> resultMap = new HashMap<>();
         List<FollowingDto> followingList = followingService.followingList(userId);
         resultMap.put("followingList",followingList);

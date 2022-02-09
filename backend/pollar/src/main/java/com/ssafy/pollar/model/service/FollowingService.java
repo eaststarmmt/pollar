@@ -5,7 +5,7 @@ import com.ssafy.pollar.model.dto.FollowingDto;
 import java.util.List;
 
 public interface FollowingService {
-    void followSend(String myId,String sendId) throws Exception;
+    boolean followSend(String myId,String sendId) throws Exception;
     void unfollow(String myId, String unfollowId) throws Exception;
     List<FollowingDto> followerList(String userId) throws Exception;
     List<FollowingDto> followingList(String userId) throws Exception;

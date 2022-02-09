@@ -21,7 +21,7 @@ public class Vote {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY) // 아이디 auto increment로 자동 저장
     @Column(name = "voteId")
-    private Long voteId;
+    private long voteId;
 
     @Column(name = "voteName",length = 255)     // 피드 제목
     private String voteName;

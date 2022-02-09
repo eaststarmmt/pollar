@@ -33,13 +33,13 @@ public class ProfileController {
     private static final String FAIL = "fail";
 
     @ApiOperation(value = "유저 프로필 정보")
-    @GetMapping("/{userId}")
-    public ResponseEntity<Map<String,Object>> profileInfo(@RequestHeader String accessToken, @RequestBody ProfileDto profileDto){
+    @PostMapping("/{usernickname}")
+    public ResponseEntity<Map<String,Object>> profileInfo(@RequestBody ProfileDto profileDto){
         Map<String,Object> resultMap = new HashMap<>();
         HttpStatus status = null;
         try {
             UserDto userDto = userService.getUserInfo(profileDto.getProfileUserId());
-            List<CategoryDto> categoryList = categoryService.getUserCategories(profileDto.getProfileUserId());
+            List<CategoryDto> interests = categoryService.getUserCategories(profileDto.getProfileUserId());
 
             resultMap.put("userId",userDto.getUserId());
             resultMap.put("userNickname",userDto.getUserNickname());
@@ -49,7 +49,7 @@ public class ProfileController {
 
             resultMap.put("followerCount",followerIdlist.size());
             resultMap.put("followingCount",followingIdlist.size());
-            resultMap.put("categoryList",categoryList);
+            resultMap.put("interests",interests);
 
             Boolean isFollow = followingService.isFollow(profileDto.getLoginUserId(),profileDto.getProfileUserId());
             resultMap.put("isFollow",isFollow);

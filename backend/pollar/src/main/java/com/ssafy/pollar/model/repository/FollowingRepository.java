@@ -13,6 +13,5 @@ public interface FollowingRepository extends JpaRepository<Following,Long> {
     Optional<List<Following>> findAllByFollower(User user);
     // getFollowee join query
     Optional<List<Following>> findAllByFollowee(User user);
-    Optional<User> findByFollower(User user);
-    Optional<User> findByFollowee(User user);
+    Optional<Following> findByFollowerAndAndFollowee(User follower,User followee);
 }

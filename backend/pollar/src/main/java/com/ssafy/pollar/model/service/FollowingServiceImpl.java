@@ -19,20 +19,21 @@ public class FollowingServiceImpl implements FollowingService {
     private final UserRepository userRepository;
 
     // 팔로우 요청 보내기
+    @Transactional
     @Override
-    public void followSend(String myId, String sendId) throws Exception {
+    public boolean followSend(String myId, String sendId) throws Exception {
         User followee = userRepository.findByUserId(myId).orElseThrow(IllegalAccessError::new);
         User follower = userRepository.findByUserId(sendId).orElseThrow(IllegalAccessError::new);
         Following following = Following.builder()
                         .followee(followee)
                         .follower(follower)
                         .build();
-        String checkUid = followingRepository.findByFollowee(followee).get().getUid();
-        String checkUid2 = followingRepository.findByFollower(follower).get().getUid();
-        if(followee.getUid().equals(checkUid) && follower.getUid().equals(checkUid2)){//이미 팔로우 하고 있는 경우
-            return;
+        if(followingRepository.findByFollowerAndAndFollowee(follower,followee).isPresent()){// 이미 팔로우 존재
+            return false;
+        }else{
+            followingRepository.save(following);
+            return true;
         }
-        followingRepository.save(following);
     }
 
     // 언팔로우 하기
@@ -41,10 +42,8 @@ public class FollowingServiceImpl implements FollowingService {
     public void unfollow(String myId, String unfollowId) throws Exception {
         User followee = userRepository.findByUserId(myId).orElseThrow(IllegalAccessError::new);
         User follower = userRepository.findByUserId(unfollowId).orElseThrow(IllegalAccessError::new);
-        Following following = Following.builder()
-                .followee(followee)
-                .follower(follower)
-                .build();
+
+        Following following = followingRepository.findByFollowerAndAndFollowee(follower,followee).get();
         followingRepository.delete(following);
     }
 
@@ -52,15 +51,18 @@ public class FollowingServiceImpl implements FollowingService {
     @Override
     public List<FollowingDto> followerList(String userId) throws Exception {
         User user = userRepository.findByUserId(userId).get();
-        List<Following> followee = followingRepository.findAllByFollower(user).get();  // 팔로워 리스트
+        List<Following> follower = followingRepository.findAllByFollower(user).get();  // 팔로워 리스트
         List<Following> anotherFollower = followingRepository.findAllByFollowee(user).get(); // 맞 팔로우 확인용 리스트
         List<FollowingDto> followingDtoList = new ArrayList<>();
-        for(int i = 0 ; i < followee.size() ; i++){
-            String followerUserId = followee.get(i).getFollower().getUserId(); // 나를 팔로우하는 아이디
-            String followeeUserId = followee.get(i).getFollowee().getUserId(); // 현재 프로필 아이디
-            String followerUserNickname = followee.get(i).getFollower().getUserNickname();
-            String followeeUserNickname = followee.get(i).getFollowee().getUserNickname();
+
+        for(int i = 0 ; i < follower.size() ; i++){
+            String followerUserId = follower.get(i).getFollower().getUserId(); // 나를 팔로우하는 아이디
+            String followeeUserId = follower.get(i).getFollowee().getUserId(); // 현재 프로필 아이디
+            String followerUserNickname = follower.get(i).getFollower().getUserNickname();
+            String followeeUserNickname = follower.get(i).getFollowee().getUserNickname();
             Boolean isFollow = false;
+            String followUserProfilePhoto = follower.get(i).getFollower().getUserProfilePhoto();
+
             for(int j=0; j < anotherFollower.size() ; j++){
                 String anotherFollowerUserId = anotherFollower.get(j).getFollower().getUserId();
                 if(anotherFollowerUserId.equals(followerUserId)){
@@ -68,7 +70,7 @@ public class FollowingServiceImpl implements FollowingService {
                     break;
                 }
             }
-            FollowingDto followingDto = new FollowingDto(followerUserId,followeeUserId,followerUserNickname,followeeUserNickname,isFollow);
+            FollowingDto followingDto = new FollowingDto(followerUserId,followeeUserId,followerUserNickname,followeeUserNickname,isFollow,followUserProfilePhoto);
             followingDtoList.add(followingDto);
         }
         return followingDtoList;
@@ -78,14 +80,16 @@ public class FollowingServiceImpl implements FollowingService {
     @Override
     public List<FollowingDto> followingList(String userId) throws Exception {
         User user = userRepository.findByUserId(userId).get();
-        List<Following> follower = followingRepository.findAllByFollowee(user).get();
+        List<Following> following = followingRepository.findAllByFollowee(user).get();
         List<FollowingDto> followingDtoList = new ArrayList<>();
-        for(int i = 0; i < follower.size() ; i++){
-            String followerUserId = follower.get(i).getFollower().getUserId(); // 나를 팔로우하는 아이디
-            String followeeUserId = follower.get(i).getFollowee().getUserId(); // 현재 프로필 아이디
-            String followerUserNickname = follower.get(i).getFollower().getUserNickname();
-            String followeeUserNickname = follower.get(i).getFollowee().getUserNickname();
-            FollowingDto followingDto = new FollowingDto(followerUserId,followeeUserId,followerUserNickname,followeeUserNickname,true);
+
+        for(int i = 0; i < following.size() ; i++){
+            String followerUserId = following.get(i).getFollower().getUserId(); // 나를 팔로우하는 아이디
+            String followeeUserId = following.get(i).getFollowee().getUserId(); // 현재 프로필 아이디
+            String followerUserNickname = following.get(i).getFollower().getUserNickname();
+            String followeeUserNickname = following.get(i).getFollowee().getUserNickname();
+            String followUserProfilePhoto = following.get(i).getFollowee().getUserProfilePhoto();
+            FollowingDto followingDto = new FollowingDto(followerUserId,followeeUserId,followerUserNickname,followeeUserNickname,true,followUserProfilePhoto);
             followingDtoList.add(followingDto);
         }
         return followingDtoList;
