@@ -2,11 +2,15 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="d8454848-9067-4b6c-bd53-3d00564da9c6" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/../frontend/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/../frontend/package-lock.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../frontend/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/../frontend/package.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../frontend/src/pages/PollCreatePage.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/../frontend/src/pages/PollCreatePage.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../frontend/src/services/api/AuthApi.js" beforeDir="false" afterPath="$PROJECT_DIR$/../frontend/src/services/api/AuthApi.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../frontend/src/services/api/PollApi.js" beforeDir="false" afterPath="$PROJECT_DIR$/../frontend/src/services/api/PollApi.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../frontend/.env" beforeDir="false" afterPath="$PROJECT_DIR$/../frontend/.env" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../frontend/src/components/polls/BlogPostCard.js" beforeDir="false" afterPath="$PROJECT_DIR$/../frontend/src/components/polls/BlogPostCard.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../frontend/src/components/profile/Profile.js" beforeDir="false" afterPath="$PROJECT_DIR$/../frontend/src/components/profile/Profile.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../frontend/src/components/signup/Index.js" beforeDir="false" afterPath="$PROJECT_DIR$/../frontend/src/components/signup/Index.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../frontend/src/components/signup/InterestForm.js" beforeDir="false" afterPath="$PROJECT_DIR$/../frontend/src/components/signup/InterestForm.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../frontend/src/components/signup/SignupForm.js" beforeDir="false" afterPath="$PROJECT_DIR$/../frontend/src/components/signup/SignupForm.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../frontend/src/pages/SignupPage.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/../frontend/src/pages/SignupPage.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../frontend/src/pages/TrendingPage.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/../frontend/src/pages/TrendingPage.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../frontend/src/services/api/UserApi.js" beforeDir="false" afterPath="$PROJECT_DIR$/../frontend/src/services/api/UserApi.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -15,6 +19,9 @@
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
+  </component>
+  <component name="MarkdownSettingsMigration">
+    <option name="stateVersion" value="1" />
   </component>
   <component name="ProjectId" id="24mb2rK6n1IZGWOiL9JTaf1cqDE" />
   <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
@@ -26,7 +33,7 @@
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/pollar" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/pollar/build.gradle" />
   </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
@@ -37,6 +44,7 @@
       <option name="presentableId" value="Default" />
       <updated>1644238504853</updated>
       <workItem from="1644238506067" duration="16000" />
+      <workItem from="1644325374885" duration="78000" />
     </task>
     <servers />
   </component>

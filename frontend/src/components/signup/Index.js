@@ -14,7 +14,7 @@ function Index() {
     userNickkname: '',
     userEmail: '',
     userBirthday: '',
-    userSex: true,
+    userSex: false,
     categories: [],
     userProfilePhoto:'',
   });

@@ -3,14 +3,6 @@ import { instance, instanceWithAuth } from '../../services/axios';
 // 공통되는 경로는 다음과 같이 별도로 정의해둠? (is this nesassary)
 const USER = '/user/';
 
-/* 회원가입 */
-// const signup = (userData) => {
-//   // return instance.post('/user/sign')
-//   return instance.post(USER + 'signup', userData).then((response) => {
-//     console.log(response);
-//   });
-// };
-
 /* 아이디 중복검사 */
 export const checkId = async (userId) => {
   const response = await instance.get(USER + 'idcheck', {
@@ -28,17 +20,44 @@ export const checkNickname = async (userNickname) => {
       userNickname: userNickname,
     },
   });
-  console.log(response);
+  // console.log(response);
   return response.data;
 };
 
 /* 이메일 중복검사 */
 // 여기는 왜 post일까
-const checkEmail = async (userEmail) => {
-  const response = await instance.post(USER + 'emailcheck', {
-    userEmail,
+export const checkEmail = async (userEmail) => {
+  const response = await instance.get(USER + 'emailcheck', {
+    params: { 
+      userEmail: userEmail 
+    },
   });
-  console.log(response);
+  // console.log(response);
+  return response.data;
 };
 
-/* 회원정보 수정 */
+/* 이메일 인증 메일 발송 */
+export const emailConfirm = async (userEmail) => {
+  // console.log(userEmail);
+  const response = await instance.get(USER + 'confirmemail', {
+    params: { 
+      userEmail: userEmail 
+    },
+  });
+  console.log(response.data);
+  return response.data;
+};
+
+/* 이메일 인증 토큰 확인 */
+export const emailToken = async (token) => {
+  console.log(token)
+  const response = await instance.get(USER + 'emailtoken', {
+    // user 가 입력한 인증번호
+    params:{
+        userEmail: token.userEmail,
+        token: token.token,
+      }
+  });
+  // console.log(response);
+  return response.data;
+};

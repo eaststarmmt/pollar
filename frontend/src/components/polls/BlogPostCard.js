@@ -8,9 +8,8 @@ import messageCircleFill from '@iconify/icons-eva/message-circle-fill';
 import { alpha, styled } from '@mui/material/styles';
 import { Box, Link, Card, Grid, Avatar, Typography, CardContent } from '@mui/material';
 // utils
-import { fDate } from '../../../utils/formatTime';
+// import { fDate } from '../../../utils/formatTime';
 import { fShortenNumber } from '../../../utils/formatNumber';
-//
 import SvgIconStyle from '../../SvgIconStyle';
 
 // ----------------------------------------------------------------------
@@ -139,7 +138,7 @@ export default function BlogPostCard({ post, index }) {
             variant="caption"
             sx={{ color: 'text.disabled', display: 'block' }}
           >
-            {fDate(createdAt)}
+            {/* {fDate(createdAt)} */}
           </Typography>
 
           <TitleStyle

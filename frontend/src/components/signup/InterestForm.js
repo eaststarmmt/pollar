@@ -16,13 +16,13 @@ function InterestForm(props) {
 
     try {
       await getUserCategories('hello');
-      //   const result = await signup(user);
-      //   console.log(result.message);
-      //   if (result.message == 'success') {
-      //     navigate('/login');
-      //   } else {
-      //     setMessage('회원가입 실패 ');
-      //   }
+        const result = await signup(user);
+        console.log(result.message);
+        if (result.message == 'success') {
+          navigate('/login');
+        } else {
+          setMessage('회원가입 실패 ');
+        }
     } catch (error) {
       setMessage('회원가입 성공');
     }

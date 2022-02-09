@@ -1,6 +1,6 @@
 // @mui material components
 import { Box, Typography, Button, Container, Grid, Avatar, Stack, Chip } from '@mui/material';
-import SettingsIcon from '@mui/icons-material/Settings';
+// import SettingsIcon from '@mui/icons-material/Settings';
 // Images
 import profilePicture from '../../assets/images/profile.jpeg';
 import profile from '../../_mocks_/profile';

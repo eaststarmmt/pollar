@@ -29,7 +29,7 @@ const SectionStyle = styled(Card)(({ theme }) => ({
 }));
 
 const ContentStyle = styled('div')(({ theme }) => ({
-  maxWidth: 480,
+  maxWidth: 580,
   margin: 'auto',
   display: 'flex',
   minHeight: '100vh',
@@ -61,7 +61,18 @@ export default function SignupPage() {
 
       <Container>
         <ContentStyle>
+        <Card
+              sx={{
+                px: 8,
+                py: 10,
+                backgroundColor: '#fffd',
+                backdropFilter: 'saturate(200%) blur(30px)',
+                boxShadow: '2px 2px 20px 10px rgba(0, 0, 0, 0.1)',
+                overflow: 'visible',
+              }}
+            >
           <Box sx={{ mb: 5 }}>
+            
             <Typography variant="h3" gutterBottom color="primary">
               Sign Up
             </Typography>
@@ -101,6 +112,7 @@ export default function SignupPage() {
               Login
             </Link>
           </Typography>
+          </Card>
         </ContentStyle>
       </Container>
     </RootStyle>
