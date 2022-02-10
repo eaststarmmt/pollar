@@ -40,7 +40,7 @@ export default function Router() {
     {
       path: '/poll',
       element: <FullLayout />,
-      children: [{ path: '', element: <PollDetailPage /> }],
+      children: [{ path: ':id', element: <PollDetailPage /> }],
     },
     {
       path: '/settings',

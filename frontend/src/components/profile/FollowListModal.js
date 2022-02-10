@@ -45,6 +45,15 @@ export default function FollowListModal({ openModal, type, listOwnerId }) {
 
   return (
     <>
+      {/* <ClickAwayListener onClickAway={handleClickAway}>
+        <Backdrop
+          sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
+          open={open}
+          onClick={handleClose}
+        >
+          <CircularProgress color="inherit" />
+        </Backdrop>
+      </ClickAwayListener> */}
       {/* open부분: 다른 Component에서 Modal을 열기위한 설계. open이 undefined 상태라면(i.e. 페이지 처음 render시) Modal이 open되는 것을 방지하기 위함 */}
       <Modal
         open={open === undefined ? false : open}
@@ -73,7 +82,11 @@ export default function FollowListModal({ openModal, type, listOwnerId }) {
                 />
               </TabPanel>
               <TabPanel value="following">
-                <FollowAccountList />
+                <FollowAccountList
+                  listType="following"
+                  setOpenModal={setOpen}
+                  listOwnerId={listOwnerId}
+                />
               </TabPanel>
             </Box>
           </TabContext>

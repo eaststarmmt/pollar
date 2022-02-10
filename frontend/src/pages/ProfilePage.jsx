@@ -31,6 +31,9 @@ export default function ProfilePage() {
   const [profileInfo, setProfileInfo] = useState();
   // 사용자 본인의 계정 여부
   const [isOwnerAccount, setIsOwnerAccount] = useState(false);
+  // 화면 refresh
+  const [triggerRefresh, setTriggerRefresh] = useState(false);
+
   const checkIfOwnerAccount = () => {
     if (typeof userId === 'undefined' || (loggedUserId && loggedUserId === userId)) {
       if (loggedUserId) {
@@ -47,6 +50,7 @@ export default function ProfilePage() {
 
   /* 사용자 계정 정보 API 호출 */
   const getAccountInfo = async () => {
+    console.log(userId);
     const data = await getProfileInfo(userId);
     setProfileInfo(data);
   };
@@ -55,7 +59,7 @@ export default function ProfilePage() {
     checkIfOwnerAccount();
     // 사용자 계정정보 요청
     getAccountInfo();
-  }, [userId]);
+  }, [userId, triggerRefresh]);
 
   return (
     <>
@@ -63,7 +67,11 @@ export default function ProfilePage() {
         <Container>
           <Card sx={style}>
             {/* isOwnerAccount - 사용자 본인의 프로필: true, 다른 사용자의 프로필: false */}
-            <Profile profileInfo={profileInfo} isOwnerAccount={isOwnerAccount} />
+            <Profile
+              profileInfo={profileInfo}
+              isOwnerAccount={isOwnerAccount}
+              setTriggerRefresh={setTriggerRefresh}
+            />
             <Box bgColor="white" minHeight="60vh">
               <FeedTabs />
             </Box>

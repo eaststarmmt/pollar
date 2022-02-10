@@ -11,7 +11,9 @@ import {
   Typography,
 } from '@mui/material';
 import FollowButton from './FollowButton';
-import { getFollowerList, getFollowingList } from '../../services/api/FollowApi';
+import { getFollowerList } from '../../services/api/FollowApi';
+import { getFollowingList } from '../../services/api/FollowApi';
+import { getLoggedUserId } from '../../utils/loggedUser';
 
 /**
  * 팔로워, 팔로잉 리스트 공용
@@ -26,10 +28,12 @@ export default function FollowAccountList({ listType, setOpenModal, listOwnerId 
   const [accountList, setAccountList] = useState([]);
   const isFollowerList = listType === 'follower';
 
+  const loggedUserId = getLoggedUserId();
+
   const getAccountList = async () => {
     const list = isFollowerList
-      ? await getFollowerList(listOwnerId)
-      : await getFollowingList(listOwnerId);
+      ? await getFollowerList(loggedUserId, listOwnerId)
+      : await getFollowingList(loggedUserId, listOwnerId);
     setAccountList(list);
   };
 
@@ -62,14 +66,19 @@ export default function FollowAccountList({ listType, setOpenModal, listOwnerId 
           <ListItem
             key={index}
             secondaryAction={
-              <FollowButton
-                isFollowButton={!account.isFollow}
-                // 리스트의 종류에 따라서, accountId를 각각 다르게 꺼내와야 함
-                accountId={isFollowerList ? account.followingId : account.followerId}
-              />
+              //? 사용자 본인일 경우에는 버튼을 생성하지 않음
+              (isFollowerList && account.followingId !== loggedUserId) ||
+              (!isFollowerList && account.followerId !== loggedUserId) ? (
+                <FollowButton
+                  isFollowButton={!account.isFollow}
+                  // 리스트의 종류에 따라서, accountId를 각각 다르게 꺼내와야 함
+                  accountId={isFollowerList ? account.followingId : account.followerId}
+                  // accountId={account.followingId}
+                />
+              ) : null
             }
             disablePadding
-            onClick={() => handleAccountClick(account)}
+            onClick={() => handleAccountClick(account.followingId)}
           >
             <ListItemButton>
               <ListItemAvatar>
@@ -90,6 +99,7 @@ export default function FollowAccountList({ listType, setOpenModal, listOwnerId 
                     color="text.primary"
                   >
                     {isFollowerList ? account.followingNickname : account.followerNickname}
+                    {/* {account.followingNickname} */}
                   </Typography>
                 }
                 secondary={
@@ -101,6 +111,7 @@ export default function FollowAccountList({ listType, setOpenModal, listOwnerId 
                       color="text.disabled"
                     >
                       @{isFollowerList ? account.followingId : account.followerId}
+                      {/* @{account.followingId} */}
                     </Typography>
                   </>
                 }

@@ -6,8 +6,17 @@ import shareFill from '@iconify/icons-eva/share-fill';
 import messageCircleFill from '@iconify/icons-eva/message-circle-fill';
 // material
 import { alpha, styled } from '@mui/material/styles';
-import { Box, Link, Card, Grid, Avatar, Typography, CardContent } from '@mui/material';
+import { Box, Link, Card, Grid, Avatar, Typography, CardContent, Button } from '@mui/material';
 import SvgIconStyle from '../common/SvgIconStyle';
+import HowToVoteIcon from '@mui/icons-material/HowToVote';
+import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
+import TextSnippetIcon from '@mui/icons-material/TextSnippet';
+import PhotoLibraryIcon from '@mui/icons-material/PhotoLibrary';
+import ChatOutlinedIcon from '@mui/icons-material/ChatOutlined';
+import FavoriteRoundedIcon from '@mui/icons-material/FavoriteRounded';
+import FavoriteBorderRoundedIcon from '@mui/icons-material/FavoriteBorderRounded';
+import ShareIcon from '@mui/icons-material/Share';
+import stringToColor from '../../utils/stringToColor';
 
 // ----------------------------------------------------------------------
 
@@ -49,6 +58,28 @@ const CoverImgStyle = styled('img')({
   position: 'absolute',
 });
 
+const CoverTextStyle = styled('div')(({ color }) => ({
+  top: 0,
+  width: '100%',
+  height: '100%',
+  objectFit: 'cover',
+  position: 'absolute',
+  display: 'flex',
+  justifyContent: 'center',
+  alignItems: 'center',
+  textAlign: 'center',
+  backgroundColor: color,
+  // objectFit: 'cover',
+  // padding: 1,
+  // overflow: 'hidden',
+  // display: 'inline-block',
+  position: 'absolute',
+  // justifyContent: 'center',
+  // lineHeight: '1.5',
+  // verticalAlign: 'bottom',
+  // textSizeAdjust: '80%',
+}));
+
 // ----------------------------------------------------------------------
 
 PollVoteCard.propTypes = {
@@ -58,37 +89,22 @@ PollVoteCard.propTypes = {
 
 export default function PollVoteCard({ post, index }) {
   const { cover, title, view, comment, share, author, createdAt } = post;
-  const latestPostLarge = index === 0;
-  const latestPost = index === 1 || index === 2;
 
   const POST_INFO = [
-    { number: comment, icon: messageCircleFill },
-    { number: view, icon: eyeFill },
-    { number: share, icon: shareFill },
+    { number: comment, icon: ChatOutlinedIcon },
+    { number: view, icon: HowToVoteIcon },
+    { number: share, icon: FavoriteBorderIcon },
   ];
 
   return (
-    <Grid item xs={12} sm={latestPostLarge ? 12 : 6} md={latestPostLarge ? 6 : 3}>
+    <Grid item xs={12} sm={6} md={4}>
       <Card sx={{ position: 'relative' }}>
         <CardMediaStyle
           sx={{
-            ...((latestPostLarge || latestPost) && {
-              pt: 'calc(100% * 4 / 3)',
-              '&:after': {
-                top: 0,
-                content: "''",
-                width: '100%',
-                height: '100%',
-                position: 'absolute',
-                bgcolor: (theme) => alpha(theme.palette.grey[900], 0.72),
-              },
-            }),
-            ...(latestPostLarge && {
-              pt: {
-                xs: 'calc(100% * 4 / 3)',
-                sm: 'calc(100% * 3 / 4.66)',
-              },
-            }),
+            pt: {
+              xs: 'calc(100% * 4 / 3)',
+              sm: 'calc(100% * 3 / 4.66)',
+            },
           }}
         >
           <SvgIconStyle
@@ -100,41 +116,31 @@ export default function PollVoteCard({ post, index }) {
               zIndex: 9,
               bottom: -15,
               position: 'absolute',
-              ...((latestPostLarge || latestPost) && { display: 'none' }),
             }}
           />
-          <AvatarStyle
-            alt={author.name}
-            src={author.avatarUrl}
-            sx={{
-              ...((latestPostLarge || latestPost) && {
-                zIndex: 9,
-                top: 24,
-                left: 24,
-                width: 40,
-                height: 40,
-              }),
-            }}
-          />
-
-          <CoverImgStyle alt={title} src={cover} sx={{ backgroundColor: 'blue' }} />
+          <AvatarStyle alt={author.name} src={author.avatarUrl} />
+          {false ? (
+            <CoverImgStyle
+              alt={title}
+              src={cover}
+              sx={{ backgroundColor: 'gray', textAlign: 'center' }}
+            />
+          ) : (
+            <CoverTextStyle color={stringToColor(title)}>
+              <Typography variant="subtitle2" color="white" px={2}>
+                {title}
+              </Typography>
+            </CoverTextStyle>
+          )}
         </CardMediaStyle>
 
-        <CardContent
-          sx={{
-            pt: 4,
-            ...((latestPostLarge || latestPost) && {
-              bottom: 0,
-              width: '100%',
-              position: 'absolute',
-            }),
-          }}
-        >
+        <CardContent sx={{ pt: 4 }}>
           <Typography
             gutterBottom
             variant="caption"
             sx={{ color: 'text.disabled', display: 'block' }}
           >
+            투표시작 2020-12-23
             {/* {fDate(createdAt)} */}
           </Typography>
 
@@ -144,17 +150,12 @@ export default function PollVoteCard({ post, index }) {
             variant="subtitle2"
             underline="hover"
             component={RouterLink}
-            sx={{
-              ...(latestPostLarge && { typography: 'h5', height: 60 }),
-              ...((latestPostLarge || latestPost) && {
-                color: 'common.white',
-              }),
-            }}
           >
             {title}
           </TitleStyle>
 
-          <InfoStyle>
+          <InfoStyle sx={{ width: '100%' }}>
+            {/* <Button sx={{ mr: 3 }}>결과보기</Button> */}
             {POST_INFO.map((info, index) => (
               <Box
                 key={index}
@@ -162,13 +163,10 @@ export default function PollVoteCard({ post, index }) {
                   display: 'flex',
                   alignItems: 'center',
                   ml: index === 0 ? 0 : 1.5,
-                  ...((latestPostLarge || latestPost) && {
-                    color: 'grey.500',
-                  }),
                 }}
               >
-                <Box component={Icon} icon={info.icon} sx={{ width: 16, height: 16, mr: 0.5 }} />
-                {/* <Typography variant="caption">{fShortenNumber(info.number)}</Typography> */}
+                <Box component={info.icon} sx={{ width: 16, height: 16, mr: 0.5 }} />
+                <Typography variant="caption">{info.number}</Typography>
               </Box>
             ))}
           </InfoStyle>
