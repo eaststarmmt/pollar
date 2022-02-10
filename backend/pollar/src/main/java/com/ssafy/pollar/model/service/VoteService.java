@@ -20,4 +20,9 @@ public interface VoteService {
     void userVoteSelection(String userId, Long selectionId)throws Exception;
     void cancelUserVoteSelection(String userId, Long selectionId)throws Exception;
     List<ParticipateDto> getVoteUserList(Long voteId)throws Exception;
+    List<VoteDto> getUserMadeVoteList(String userId)throws Exception;
+    long getUserMadeVoteCount(String userId)throws Exception;
+    List<VoteDto> getUserParticipateVoteList(String userId)throws Exception;
+    long getUserParticipateVoteCount(String userId)throws Exception;
+    List<VoteDto> getUserLikeVoteList(String userId)throws Exception;
 }

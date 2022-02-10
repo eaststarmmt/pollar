@@ -8,6 +8,7 @@ import com.ssafy.pollar.model.service.NotificationService;
 import com.ssafy.pollar.model.service.VoteService;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
+import io.swagger.models.auth.In;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -76,14 +77,14 @@ public class VoteController {
     }
 
     @ApiOperation(value="좋아요 개수 반환")
-    @GetMapping("like/{voteId}")
+    @GetMapping("/{voteId}/vlike")
     public ResponseEntity<Integer> countLike(@PathVariable @ApiParam(value = "피드 id") Long voteId)throws Exception{
 
         return new ResponseEntity<>(voteService.countLike(voteId),HttpStatus.OK);
     }
 
     @ApiOperation(value="좋아요 id 리스트 반환")
-    @GetMapping("likelist/{voteId}")
+    @GetMapping("/{voteId}/vlikelist")
     public ResponseEntity<List<String> > getLikeList(@PathVariable @ApiParam(value = "피드 id") Long voteId)throws Exception{
 
         return new ResponseEntity<>(voteService.getLikeList(voteId),HttpStatus.OK);
@@ -111,9 +112,45 @@ public class VoteController {
     }
 
     @ApiOperation(value = "투표에서 누가 어디에 투표했는지 리스트")
-    @GetMapping("{voteId}/parlist")
+    @GetMapping("{voteId}/vparlist")
     public ResponseEntity<List<ParticipateDto>> getVoteUserList(@PathVariable @ApiParam(value = "투표아이디") Long voteId)throws Exception{
         List<ParticipateDto> list = voteService.getVoteUserList(voteId);
         return new ResponseEntity<>(list,HttpStatus.OK);
     }
+
+    @ApiOperation(value = "유저가 만든 투표리스트")
+    @GetMapping("{userId}/uvotelist")
+    public ResponseEntity<List<VoteDto>> getUserMadeVoteList(@PathVariable @ApiParam(value = "유저 아이디") String userId)throws Exception{
+
+        return new ResponseEntity<>(voteService.getUserMadeVoteList(userId),HttpStatus.OK);
+    }
+
+    @ApiOperation(value = "유저가 만든 투표 개수")
+    @GetMapping("{userId}/uvotecount")
+    public ResponseEntity<Long> getUserMadeVoteCount(@PathVariable @ApiParam(value = "유저 아이디") String userId)throws Exception{
+
+        return new ResponseEntity<>(voteService.getUserMadeVoteCount(userId),HttpStatus.OK);
+    }
+
+    @ApiOperation(value = "유저가 참여한 투표 리스트")
+    @GetMapping("{userId}/uparlist")
+    public ResponseEntity<List<VoteDto>> getUserParticipateVoteList(@PathVariable @ApiParam(value = "유저 아이디") String userId)throws Exception{
+
+        return new ResponseEntity<>(voteService.getUserParticipateVoteList(userId),HttpStatus.OK);
+    }
+
+    @ApiOperation(value = "유저가 참여한 투표 개수")
+    @GetMapping("{userId}/uparcount")
+    public ResponseEntity<Long> getUserParticipateVoteCount(@PathVariable @ApiParam(value = "유저 아이디") String userId)throws Exception{
+
+        return new ResponseEntity<>(voteService.getUserParticipateVoteCount(userId),HttpStatus.OK);
+    }
+
+    @ApiOperation(value = "유저가 좋아요한 투표 리스트")
+    @GetMapping("{userId}/ulikelist")
+    public ResponseEntity<List<VoteDto>> getUserLikeVoteList(@PathVariable @ApiParam(value = "유저 아이디") String userId)throws Exception{
+
+        return new ResponseEntity<>(voteService.getUserLikeVoteList(userId),HttpStatus.OK);
+    }
+
 }

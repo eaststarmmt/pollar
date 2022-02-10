@@ -181,6 +181,7 @@ public class VoteServiceImpl implements VoteService {
 
         List<VoteSelect> selectList = voteSelectRepository.getAllByVoteSelect(voteRepository.findById(voteId).get());
 
+
         for (VoteSelect select: selectList) {
             List<User> userList = voteParticipateRepository.getUserList(select);
             for (User user :userList) {
@@ -193,6 +194,53 @@ public class VoteServiceImpl implements VoteService {
             }
         }
 
+        return dtoList;
+    }
+
+    @Override
+    public List<VoteDto> getUserMadeVoteList(String userId) throws Exception {
+        List<Vote> entityList = voteRepository.findAllByAuthor(userRepository.findByUserId(userId).get());
+        List<VoteDto> dtoList = new ArrayList<>();
+
+        for (Vote entity: entityList) {
+            VoteDto dto = new VoteDto(entity);
+            dtoList.add(dto);
+        }
+        return dtoList;
+    }
+
+    @Override
+    public long getUserMadeVoteCount(String userId) throws Exception {
+        return voteRepository.countAllByAuthor(userRepository.findByUserId(userId).get());
+    }
+
+    @Override
+    public List<VoteDto> getUserParticipateVoteList(String userId) throws Exception {
+        List<Vote> entityList = voteRepository.getUserParticipateVoteList(userId);
+        List<VoteDto> dtoList = new ArrayList<>();
+
+        for (Vote entity: entityList) {
+            VoteDto dto = new VoteDto(entity);
+            dtoList.add(dto);
+        }
+        return dtoList;
+    }
+
+    @Override
+    public long getUserParticipateVoteCount(String userId) throws Exception {
+        List<Vote> entityList = voteRepository.getUserParticipateVoteList(userId);
+        return entityList.size();
+    }
+
+    @Override
+    public List<VoteDto> getUserLikeVoteList(String userId) throws Exception {
+        List<Vote> entityList = voteRepository.getUserLikeVoteList(userId);
+        List<VoteDto> dtoList = new ArrayList<>();
+
+        for (Vote entity: entityList) {
+            VoteDto dto = new VoteDto(entity);
+            dtoList.add(dto);
+        }
         return dtoList;
     }
 
