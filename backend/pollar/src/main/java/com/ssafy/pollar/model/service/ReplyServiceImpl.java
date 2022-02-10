@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -47,5 +48,11 @@ public class ReplyServiceImpl implements ReplyService {
         }
 
         return dtoList;
+    }
+
+    @Override
+    public void delete(Long replyId) throws Exception {   // 해당 댓글의 아이디를 이용해서 댓글 삭제
+        Optional<Reply> reply = replyRepository.findById(replyId); 
+        replyRepository.delete(reply.get());
     }
 }

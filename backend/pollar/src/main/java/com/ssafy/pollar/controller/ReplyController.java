@@ -26,9 +26,17 @@ public class ReplyController {
         replyService.create(replyDto);
         return new ResponseEntity<String>(SUCCESS, HttpStatus.OK);  // status 200과 success라는 문자열을 반환
     }
+
     @ApiOperation(value = "댓글 목록", notes = "해당 게시글의 모든 댓글 정보를 반환", response = List.class)
     @GetMapping("/{voteId}")
     public ResponseEntity<List<ReplyDto>> getReplies(@PathVariable("voteId") @ApiParam(value = "댓글을 얻기 위한 투표의 아이디", required = true) Long voteId) throws Exception {
         return new ResponseEntity<List<ReplyDto>>(replyService.getReplies(voteId), HttpStatus.OK);
+    }
+
+    @ApiOperation(value = "댓글 삭제", notes = "해당 댓글을 삭제한다.")
+    @DeleteMapping("/{replyId}")
+    public ResponseEntity<String> deleteReply(@PathVariable("replyId") @ApiParam(value = "댓글 아이디", required = true) Long replyId) throws Exception {
+        replyService.delete(replyId);
+        return new ResponseEntity<String>(SUCCESS, HttpStatus.OK);
     }
 }
