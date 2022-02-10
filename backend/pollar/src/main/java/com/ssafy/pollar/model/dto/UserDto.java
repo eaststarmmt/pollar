@@ -42,5 +42,9 @@ public class UserDto {
         this.userId = user.getUserId();
         this.userNickname = user.getUserNickname();
         this.userProfilePhoto = user.getUserProfilePhoto();
+        this.userEmail = user.getUserEmail();
+        this.userBirthday = user.getUserBirthday();
+        this.userGender = user.getUserGender();
+        this.userProfilePhoto = user.getUserProfilePhoto();
     }
 }

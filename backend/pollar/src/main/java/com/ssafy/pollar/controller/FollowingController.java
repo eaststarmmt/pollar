@@ -69,9 +69,9 @@ public class FollowingController {
     // follower 유저들을 통신하는기능
     @ApiOperation(value = "팔로워 목록을 확인")
     @GetMapping("/followerlist")
-    public ResponseEntity<Map<String,List>> followerList(@RequestParam String userId) throws Exception {
+    public ResponseEntity<Map<String,List>> followerList(@RequestParam String logInUserId,@RequestParam String profileUserId) throws Exception {
         Map<String,List> resultMap = new HashMap<>();
-        List<FollowingDto> followerList = followingService.followerList(userId);
+        List<FollowingDto> followerList = followingService.followerList(logInUserId,profileUserId);
         resultMap.put("followerList",followerList);
         return new ResponseEntity<>(resultMap,HttpStatus.OK);
     }
@@ -79,9 +79,9 @@ public class FollowingController {
     // followee 유저들을 통신하는 기능
     @ApiOperation(value = "팔로잉 목록을 확인")
     @GetMapping("/followinglist")
-    public ResponseEntity<Map<String,List>> followeeList(@RequestParam String userId) throws Exception {
+    public ResponseEntity<Map<String,List>> followeeList(@RequestParam String logInUserId,@RequestParam String profileUserId) throws Exception {
         Map<String,List> resultMap = new HashMap<>();
-        List<FollowingDto> followingList = followingService.followingList(userId);
+        List<FollowingDto> followingList = followingService.followingList(logInUserId,profileUserId);
         resultMap.put("followingList",followingList);
         return new ResponseEntity<>(resultMap,HttpStatus.OK);
     }

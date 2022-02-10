@@ -1,9 +1,18 @@
 package com.ssafy.pollar.domain.entity;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+
 import javax.persistence.*;
 import java.time.LocalDateTime;
 
 @Entity
+@Getter
+@RequiredArgsConstructor
+@AllArgsConstructor
+@Builder
 public class Reply {
 
     @Id

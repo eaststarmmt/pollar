@@ -37,7 +37,7 @@ public class VoteDto {
     private String voteName;
     @ApiModelProperty(position = 3, value = "피드 내용", example = "여자친구가 민초단인데 계속 만나야 될까요?")
     private String voteContent;
-    @ApiModelProperty(position = 4, value = "투표 타입")
+    @ApiModelProperty(position = 4, value = "투표 타입, true: 글, false: 사진")
     private Boolean voteType;
     @ApiModelProperty(position = 5, value = "투표 마감 시간.")
     private LocalDateTime voteExpirationTime;

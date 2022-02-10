@@ -7,29 +7,43 @@ import com.ssafy.pollar.model.dto.UserDto;
 import com.ssafy.pollar.model.repository.CategoryRepository;
 import com.ssafy.pollar.model.repository.UserRepository;
 import com.ssafy.pollar.model.repository.UserCategoryRepository;
+import com.ssafy.pollar.util.S3Uploader;
 import lombok.RequiredArgsConstructor;
+import org.apache.tomcat.util.http.fileupload.FileUpload;
+import org.apache.tomcat.util.http.fileupload.FileUtils;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.transaction.annotation.Transactional;
 
 
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.nio.file.StandardOpenOption;
 import java.util.Optional;
 import java.util.UUID;
 
-@Service
 @RequiredArgsConstructor
+@Service
 public class UserServiceImpl implements UserService{
 
     private final UserRepository userRepository;
     private final UserCategoryRepository userCategoryRepository;
     private final CategoryRepository categoryRepository;
 
-    @Value("${file.path}")
-    private String uploadFolder;
+    private final S3Uploader s3Uploader;
+
+//    @Value("${custom.path.upload-images}")
+//    @Value("${file.path}")
+//    private String uploadFolder;
 
     @Override
     public void signup(UserDto userDto) throws Exception {
@@ -127,25 +141,18 @@ public class UserServiceImpl implements UserService{
     @Override
     public void modifyProfile(UserDto userDto, MultipartFile userProfilePhoto) throws Exception {
         UUID uuid = UUID.randomUUID();
-        System.out.println("-----------------------------------");
-        System.out.println(userProfilePhoto);
-        String imageFileName = uuid + "_" + userProfilePhoto.getOriginalFilename();
-        System.out.println("-----------------------------------");
-        System.out.println("이미지 파일 이름: " + imageFileName);
 
-        Path imageFilePath = Paths.get(uploadFolder + imageFileName);
 
-//        String user = userRepository.findByUserId(userId).get().getUid();
-//        String uid = userDto.getUserId().substring(1);
-//        System.out.println(uid);
-
-//        User user = userRepository.findByUserId(userId).get();
-//        Optional<User> user = userRepository.findByUserId(userDto.getUserId());
         User usercur = userRepository.findByUserId(userDto.getUserId()).get();
         // 통신 I/O
         try {
-            Files.write(imageFilePath, userProfilePhoto.getBytes());
-            System.out.println("사진은 저장 완료");
+//            Files.write(imageFilePath, userProfilePhoto.getBytes());
+//            s3Uploader.upload(userProfilePhoto, "profile");
+            String imgPath = s3Uploader.upload(userProfilePhoto, "profile");
+            System.out.println("==============================================");
+            System.out.println("저장된 s3 경로 : " + imgPath);
+            System.out.println("==============================================");
+            // db의 id 컬럼값으로 파일을 가져옴
             User user = User.builder()
                     .uid(usercur.getUid())
                     .userId(usercur.getUserId())
@@ -154,15 +161,28 @@ public class UserServiceImpl implements UserService{
                     .userEmail((usercur.getUserEmail()))
                     .userBirthday((usercur.getUserBirthday()))
                     .userGender((usercur.getUserGender()))
-                    .userProfilePhoto(String.valueOf(imageFilePath))
+                    .userProfilePhoto(imgPath)
                     .build();
 
-            System.out.println("저장전?");
             userRepository.save(user);
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
+
+    private static void ListFile( String strDirPath ) {
+        File path = new File( strDirPath );
+        File[] fList = path.listFiles();
+        for( int i = 0; i < fList.length; i++ ) {
+            if( fList[i].isFile() ) {
+                System.out.println( fList[i].getPath() );
+                // 파일의 FullPath 출력
+            } else if( fList[i].isDirectory() ) {
+                ListFile( fList[i].getPath() ); // 재귀함수 호출
+            }
+        }
+    }
+
 
     @Override
     public String findId(String userEmail) throws Exception {

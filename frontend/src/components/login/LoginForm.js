@@ -5,6 +5,8 @@ import { useFormik, Form, FormikProvider } from 'formik';
 import { Icon } from '@iconify/react';
 import eyeFill from '@iconify/icons-eva/eye-fill';
 import eyeOffFill from '@iconify/icons-eva/eye-off-fill';
+import CloseIcon from '@mui/icons-material/Close';
+
 // material
 import {
   Link,
@@ -14,6 +16,9 @@ import {
   IconButton,
   InputAdornment,
   FormControlLabel,
+  Collapse,
+  Alert,
+  Typography,
 } from '@mui/material';
 import { LoadingButton } from '@mui/lab';
 // api
@@ -26,6 +31,8 @@ import { loggedUserState } from '../../atoms/atoms';
 export default function LoginForm() {
   const navigate = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
+  // 로그인 실패 시 Alert
+  const [openAlert, setOpenAlert] = useState(false);
 
   const setLoggedUserState = useSetRecoilState(loggedUserState);
 
@@ -42,10 +49,7 @@ export default function LoginForm() {
     },
     validationSchema: LoginSchema,
     onSubmit: async () => {
-      // alert(JSON.stringify(values, null, 2));
-      // await login(values);
       await handleLogin(values);
-      // navigate('/', { replace: true });
     },
   });
 
@@ -68,81 +72,109 @@ export default function LoginForm() {
         //// navigate('/');
         navigate('/', { replace: true });
       } else {
-        // todo 에러처리들
-        alert('로그인에 실패하였습니다');
+        setOpenAlert(true);
       }
     } catch (error) {
-      // todo 에러처리들
-      alert('로그인에 실패하였습니다');
+      setOpenAlert(true);
     }
   };
 
   return (
-    <FormikProvider value={formik}>
-      <Form autoComplete="off" noValidate onSubmit={handleSubmit}>
-        <Stack spacing={3}>
-          <TextField
-            fullWidth
-            autoComplete="username"
-            type="userId"
-            label="Username"
-            {...getFieldProps('userId')}
-            error={Boolean(touched.userId && errors.userId)}
-            helperText={touched.userId && errors.userId}
-            value={formik.values.userId}
-            onChange={formik.handleChange}
-            // onChange={(userId) => {
-            //   setUserId(userId.target.value);
-            // }}
-          />
-
-          <TextField
-            fullWidth
-            autoComplete="current-password"
-            type={showPassword ? 'text' : 'password'}
-            label="Password"
-            {...getFieldProps('password')}
-            InputProps={{
-              endAdornment: (
-                <InputAdornment position="end">
-                  <IconButton onClick={handleShowPassword} edge="end">
-                    <Icon icon={showPassword ? eyeFill : eyeOffFill} />
-                  </IconButton>
-                </InputAdornment>
-              ),
-            }}
-            error={Boolean(touched.password && errors.password)}
-            helperText={touched.password && errors.password}
-            value={formik.values.password}
-            onChange={formik.handleChange}
-
-            // onChange={(password) => {
-            //   setPassword(password.target.value);
-            // }}
-          />
-        </Stack>
-
-        <Stack direction="row" alignItems="center" justifyContent="space-between" sx={{ my: 2 }}>
-          <FormControlLabel
-            control={<Checkbox {...getFieldProps('remember')} checked={values.remember} />}
-            label="Remember me"
-          />
-
-          <Link component={RouterLink} variant="subtitle2" to="#">
-            Forgot password?
-          </Link>
-        </Stack>
-
-        <LoadingButton
-          fullWidth
-          size="large"
-          type="submit"
-          variant="contained"
-          loading={isSubmitting}
+    <>
+      <Collapse in={openAlert}>
+        <Alert
+          severity="error"
+          action={
+            <IconButton
+              aria-label="close"
+              color="inherit"
+              size="small"
+              onClick={() => {
+                setOpenAlert(false);
+              }}
+            >
+              <CloseIcon fontSize="inherit" />
+            </IconButton>
+          }
+          variant="filled"
+          sx={{ mb: 2 }}
         >
-          Login
-        </LoadingButton>
-      </Form>
-    </FormikProvider>
+          로그인 실패! 입력정보를 확인하세요
+        </Alert>
+      </Collapse>
+      <FormikProvider value={formik}>
+        <Form autoComplete="off" noValidate onSubmit={handleSubmit}>
+          <Stack spacing={2}>
+            <TextField
+              fullWidth
+              autoComplete="username"
+              type="userId"
+              label="Username"
+              {...getFieldProps('userId')}
+              error={Boolean(touched.userId && errors.userId)}
+              helperText={touched.userId && errors.userId}
+              value={formik.values.userId}
+              onChange={formik.handleChange}
+              // onChange={(userId) => {
+              //   setUserId(userId.target.value);
+              // }}
+            />
+
+            <TextField
+              fullWidth
+              autoComplete="current-password"
+              type={showPassword ? 'text' : 'password'}
+              label="Password"
+              {...getFieldProps('password')}
+              InputProps={{
+                endAdornment: (
+                  <InputAdornment position="end">
+                    <IconButton onClick={handleShowPassword} edge="end">
+                      <Icon icon={showPassword ? eyeFill : eyeOffFill} />
+                    </IconButton>
+                  </InputAdornment>
+                ),
+              }}
+              error={Boolean(touched.password && errors.password)}
+              helperText={touched.password && errors.password}
+              value={formik.values.password}
+              onChange={formik.handleChange}
+
+              // onChange={(password) => {
+              //   setPassword(password.target.value);
+              // }}
+            />
+          </Stack>
+          <LoadingButton
+            fullWidth
+            size="large"
+            type="submit"
+            variant="contained"
+            loading={isSubmitting}
+            sx={{ mt: 4, mb: 1 }}
+          >
+            Login
+          </LoadingButton>
+
+          <Stack direction="row" alignItems="center" justifyContent="space-between">
+            {/* <FormControlLabel
+              control={<Checkbox {...getFieldProps('remember')} checked={values.remember} />}
+              label="Remember me"
+            /> */}
+            <Typography variant="body2" color="text.secondary">
+              Forgot{' '}
+              <Link component={RouterLink} variant="subtitle2" to="#">
+                username
+              </Link>{' '}
+              /{' '}
+              <Link component={RouterLink} variant="subtitle2" to="#">
+                password
+              </Link>
+              ?
+            </Typography>
+          </Stack>
+        </Form>
+      </FormikProvider>
+    </>
   );
 }

@@ -1,9 +1,8 @@
 import { Icon } from '@iconify/react';
-import { useRef, useState } from 'react';
-import homeFill from '@iconify/icons-eva/home-fill';
+import { useEffect, useRef, useState } from 'react';
 import personFill from '@iconify/icons-eva/person-fill';
 import settings2Fill from '@iconify/icons-eva/settings-2-fill';
-import { Link as RouterLink } from 'react-router-dom';
+import { Link as RouterLink, useNavigate } from 'react-router-dom';
 // material
 import { alpha, styled } from '@mui/material/styles';
 import {
@@ -18,8 +17,8 @@ import {
 } from '@mui/material';
 // components
 import MenuPopover from '../../components/MenuPopover';
-//
-import account from '../../_mocks_/account';
+// mock data
+//// import account from '../../_mocks_/account';
 // Recoil
 import { useResetRecoilState } from 'recoil';
 import { loggedUserState } from '../../atoms/atoms';
@@ -71,9 +70,10 @@ const StyledBadge = styled(Badge)(({ theme }) => ({
 
 // ----------------------------------------------------------------------
 
-export default function AccountPopover() {
+export default function AccountPopover({ account, setLoggedUser }) {
   const anchorRef = useRef(null);
   const [open, setOpen] = useState(false);
+  const navigate = useNavigate();
 
   // 로그아웃 시 Recoil atom 초기화
   const resetLoggedUser = useResetRecoilState(loggedUserState);
@@ -91,6 +91,10 @@ export default function AccountPopover() {
     resetLoggedUser();
     // remove JWT
     logout();
+    // redirect to 'HomePage'
+    navigate('/', { replace: true });
+    setOpen(false);
+    setLoggedUser();
   };
 
   return (
@@ -120,7 +124,8 @@ export default function AccountPopover() {
           anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
           variant="dot"
         >
-          <Avatar src={account.photoURL} alt="PhotoURL" />
+          {/* //todo */}
+          <Avatar src={account.userProfilePhoto} alt="PhotoURL" />
         </StyledBadge>
       </IconButton>
 
@@ -132,10 +137,10 @@ export default function AccountPopover() {
       >
         <Box sx={{ my: 1.5, px: 2.5 }}>
           <Typography variant="subtitle1" noWrap>
-            {account.username}
+            {account.userNickname}
           </Typography>
           <Typography variant="body2" sx={{ color: 'text.secondary' }} noWrap>
-            {account.nickname}
+            @{account.userId}
           </Typography>
         </Box>
 

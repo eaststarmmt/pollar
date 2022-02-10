@@ -4,6 +4,9 @@ import Container from '@mui/material/Container';
 import { Box, Icon, Tab, Typography } from '@mui/material';
 import { useState } from 'react';
 import { TabContext, TabList, TabPanel } from '@mui/lab';
+import UploadsTabPanel from './UploadsTabPanel';
+import VotesTabPanel from './VotesTabPanel';
+import LikesTabPanel from './LikesTabPanel';
 
 const style = {
   backgroundColor: '#fff',
@@ -21,7 +24,7 @@ const style = {
   boxShadow: 10,
   borderBottomLeftRadius: 20,
   borderBottomRightRadius: 20,
-  px: 10,
+  px: 2,
   py: 2,
 };
 
@@ -47,39 +50,15 @@ function Posts() {
               <Tab label="Likes" value="3" />
             </TabList>
           </Box>
-          <Box sx={style}>
-            <TabPanel value="1">Uploaded</TabPanel>
-            <TabPanel value="2">Voted</TabPanel>
+          <Box overflow="auto" sx={style}>
+            <TabPanel value="1">
+              <UploadsTabPanel />
+            </TabPanel>
+            <TabPanel value="2">
+              <VotesTabPanel />
+            </TabPanel>
             <TabPanel value="3">
-              <Typography variant="body1" fontWeight="light" color="text">
-                Decisions: If you can&apos;t decide, the answer is no. If two equally difficult
-                paths, choose the one more painful in the short term (pain avoidance is creating an
-                illusion of equality). Choose the path that leaves you more equanimous. <br />
-                <Typography
-                  component="a"
-                  href="#"
-                  variant="body1"
-                  fontWeight="light"
-                  color="info"
-                  mt={3}
-                  sx={{
-                    width: 'max-content',
-                    display: 'flex',
-                    alignItems: 'center',
-
-                    '& .material-icons-round': {
-                      transform: `translateX(3px)`,
-                      transition: 'transform 0.2s cubic-bezier(0.34, 1.61, 0.7, 1.3)',
-                    },
-
-                    '&:hover .material-icons-round, &:focus .material-icons-round': {
-                      transform: `translateX(6px)`,
-                    },
-                  }}
-                >
-                  More about me <Icon sx={{ fontWeight: 'bold' }}>arrow_forward</Icon>
-                </Typography>
-              </Typography>
+              <LikesTabPanel />
             </TabPanel>
           </Box>
         </TabContext>

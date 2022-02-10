@@ -44,11 +44,11 @@ public class ProfileController {
             resultMap.put("userId",userDto.getUserId());
             resultMap.put("userNickname",userDto.getUserNickname());
 
-            List<FollowingDto> followerIdlist = followingService.followerList(profileDto.getProfileUserId());
-            List<FollowingDto> followingIdlist = followingService.followingList(profileDto.getProfileUserId());
+            List<FollowingDto> followerIdList = followingService.followerList(profileDto.getLoginUserId(), profileDto.getProfileUserId());
+            List<FollowingDto> followingIdList = followingService.followingList(profileDto.getLoginUserId(), profileDto.getProfileUserId());
 
-            resultMap.put("followerCount",followerIdlist.size());
-            resultMap.put("followingCount",followingIdlist.size());
+            resultMap.put("followerCount",followerIdList.size());
+            resultMap.put("followingCount",followingIdList.size());
             resultMap.put("interests",interests);
 
             Boolean isFollow = followingService.isFollow(profileDto.getLoginUserId(),profileDto.getProfileUserId());

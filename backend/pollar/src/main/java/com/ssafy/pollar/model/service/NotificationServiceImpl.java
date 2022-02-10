@@ -1,8 +1,11 @@
 package com.ssafy.pollar.model.service;
 
 import com.ssafy.pollar.domain.entity.Notification;
+import com.ssafy.pollar.domain.entity.User;
 import com.ssafy.pollar.model.dto.FollowingDto;
 import com.ssafy.pollar.model.dto.NotificationDto;
+import com.ssafy.pollar.model.dto.ParticipateDto;
+import com.ssafy.pollar.model.dto.VoteDto;
 import com.ssafy.pollar.model.repository.NotificationRepository;
 import com.ssafy.pollar.model.repository.UserRepository;
 import com.ssafy.pollar.model.repository.VoteRepository;
@@ -19,21 +22,22 @@ import java.util.List;
 public class NotificationServiceImpl implements NotificationService{
 
     private final FollowingService followingService;
+    private final VoteService voteService;
     private final NotificationRepository notificationRepository;
     private final UserRepository userRepository;
     private final VoteRepository voteRepository;
 
     @Override
     public void feedCreateNotification(String sendId,long voteId) throws Exception { // voteId, sendId
-        List<FollowingDto> followingDtoList = followingService.followerList(sendId);
+        List<FollowingDto> followingDtoList = followingService.followerList(sendId, sendId);
         Notification notification = null;
-        for(int i = 0 ;i < followingDtoList.size() ; i++){
+        for(int i = 0 ; i < followingDtoList.size() ; i++){
             notification = Notification.builder()
                     .notificationType(0)
                     .notificationContents("")
                     .notificationRead(false)
                     .sendUserId(userRepository.findByUserId(sendId).get())
-                    .receiveUserId(userRepository.findByUserId(followingDtoList.get(i).getFollowerId()).get())
+                    .receiveUserId(userRepository.findByUserId(followingDtoList.get(i).getFollowingId()).get())
                     .voteId(voteRepository.getById(voteId))
                     .build();
             notificationRepository.save(notification);
@@ -41,16 +45,32 @@ public class NotificationServiceImpl implements NotificationService{
     }
 
     @Override
-    public void feedFinishNotification(NotificationDto notificationDto) throws Exception{
-        // 투표 참여자를 알아야 확인가능
+    public void feedFinishNotification(long voteId) throws Exception{
+        List<ParticipateDto> userList = voteService.getVoteUserList(voteId);
+        String sendId = voteService.detail(voteId).getAuthor();
+        Notification notification = null;
+        for(int i = 0 ; i < userList.size() ; i++){
+            String comment = voteService.detail(voteId).getVoteName() + "가 종료되었습니다.";
+            notification = Notification.builder()
+                    .notificationType(1)
+                    .notificationContents(comment)
+                    .notificationRead(false)
+                    .sendUserId(userRepository.findByUserId(sendId).get())
+                    .receiveUserId(userRepository.findByUserId(userList.get(i).getUserId()).get())
+                    .voteId(voteRepository.getById(voteId))
+                    .build();
+        }
     }
 
     @Override
     public void feedLikeNotification(long voteId, String sendId, String receiveId) throws Exception {
         // voteId, sendId: 좋아요 누른사람, receiveId: 투표 생성자
+        String sendNick = userRepository.findByUserId(sendId).get().getUserNickname();
+        String voteName = voteService.detail(voteId).getVoteName();
+        String comment = sendNick + "가 "+ voteName + "에 좋아요를 누르셧습니다.";
         Notification notification = Notification.builder()
                 .notificationType(2)
-                .notificationContents("")
+                .notificationContents(comment)
                 .notificationRead(false)
                 .sendUserId(userRepository.findByUserId(sendId).get())
                 .receiveUserId(userRepository.findByUserId(receiveId).get())
@@ -66,9 +86,12 @@ public class NotificationServiceImpl implements NotificationService{
 
     @Override
     public void followNotification(String sendId,String receiveId) throws Exception{
+        String sendNick = userRepository.findByUserId(sendId).get().getUserNickname();
+        String receiveNick = userRepository.findByUserId(receiveId).get().getUserNickname();
+        String comment = sendNick + "가 팔로우 요청 하였습니다.";
         Notification notification = Notification.builder()
                 .notificationType(4)
-                .notificationContents("")
+                .notificationContents(comment)
                 .notificationRead(false)
                 .sendUserId(userRepository.findByUserId(sendId).get())
                 .receiveUserId(userRepository.findByUserId(receiveId).get())

@@ -1,4 +1,5 @@
-import { instance, instanceWithAuth } from '../../services/axios';
+import { instance, instanceWithAuth, fileInstance } from '../../services/axios';
+import { getLoggedUserId } from '../../utils/loggedUser';
 
 // 공통되는 경로는 다음과 같이 별도로 정의해둠? (is this nesassary)
 const USER = '/user/';
@@ -53,4 +54,19 @@ export const emailToken = async (token) => {
       }
   });
   return response.data;
+};
+
+
+
+/* 회원정보 수정 */
+
+
+// 회원 정보 얻어오기
+
+
+// 프로필 이미지 수정
+// ProfileApi 에서 기본 유저 정보 호출해서 사용하기
+export const modifyProfilePhoto = async(formData) => {
+  const response = await fileInstance.put(USER + 'photo', formData);
+  console.log(response);
 };

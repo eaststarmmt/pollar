@@ -6,6 +6,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 @SpringBootApplication
 public class PollarApplication {
 
+
 	public static void main(String[] args) {
 		
 		SpringApplication.run(PollarApplication.class, args);
