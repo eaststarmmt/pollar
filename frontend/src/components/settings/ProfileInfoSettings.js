@@ -77,12 +77,10 @@ export default function RegisterForm() {
 
   return (
     <>
-      {/* <label htmlFor="photo-upload" className="custom-file-upload fas">
-        <div className="img-wrap img-upload">
-          <img for="photo-upload" src={tododo} />
-        </div>
-        <input id="photo-upload" type="file" onChange={onChange} />
-      </label> */}
+      한주님 작업공간: 프로필사진 / 닉네임 / 비밀번호 2가지만 변경가능
+      <br /> - 비밀번호 확인 방식?
+      <br /> - 회원탈퇴 추가
+      <br /> - 아래코드 다 삭제하고 하시면 됩니다! (예전 회원가입코드에서 단순 복붙해온 것)
       <FormikProvider value={formik}>
         {/* <ImageUploadButton /> */}
         <Form autoComplete="off" noValidate onSubmit={handleSubmit}>

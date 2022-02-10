@@ -13,14 +13,18 @@ import TabUnstyled, { tabUnstyledClasses } from '@mui/base/TabUnstyled';
 import { useParams } from 'react-router-dom';
 import NeumorphicPaper from '../common/NeumorphicPaper';
 
+import posts from '../../_mocks_/blog';
+import PollDetailCard from './PollDetailCard';
+
 const blue = {
   // 50: '#b6b6d7',
   50: '#ffffff',
   100: '#F9FAFB',
   200: '#F4F6F8',
   300: '#DFE3E8',
-  400: '#C4CDD5',
-  500: '#DFE3E8',
+  400: '#C4CDDf',
+  500: '#DFE3Ef',
+  // 500: '#E4EBF5',
   600: '#637381',
   700: '#454F5B',
   800: '#212B36',
@@ -64,7 +68,17 @@ const Tab = styled(TabUnstyled)`
 //   outline: 2px solid ${blue[200]};
 //   outline-offset: 2px;
 // }
+const colors = {
+  primaryLight: '#8abdff',
+  primary: '#6d5dfc',
+  primaryDark: '#5b0eeb',
 
+  white: '#FFFFFF',
+  greyLight1: '#E4EBF5',
+  greyLight2: '#c8d0e7',
+  greyLight3: '#bec8e4',
+  greyDark: '#9baacf',
+};
 const TabsPanel = styled(TabPanelUnstyled)`
   width: 100%;
   font-family: IBM Plex Sans, sans-serif;
@@ -82,6 +96,7 @@ const TabsList = styled(TabsListUnstyled)`
   align-content: space-between;
   margin-left: 16rem;
   margin-right: 16rem;
+  box-shadow: 0.3rem 0.3rem 0.6rem ${colors.greyLight2}, -0.2rem -0.2rem 0.5rem ${colors.white};
 `;
 
 export default function PollListTabs() {
@@ -107,10 +122,31 @@ export default function PollListTabs() {
             <Tab>팔로잉</Tab>
             <Tab>최신순</Tab>
           </TabsList>
-          <NeumorphicPaper sx={{ mt: -3, mx: 10, p: 10, zIndex: 0, height: '70vh' }}>
-            <TabsPanel value={0}>First content</TabsPanel>
-            <TabsPanel value={1}>Second content</TabsPanel>
-            <TabsPanel value={2}>Third content</TabsPanel>
+          <NeumorphicPaper sx={{ mt: -3, mx: 10, pt: 5, px: 10, zIndex: 0, height: '70vh' }}>
+            <TabsPanel value={0}>
+              {/* 업로드한 투표 리스트 */}
+              <Grid container spacing={3}>
+                {posts.map((post, index) => (
+                  <PollDetailCard key={post.id} post={post} index={index} />
+                ))}
+              </Grid>
+            </TabsPanel>
+            <TabsPanel value={1}>
+              {/* 업로드한 투표 리스트 */}
+              <Grid container spacing={3}>
+                {posts.map((post, index) => (
+                  <PollDetailCard key={post.id} post={post} index={index} />
+                ))}
+              </Grid>
+            </TabsPanel>
+            <TabsPanel value={2}>
+              {/* 업로드한 투표 리스트 */}
+              <Grid container spacing={3}>
+                {posts.map((post, index) => (
+                  <PollDetailCard key={post.id} post={post} index={index} />
+                ))}
+              </Grid>
+            </TabsPanel>
           </NeumorphicPaper>
         </TabsUnstyled>
       </Box>

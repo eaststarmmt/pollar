@@ -74,7 +74,6 @@ export default function SettingsVerticalTab() {
         <Tab label="Notification&nbsp;" {...a11yProps(2)} />
       </Tabs>
       <TabPanel value={value} index={0}>
-        한주님 작업공간
         <ProfileInfoSettings />
         {/* <CardProfile /> */}
       </TabPanel>

@@ -24,10 +24,13 @@ const NeumorphicPaper = styled(Paper)(({ theme }) => ({
   borderRadius: '1rem',
   fontSize: '1.4rem',
   paddingLeft: '1.4rem',
+  paddingRight: '1.4rem',
   boxShadow: `${innerShadow}`,
   background: 'none',
   fontFamily: 'inherit',
   color: `${colors.greyDark}`,
+  //? 스크롤 가능하게
+  overflow: 'auto',
   // &::placeholder { color: var(--greyLight-3); }
   // &:focus { outline: none; box-shadow: $shadow; }
 }));

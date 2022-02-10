@@ -12,8 +12,8 @@ import { getLoggedUserId } from '../utils/loggedUser';
 const style = {
   p: 2,
   mx: { xs: 2, lg: 3 },
-  mt: 8,
-  mb: 4,
+  mt: 6,
+  mb: 0,
   backgroundColor: '#fff6',
   // backgroundColor: ({ palette: { white }, functions: { rgba } }) => rgba(white.main, 0.8),
   backdropFilter: 'saturate(200%) blur(30px)',
