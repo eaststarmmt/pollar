@@ -1,5 +1,6 @@
 package com.ssafy.pollar.model.dto;
 
+import com.ssafy.pollar.domain.entity.Reply;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
@@ -28,4 +29,12 @@ public class ReplyDto {
     private LocalDateTime replyCreateTime;
     @ApiModelProperty(value = "대댓글 여부 확인용")
     private long replyDepth;
+
+    public ReplyDto(Reply reply) {
+        this.replyId = reply.getReplyId();
+        this.replyUser = reply.getReplyUser().getUserId();
+        this.voteReply = reply.getVoteReply().getVoteId();
+        this.replyContent = reply.getReplyContent();
+        this.replyCreateTime = reply.getReplyCreateTime();
+    }
 }
