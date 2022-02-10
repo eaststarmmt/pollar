@@ -52,7 +52,22 @@ public class ReplyServiceImpl implements ReplyService {
 
     @Override
     public void delete(Long replyId) throws Exception {   // 해당 댓글의 아이디를 이용해서 댓글 삭제
-        Optional<Reply> reply = replyRepository.findById(replyId); 
+        Optional<Reply> reply = replyRepository.findById(replyId);
         replyRepository.delete(reply.get());
+    }
+
+    @Override
+    public void modify(ReplyDto replyDto) throws Exception {    // 받아온 댓글의 정보의 아이디를 이용하여 댓글 정보 수정
+        Reply reply = replyRepository.findById(replyDto.getReplyId()).get();
+        
+        Reply newReply = Reply.builder()
+                .replyId(reply.getReplyId()) 
+                .replyUser(reply.getReplyUser())
+                .voteReply(reply.getVoteReply())
+                .replyContent(replyDto.getReplyContent())   // 내용만 dto에서 받아옴
+                .replyCreateTime(reply.getReplyCreateTime())
+                .build();
+        
+        replyRepository.save(newReply);     // 변경된 정보 저장
     }
 }

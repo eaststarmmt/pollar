@@ -39,4 +39,11 @@ public class ReplyController {
         replyService.delete(replyId);
         return new ResponseEntity<String>(SUCCESS, HttpStatus.OK);
     }
+
+    @ApiOperation(value = "댓글 수정", notes = "수정할 댓글 정보를 입력한다.")
+    @PutMapping
+    public ResponseEntity<String> modifyReply(@RequestBody @ApiParam(value = "수정할 댓글 정보", required = true) ReplyDto replyDto) throws Exception {
+        replyService.modify(replyDto);
+        return new ResponseEntity<String>(SUCCESS, HttpStatus.OK);
+    }
 }
