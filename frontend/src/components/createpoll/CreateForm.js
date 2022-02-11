@@ -67,23 +67,20 @@ function CreateForm() {
     }
 
     const voteDto = {
-      'author': 'user123',
-      'voteName': vote.voteName,
-      'voteContent': vote.voteContent,
-      'voteType': vote.voteType,
-      'voteExpirationTime': vote.voteExpirationTime,
-      'userAnonymousType': vote.userAnonymousType,
-      'voteAnonymousType': vote.voteAnonymousType,
-      'voteCategories': vote.voteCategories,
-      'voteSelects': tmpList,
+      author: 'user123',
+      voteName: vote.voteName,
+      voteContent: vote.voteContent,
+      voteType: vote.voteType,
+      voteExpirationTime: vote.voteExpirationTime,
+      userAnonymousType: vote.userAnonymousType,
+      voteAnonymousType: vote.voteAnonymousType,
+      voteCategories: vote.voteCategories,
+      voteSelects: tmpList,
     };
 
-    const form = new FormData()
+    const form = new FormData();
 
-    form.append(
-      'voteDto',
-      new Blob([JSON.stringify(voteDto)], { type: 'application/json' })
-    );
+    form.append('voteDto', new Blob([JSON.stringify(voteDto)], { type: 'application/json' }));
 
     if (vote.voteType === 'true') {
       const result = await voteCreate(form);

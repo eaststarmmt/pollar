@@ -26,24 +26,21 @@ function PollTextOptions(props) {
     <>
       {textList &&
         textList.map((item, i) => (
-          <>
-            <TextField
-              paddingBottom={1}
-              key={i}
-              id="vote-list"
-              label={`${i + 1}번 선택지`}
-              required
-              fullWidth
-              placeholder="투표 선택지 입력"
-              onChange={(e) => {
-                setVote({
-                  ...vote,
-                  textList: (textList[i] = e.target.value),
-                });
-                changeList();
-              }}
-            />
-          </>
+          <TextField
+            key={i}
+            id="vote-list"
+            label={`${i + 1}번 선택지`}
+            required
+            fullWidth
+            placeholder="투표 선택지 입력"
+            onChange={(e) => {
+              setVote({
+                ...vote,
+                textList: (textList[i] = e.target.value),
+              });
+              changeList();
+            }}
+          />
         ))}
       <br />
       <br />
