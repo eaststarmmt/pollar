@@ -114,8 +114,8 @@ public class VoteServiceImpl implements VoteService {
     }
 
     @Override
-    public List<VoteDto> getVoteList() throws Exception {
-        List<Vote> list = voteRepository.findByOrderByVoteCreateTimeDesc();
+    public List<VoteDto> getVoteList() throws Exception {       //피드 전체 목록 반환
+        List<Vote> list = voteRepository.findByOrderByVoteCreateTimeDesc(); //생성시간 내림차순으로 정렬 최신순으로
         List<VoteDto> dtoList = new ArrayList<>();
         for (Vote vote: list) {
             VoteDto dto = new VoteDto(vote);
@@ -125,29 +125,29 @@ public class VoteServiceImpl implements VoteService {
     }
 
     @Override
-    public void insertLike(String userId, Long voteId) throws Exception{
+    public void insertLike(String userId, Long voteId) throws Exception{    //좋아요 누르기
         User user = userRepository.findByUserId(userId).get();
         Vote vote = voteRepository.findById(voteId).get();
         voteLikeRepository.save( VoteLike.builder().userVoteLike(user).voteLike(vote).build());
     }
     @Override
-    public void cancelLike(String userId, Long voteId) throws Exception{
+    public void cancelLike(String userId, Long voteId) throws Exception{    //좋아요 취소
         User user = userRepository.findByUserId(userId).get();
         Vote vote = voteRepository.findById(voteId).get();
         voteLikeRepository.delete(voteLikeRepository.findByUserVoteLikesAndVoteLikesByQuery(user,vote).get());
     }
 
     @Override
-    public int countLike(Long voteId) throws Exception{
+    public int countLike(Long voteId) throws Exception{         //투표의 좋아요 수
         return voteLikeRepository.countLike(voteId);
     }
     @Override
-    public List<String> getLikeList(Long voteId)throws Exception{
+    public List<String> getLikeList(Long voteId)throws Exception{   //투표의 좋아요 id 리스트
         return voteLikeRepository.getLikeListByQuery(voteId);
     }
 
     @Override
-    public List<SelectionDto> getVoteSelectionList(Long voteId) throws Exception {
+    public List<SelectionDto> getVoteSelectionList(Long voteId) throws Exception {  //투표의 선택지 리스트
 
         Vote vote = voteRepository.findById(voteId).get();
 
@@ -162,7 +162,7 @@ public class VoteServiceImpl implements VoteService {
     }
 
     @Override
-    public void userVoteSelection(String userId, Long selectionId) throws Exception {
+    public void userVoteSelection(String userId, Long selectionId) throws Exception {   //유저가 선택지에 투표
         VoteParticipate voteParticipate = VoteParticipate.builder()
                 .userPariticipate(userRepository.findByUserId(userId).get())
                 .voteParticipate(voteSelectRepository.findById(selectionId).get())
@@ -171,14 +171,14 @@ public class VoteServiceImpl implements VoteService {
     }
 
     @Override
-    public void cancelUserVoteSelection(String userId, Long selectionId) throws Exception {
+    public void cancelUserVoteSelection(String userId, Long selectionId) throws Exception { //유저 투표 취소
 
         voteParticipateRepository.delete(voteParticipateRepository.findByUserPariticipateAndVoteParticipate(userRepository.findByUserId(userId).get(),voteSelectRepository.findById(selectionId).get()).get());
 
     }
 
     @Override
-    public List<ParticipateDto> getVoteUserList(Long voteId) throws Exception {
+    public List<ParticipateDto> getVoteUserList(Long voteId) throws Exception { // 투표에서 어떤 유저가 어떤 선택지에 투표했는지 리스트
 
         List<ParticipateDto> dtoList = new ArrayList<>();
 
@@ -201,7 +201,7 @@ public class VoteServiceImpl implements VoteService {
     }
 
     @Override
-    public List<VoteDto> getUserMadeVoteList(String userId) throws Exception {
+    public List<VoteDto> getUserMadeVoteList(String userId) throws Exception {      // 유저가 만든 투표리스트
         List<Vote> entityList = voteRepository.findAllByAuthor(userRepository.findByUserId(userId).get());
         List<VoteDto> dtoList = new ArrayList<>();
 
@@ -213,12 +213,12 @@ public class VoteServiceImpl implements VoteService {
     }
 
     @Override
-    public long getUserMadeVoteCount(String userId) throws Exception {
+    public long getUserMadeVoteCount(String userId) throws Exception {      //유저가 만든 투표 개수
         return voteRepository.countAllByAuthor(userRepository.findByUserId(userId).get());
     }
 
     @Override
-    public List<VoteDto> getUserParticipateVoteList(String userId) throws Exception {
+    public List<VoteDto> getUserParticipateVoteList(String userId) throws Exception {   //유저가 참여한 투표 리스트
         List<Vote> entityList = voteRepository.getUserParticipateVoteList(userId);
         List<VoteDto> dtoList = new ArrayList<>();
 
@@ -230,7 +230,7 @@ public class VoteServiceImpl implements VoteService {
     }
 
     @Override
-    public long getUserParticipateVoteCount(String userId) throws Exception {
+    public long getUserParticipateVoteCount(String userId) throws Exception {   //유저가 참여한 투표 개수
         List<Vote> entityList = voteRepository.getUserParticipateVoteList(userId);
         return entityList.size();
     }
@@ -248,9 +248,7 @@ public class VoteServiceImpl implements VoteService {
     }
 
     @Override
-    public List<VoteDto> getUserInterestVoteList(String userId)throws Exception{
-        //userid로 cate찾고
-        //그거랑 맞는 cate를 가진 vote
+    public List<VoteDto> getUserInterestVoteList(String userId)throws Exception{    //유저의 관심분야 투표 리스트
         List<Category> categoryList = categoryRepository.getUserCategories(userId);
 
         List<Vote> entityList = new ArrayList<>();
@@ -267,7 +265,7 @@ public class VoteServiceImpl implements VoteService {
     }
 
     @Override
-    public List<VoteDto> getUserFollowVoteList(String userId) throws Exception {
+    public List<VoteDto> getUserFollowVoteList(String userId) throws Exception {    //유저가 팔로우한 사람이 만든 투표 리스트
 
         List<FollowingDto> followingDtoList = followingService.followingList(userId,userId);
         List<Vote> entityList = new ArrayList<>();
