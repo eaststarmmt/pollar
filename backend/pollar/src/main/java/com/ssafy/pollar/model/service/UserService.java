@@ -10,6 +10,7 @@ public interface UserService {
     boolean idCheck(String userId) throws Exception;
     boolean nicknameCheck(String userNickname) throws Exception;
     boolean emailCheck(String userEmail) throws Exception;
+    boolean passwordCheck(String userId,String userPassword) throws Exception;
     void modifyUserInfo(UserDto userDto) throws Exception;
     void deleteUserInfo(String userId) throws Exception;
     boolean login(UserDto userDto) throws Exception;

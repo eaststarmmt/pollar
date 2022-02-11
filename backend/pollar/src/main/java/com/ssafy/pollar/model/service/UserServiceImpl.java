@@ -97,6 +97,15 @@ public class UserServiceImpl implements UserService{
         }
     }
 
+    @Override
+    public boolean passwordCheck(String userId,String userPassword) throws Exception {
+        if(userRepository.findByUserIdAndPassword(userId,userPassword).isPresent()){//비밀번호 일치한경우
+            return true;
+        }else{
+            return false;
+        }
+    }
+
     //회원정보 수정
     @Override
     public void modifyUserInfo(UserDto userDto) throws Exception{
@@ -107,9 +116,9 @@ public class UserServiceImpl implements UserService{
                 .userId(usercur.getUserId())
                 .password(usercur.getPassword())
                 .userNickname((userDto.getUserNickname()))
-                .userEmail((userDto.getUserEmail()))
-                .userBirthday((userDto.getUserBirthday()))
-                .userGender((userDto.getUserGender()))
+                .userEmail((usercur.getUserEmail()))
+                .userBirthday((usercur.getUserBirthday()))
+                .userGender((usercur.getUserGender()))
                 .userProfilePhoto(userDto.getUserProfilePhoto())
                 .build();
 

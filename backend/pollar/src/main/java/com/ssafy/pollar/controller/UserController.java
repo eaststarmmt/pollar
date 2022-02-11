@@ -35,38 +35,81 @@ public class UserController {
     @ApiOperation(value = "회원가입",notes="회원 정보를 입력한다.")
     @PostMapping("/signup")
     public ResponseEntity<String> signUp (@RequestBody @ApiParam(value = "회원가입시 필요한 회원정보", required = true) UserDto userDto )throws Exception {
-        userService.signup(userDto);
-        return new ResponseEntity<String>(SUCCESS, HttpStatus.OK);
+        HttpStatus status = null;
+        String message = "";
+        try {
+            userService.signup(userDto);
+            status = HttpStatus.OK;
+            message = SUCCESS;
+        }catch (Exception e){
+            status = HttpStatus.INTERNAL_SERVER_ERROR;
+            message = FAIL;
+        }
+        return new ResponseEntity<String>(message, status);
     }
 
     @ApiOperation(value ="아이디 중복검사")
     @GetMapping("/idcheck")
     public ResponseEntity<Boolean> idCheck(@RequestParam @ApiParam(value = "중복된 아이디가 있는지 확인") String userId) throws Exception{
         boolean checkflag = false;
-        if(userService.idCheck((userId))){
-            checkflag= true;
+        HttpStatus status = null;
+        try {
+            if(userService.idCheck((userId))){
+                checkflag= true;
+            }
+            status = HttpStatus.OK;
+        }catch (Exception e){
+            status = HttpStatus.INTERNAL_SERVER_ERROR;
         }
-        return new ResponseEntity<Boolean>(checkflag,HttpStatus.OK);
+        return new ResponseEntity<Boolean>(checkflag,status);
     }
 
     @ApiOperation(value = "닉네임중복체크")
     @GetMapping("/nickcheck")
     public ResponseEntity<Boolean> nicknameCheck(@RequestParam @ApiParam(value = "중복된 닉네임이 있는지 확인") String userNickname) throws Exception{
         boolean checkflag = false;
-        if(userService.nicknameCheck((userNickname))){
-            checkflag= true;
+        HttpStatus status = null;
+        try {
+            if(userService.nicknameCheck((userNickname))){
+                checkflag= true;
+            }
+            status = HttpStatus.OK;
+        }catch (Exception e){
+            status = HttpStatus.INTERNAL_SERVER_ERROR;
         }
-        return new ResponseEntity<Boolean>(checkflag,HttpStatus.OK);
+        return new ResponseEntity<Boolean>(checkflag,status);
+    }
+
+    @ApiOperation(value = "현재 비밀 번호 확인")
+    @GetMapping("/passwordcheck")
+    public ResponseEntity<Boolean> passwordCheck(@RequestParam String userId, @RequestParam String password)throws Exception{
+        boolean checkflag = false;
+        HttpStatus status = null;
+        try {
+            if(userService.passwordCheck(userId,password)){
+                checkflag = true;
+            }
+            status = HttpStatus.OK;
+        }catch (Exception e){
+            status = HttpStatus.INTERNAL_SERVER_ERROR;
+        }
+        return new ResponseEntity<>(checkflag,status);
     }
 
     @ApiOperation(value = "이메일중복체크")
     @GetMapping("/emailcheck")
     public ResponseEntity<Boolean> emailCheck(@RequestParam @ApiParam(value = "중복된 이메일이 있는지 확인") String userEmail) throws Exception {
         boolean checkflag = false;
-        if(userService.emailCheck(userEmail)){
-            checkflag= true;
+        HttpStatus status = null;
+        try {
+            if(userService.emailCheck(userEmail)){
+                checkflag= true;
+            }
+            status = HttpStatus.OK;
+        }catch (Exception e){
+            status = HttpStatus.INTERNAL_SERVER_ERROR;
         }
-        return new ResponseEntity<Boolean>(checkflag,HttpStatus.OK);
+        return new ResponseEntity<Boolean>(checkflag,status);
     }
 
     // 사용자 회원가입중 이메일 인증 버튼 클릭시 링크를 사용자 이메일로 보내준다.
@@ -119,9 +162,17 @@ public class UserController {
     @PutMapping
     public ResponseEntity<String> modifyUserInfo(@RequestBody @ApiParam(value ="수정한 회원정보", required = true) UserDto userDto) throws Exception{
         logger.info(userDto.getUserId()+" " +userDto.getUid());
-        userService.modifyUserInfo(userDto);
-
-        return new ResponseEntity<String>(SUCCESS,HttpStatus.OK);
+        String message = "";
+        HttpStatus status = null;
+        try {
+            userService.modifyUserInfo(userDto);
+            message = SUCCESS;
+            status = HttpStatus.OK;
+        }catch (Exception e){
+            status = HttpStatus.INTERNAL_SERVER_ERROR;
+            message = FAIL;
+        }
+        return new ResponseEntity<>(message,status);
     }
 
     @ApiOperation(value ="회원전보 삭제", notes = "회원정보 삭제")

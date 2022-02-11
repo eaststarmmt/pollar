@@ -69,20 +69,37 @@ public class FollowingController {
     // follower 유저들을 통신하는기능
     @ApiOperation(value = "팔로워 목록을 확인")
     @GetMapping("/followerlist")
-    public ResponseEntity<Map<String,List>> followerList(@RequestParam String logInUserId,@RequestParam String profileUserId) throws Exception {
-        Map<String,List> resultMap = new HashMap<>();
-        List<FollowingDto> followerList = followingService.followerList(logInUserId,profileUserId);
-        resultMap.put("followerList",followerList);
-        return new ResponseEntity<>(resultMap,HttpStatus.OK);
+    public ResponseEntity<Map<String,Object>> followerList(@RequestParam String logInUserId,@RequestParam String profileUserId) throws Exception {
+        Map<String,Object> resultMap = new HashMap<>();
+        HttpStatus status = null;
+        try {
+            List<FollowingDto> followerList = followingService.followerList(logInUserId,profileUserId);
+            resultMap.put("followerList",followerList);
+            resultMap.put("message",SUCCESS);
+            status = HttpStatus.OK;
+        }catch (Exception e){
+            resultMap.put("message",FAIL);
+            status = HttpStatus.INTERNAL_SERVER_ERROR;
+        }
+
+        return new ResponseEntity<>(resultMap,status);
     }
 
     // followee 유저들을 통신하는 기능
     @ApiOperation(value = "팔로잉 목록을 확인")
     @GetMapping("/followinglist")
-    public ResponseEntity<Map<String,List>> followeeList(@RequestParam String logInUserId,@RequestParam String profileUserId) throws Exception {
-        Map<String,List> resultMap = new HashMap<>();
-        List<FollowingDto> followingList = followingService.followingList(logInUserId,profileUserId);
-        resultMap.put("followingList",followingList);
-        return new ResponseEntity<>(resultMap,HttpStatus.OK);
+    public ResponseEntity<Map<String,Object>> followeeList(@RequestParam String logInUserId,@RequestParam String profileUserId) throws Exception {
+        Map<String,Object> resultMap = new HashMap<>();
+        HttpStatus status = null;
+        try {
+            List<FollowingDto> followingList = followingService.followingList(logInUserId,profileUserId);
+            resultMap.put("followingList",followingList);
+            resultMap.put("message",SUCCESS);
+            status = HttpStatus.OK;
+        }catch (Exception e){
+            resultMap.put("message",FAIL);
+            status = HttpStatus.INTERNAL_SERVER_ERROR;
+        }
+        return new ResponseEntity<>(resultMap,status);
     }
 }
