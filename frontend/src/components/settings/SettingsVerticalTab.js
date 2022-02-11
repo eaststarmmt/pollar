@@ -1,15 +1,15 @@
-import * as React from 'react';
 import PropTypes from 'prop-types';
 import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
-import SelectInterests from '../signup/SelectInterests';
-import { Button } from '@mui/material';
 import ProfileInfoSettings from './ProfileInfoSettings';
-import CardProfile from './CardProfile';
-import ImageUploadButton from '../common/ImageUploadButton';
 import NotificationSettings from './NotificationSettings';
+import { useEffect, useState } from 'react';
+import { getUserInfo } from '../../services/api/UserApi';
+import { getLoggedUserId } from '../../utils/loggedUser';
+import { setUserInterests } from '../../services/api/CategoryApi';
+import InterestsSettings from './InterestsSettings';
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -43,13 +43,46 @@ function a11yProps(index) {
     'aria-controls': `vertical-tabpanel-${index}`,
   };
 }
-
 export default function SettingsVerticalTab() {
-  const [value, setValue] = React.useState(0);
+  // 포커스 된 탭
+  const [value, setValue] = useState(0);
+  const [userInfo, setUserInfo] = useState({
+    userId: '',
+    password: '',
+    userNickname: '',
+    userEmail: '',
+    userBirthday: '',
+    userGender: false,
+    categories: [],
+    userProfilePhoto: '',
+  });
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
   };
+
+  /* 사용자 계정 정보 API 호출 */
+  const getAccountUserInfo = async () => {
+    const data = await getUserInfo(getLoggedUserId());
+    // data.categories = await getUserInterests(getLoggedUserId());
+    setUserInfo(data);
+  };
+
+  /* 관심분야 재설정 */
+  const handleUpdateInterests = async () => {
+    const result = await setUserInterests(userInfo.categories);
+    if (result.message == 'success') {
+      // todo
+      alert('성공적으로 반영');
+    } else {
+      // todo
+      alert('오류가 발생했습니다. 잠시 후 시도해주세요 ');
+    }
+  };
+
+  useEffect(() => {
+    getAccountUserInfo();
+  }, []);
 
   return (
     <Box sx={{ flexGrow: 1, bgcolor: 'transparent', display: 'flex', height: '50vh' }}>
@@ -74,12 +107,13 @@ export default function SettingsVerticalTab() {
         <Tab label="Notification&nbsp;" {...a11yProps(2)} />
       </Tabs>
       <TabPanel value={value} index={0}>
+        한주님 작업공간
         <ProfileInfoSettings />
         {/* <CardProfile /> */}
       </TabPanel>
       <TabPanel value={value} index={1}>
-        Tell us your interests, and get recommended Polls! (최대 3개까지 지정가능)
-        <SelectInterests />
+        관심분야 설정 (최대 3개까지 지정가능)
+        <InterestsSettings />
       </TabPanel>
       <TabPanel value={value} index={2}>
         알림설정

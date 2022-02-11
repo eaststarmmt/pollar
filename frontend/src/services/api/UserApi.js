@@ -1,12 +1,12 @@
-import { instance, instanceWithAuth, fileInstance } from '../../services/axios';
+import { instance, createMultipartInstance, fileInstance } from '../../services/axios';
 import { getLoggedUserId } from '../../utils/loggedUser';
 
-// 공통되는 경로는 다음과 같이 별도로 정의해둠? (is this nesassary)
-const USER = '/user/';
+// 공통되는 경로는 다음과 같이 별도로 정의해둠
+const COMMON = '/user';
 
 /* 아이디 중복검사 */
 export const checkId = async (userId) => {
-  const response = await instance.get(USER + 'idcheck', {
+  const response = await instance.get(COMMON + '/idcheck', {
     params: {
       userId: userId,
     },
@@ -16,7 +16,7 @@ export const checkId = async (userId) => {
 
 /* 닉네임 중복검사 */
 export const checkNickname = async (userNickname) => {
-  const response = await instance.get(USER + 'nickcheck', {
+  const response = await instance.get(COMMON + '/nickcheck', {
     params: {
       userNickname: userNickname,
     },
@@ -26,9 +26,9 @@ export const checkNickname = async (userNickname) => {
 
 /* 이메일 중복검사 */
 export const checkEmail = async (userEmail) => {
-  const response = await instance.get(USER + 'emailcheck', {
-    params: { 
-      userEmail: userEmail 
+  const response = await instance.get(COMMON + '/emailcheck', {
+    params: {
+      userEmail: userEmail,
     },
   });
   return response.data;
@@ -36,9 +36,9 @@ export const checkEmail = async (userEmail) => {
 
 /* 이메일 인증 메일 발송 */
 export const emailConfirm = async (userEmail) => {
-  const response = await instance.get(USER + 'confirmemail', {
-    params: { 
-      userEmail: userEmail 
+  const response = await instance.get(COMMON + '/confirmemail', {
+    params: {
+      userEmail: userEmail,
     },
   });
   console.log(response.data);
@@ -47,26 +47,31 @@ export const emailConfirm = async (userEmail) => {
 
 /* 이메일 인증 토큰 확인 */
 export const emailToken = async (token) => {
-  const response = await instance.get(USER + 'emailtoken', {
-    params:{
-        userEmail: token.userEmail,
-        token: token.token,
-      }
+  const response = await instance.get(COMMON + '/emailtoken', {
+    params: {
+      userEmail: token.userEmail,
+      token: token.token,
+    },
   });
   return response.data;
 };
 
-
-
 /* 회원정보 수정 */
 
-
-// 회원 정보 얻어오기
-
+/* 회원 정보 불러오기 */
+export const getUserInfo = async () => {
+  const response = await createMultipartInstance().get(COMMON + `/info/${getLoggedUserId()}`);
+  // , {
+  //   params: {
+  //     userId: getLoggedUserId(),
+  //   },
+  // });
+  return response.data;
+};
 
 // 프로필 이미지 수정
 // ProfileApi 에서 기본 유저 정보 호출해서 사용하기
-export const modifyProfilePhoto = async(formData) => {
-  const response = await fileInstance.put(USER + 'photo', formData);
+export const modifyProfilePhoto = async (formData) => {
+  const response = await fileInstance.put(COMMON + '/photo', formData);
   console.log(response);
 };

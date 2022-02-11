@@ -1,11 +1,10 @@
 import * as React from 'react';
-import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
 import CardActions from '@mui/material/CardActions';
 import CardContent from '@mui/material/CardContent';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
-import { Grid, Stack } from '@mui/material';
+import { Chip, Grid, Stack } from '@mui/material';
 import PollImageButton from '../common/PollImageButton';
 
 const itemList = ['item1', 'item2', 'item3', 'item4'];
@@ -51,11 +50,12 @@ export default function PollDetailCard({ poll }) {
                 작성일자 2020-12-09 ~ 마감시간 2020-12-29
               </Typography>
               <Typography variant="h5" component="div">
-                Poll Title
+                Poll Title {poll}
               </Typography>
-              <Typography variant="body2" sx={{ mb: 1.5 }} color="text.disabled">
+              <Chip label="투표 카테고리" size="small" sx={{ fontSize: 12 }} />
+              {/* <Typography variant="body2" sx={{ mb: 1.5 }} color="text.disabled">
                 poll 카테고리
-              </Typography>
+              </Typography> */}
               <Typography variant="body2" sx={{ fontSize: 14 }}>
                 투표내용... (최대 100자)
               </Typography>
@@ -65,7 +65,12 @@ export default function PollDetailCard({ poll }) {
                 <Grid item xs={12} md={12}>
                   <Stack spacing={1}>
                     {itemList.map((item, index) => (
-                      <Button key={index} variant="contained">
+                      <Button
+                        key={index}
+                        variant="outlined"
+                        color="primary"
+                        sx={{ backgroundColor: 'secondary' }}
+                      >
                         {item}
                       </Button>
                     ))}

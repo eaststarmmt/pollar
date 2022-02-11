@@ -6,6 +6,7 @@ import profilePicture from '../../assets/images/profile.jpeg';
 import FollowListModal from './FollowListModal';
 import { useState } from 'react';
 import MobileHidden from '../common/MobileHidden';
+import { useNavigate } from 'react-router-dom';
 import FollowButton from './FollowButton';
 
 function Profile({ profileInfo, isOwnerAccount, setTriggerRefresh }) {
@@ -37,9 +38,10 @@ function Profile({ profileInfo, isOwnerAccount, setTriggerRefresh }) {
               alignItems="flex-end"
               sx={{ width: '100%' }}
             >
-              <MobileHidden width="lgDown">
+              <MobileHidden width="smDown">
                 <Avatar
-                  src={profilePicture}
+                  // src={profilePicture}
+                  src={profileInfo.userProfilePhoto}
                   alt="Profile Photo"
                   shadow="xl"
                   sx={{ width: '10rem', height: '10rem' }}
@@ -60,20 +62,15 @@ function Profile({ profileInfo, isOwnerAccount, setTriggerRefresh }) {
                     {profileInfo.userNickname}
                   </Typography>
                   <Stack direction="row" spacing={1}>
-                    {profileInfo.interests.map((item, index) => (
-                      <Chip key={index} label={item} color="info" size="small" variant="outlined" />
+                    {profileInfo.interests.map((item) => (
+                      <Chip
+                        key={item.categoryId}
+                        label={item.categoryNameSmall}
+                        color="info"
+                        size="small"
+                        variant="outlined"
+                      />
                     ))}
-                    {/* 관심분야 수정으로 바로 갈 수 있는 버튼 */}
-                    {/* <Chip label="..." color="info" size="small" variant="outlined" /> */}
-                    {/* 
-                  <IconButton
-                    href="/users/settings"
-                    color="primary"
-                    aria-label="edit interests"
-                    size="small"
-                  >
-                    <SettingsIcon fontSize="small" />
-                  </IconButton> */}
                   </Stack>
                 </Stack>
                 <Typography variant="caption" color="text.disabled" sx={{ ml: 0.5 }}>

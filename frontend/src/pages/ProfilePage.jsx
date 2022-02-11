@@ -7,13 +7,14 @@ import { useNavigate, useParams } from 'react-router-dom';
 import FeedTabs from '../components/profile/FeedTabs';
 import Profile from '../components/profile/Profile';
 import { getProfileInfo } from '../services/api/ProfileApi';
+import { getTotalUploadsCount, getTotalVotesCount } from '../services/api/PollApi';
 import { getLoggedUserId } from '../utils/loggedUser';
 
 const style = {
   p: 2,
   mx: { xs: 2, lg: 3 },
   mt: 6,
-  mb: 0,
+  // mb: 0,
   backgroundColor: '#fff6',
   // backgroundColor: ({ palette: { white }, functions: { rgba } }) => rgba(white.main, 0.8),
   backdropFilter: 'saturate(200%) blur(30px)',
@@ -48,17 +49,22 @@ export default function ProfilePage() {
   };
   //// const isOwnerAccount = typeof userId === 'undefined' && userId === getLoggedUserId();
 
-  /* 사용자 계정 정보 API 호출 */
-  const getAccountInfo = async () => {
-    console.log(userId);
+  /* 사용자 계정 프로필 정보 API 호출 */
+  const getAccountProfileInfo = async () => {
     const data = await getProfileInfo(userId);
+
+    // 사용자 총 업로드 수
+    data.totalPollCount = await getTotalUploadsCount(userId);
+    // 사용자 총 투표 수
+    data.totalVoteCount = await getTotalVotesCount(userId);
+
     setProfileInfo(data);
   };
 
   useEffect(() => {
     checkIfOwnerAccount();
     // 사용자 계정정보 요청
-    getAccountInfo();
+    getAccountProfileInfo();
   }, [userId, triggerRefresh]);
 
   return (

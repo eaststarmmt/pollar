@@ -1,8 +1,4 @@
-import Container from '@mui/material/Container';
-
-import { useState } from 'react';
 import { styled } from '@mui/system';
-import { useParams } from 'react-router-dom';
 import PollListTabs from '../components/polls/PollListTabs';
 import Page from '../components/Page';
 import { Card, Grid, Stack, Typography } from '@mui/material';
