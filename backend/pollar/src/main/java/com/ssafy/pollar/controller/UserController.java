@@ -146,6 +146,9 @@ public class UserController {
                 resultMap.put("userId",userDto.getUserId());
                 resultMap.put("userNickname",userService.getUserInfo(userDto.getUserId()).getUserNickname());
                 resultMap.put("userProfilePhoto",userService.getUserInfo(userDto.getUserId()).getUserProfilePhoto());
+                resultMap.put("userEmail",userService.getUserInfo(userDto.getUserId()).getUserEmail());
+                resultMap.put("userGender", userService.getUserInfo(userDto.getUserId()).getUserGender());
+                resultMap.put("userBirthday", userService.getUserInfo(userDto.getUserId()).getUserBirthday());
                 resultMap.put("message",SUCCESS);
             }else{
                 resultMap.put("message",FAIL);
@@ -210,10 +213,18 @@ public class UserController {
     @GetMapping("/info/{userId}")
     public ResponseEntity<Map<String,Object>> getInfoUser(@PathVariable String userId)throws Exception{
         Map<String,Object> resultMap = new HashMap<>();
+        String message = "";
         HttpStatus status = null;
         try {
             UserDto userDto = userService.getUserInfo(userId);
-
+            resultMap.put("userId",userDto.getUserId());
+            resultMap.put("userNickname",userService.getUserInfo(userDto.getUserId()).getUserNickname());
+            resultMap.put("userProfilePhoto",userService.getUserInfo(userDto.getUserId()).getUserProfilePhoto());
+            resultMap.put("userEmail",userService.getUserInfo(userDto.getUserId()).getUserEmail());
+            resultMap.put("userGender", userService.getUserInfo(userDto.getUserId()).getUserGender());
+            resultMap.put("userBirthday", userService.getUserInfo(userDto.getUserId()).getUserBirthday());
+            resultMap.put("message",SUCCESS);
+            status = HttpStatus.OK;
         }catch (Exception e){
             resultMap.put("message",FAIL);
             status = HttpStatus.INTERNAL_SERVER_ERROR;
