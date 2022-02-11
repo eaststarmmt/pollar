@@ -186,8 +186,10 @@ public class VoteServiceImpl implements VoteService {
 
 
         for (VoteSelect select: selectList) {
+            System.out.println("S  "+select.getContent());
             List<User> userList = voteParticipateRepository.getUserList(select);
             for (User user :userList) {
+                System.out.println(user.getUserId());
                 ParticipateDto dto = ParticipateDto.builder()
                         .userId(user.getUserId())
                         .userNickname(user.getUserNickname())
