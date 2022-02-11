@@ -174,4 +174,10 @@ public class VoteController {
 
         return new ResponseEntity<>(voteService.getUserFollowVoteList(userId),HttpStatus.OK);
     }
+
+    @ApiOperation(value = "인기투표")
+    @GetMapping("/trendingvote")
+    public ResponseEntity<List<VoteDto>> getTrendingVote()throws Exception{
+        return new ResponseEntity<>(voteService.getTrendingVote(),HttpStatus.OK);
+    }
 }

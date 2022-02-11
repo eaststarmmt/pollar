@@ -8,6 +8,8 @@ import com.ssafy.pollar.model.dto.VoteDto;
 import com.ssafy.pollar.model.repository.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -282,4 +284,16 @@ public class VoteServiceImpl implements VoteService {
         return dtoList;
     }
 
+    @Override
+    public List<VoteDto> getTrendingVote()throws Exception{
+
+        PageRequest pageRequest = PageRequest.of(0,3);
+        List<Vote> entityList = voteRepository.getTop3TrendingVote(LocalDateTime.now(),pageRequest);
+        List<VoteDto> dtoList = new ArrayList<>();
+        for (Vote entity: entityList) {
+            VoteDto dto = new VoteDto(entity);
+            dtoList.add(dto);
+        }
+        return dtoList;
+    }
 }
