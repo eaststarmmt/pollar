@@ -31,6 +31,20 @@ public class VoteDto {
         this.author=vote.getAuthor().getUserId();
     }
 
+    public VoteDto(long voteId, String voteName){// 피드 검색용
+        this.voteId = voteId;
+        this.voteName =voteName;
+    }
+
+    public VoteDto(long voteId, String voteName, String author, String voteContent, long voteLikeCount, long voteReplyCount){// 피드 카테고리 검색
+        this.voteId = voteId;
+        this.voteName = voteName;
+        this.author = author;
+        this.voteContent = voteContent;
+        this.voteLikeCount = voteLikeCount;
+        this.voteReplyCount = voteReplyCount;
+    }
+
     @ApiModelProperty(position = 1, value = "피드 아이디", notes="자동으로 생성되므로 작성 보내지 않는다")
     private Long voteId;
     @ApiModelProperty(position = 2, value = "피드 제목")
@@ -59,5 +73,9 @@ public class VoteDto {
     private List<Long> voteReplys;
     @ApiModelProperty(position = 14, value = "피드를 작성한 유저 id")
     private String author;
+    @ApiModelProperty(position = 15, value = "피드를 좋아요수")
+    private long voteLikeCount;
+    @ApiModelProperty(position = 16, value = "피드를 댓글 수")
+    private long voteReplyCount;
 
 }

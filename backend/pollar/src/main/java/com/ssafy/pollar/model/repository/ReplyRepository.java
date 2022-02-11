@@ -9,4 +9,5 @@ import java.util.Optional;
 
 public interface ReplyRepository extends JpaRepository<Reply, Long> {
     List<Reply> getAllByVoteReply(Vote vote);
+    long existsAllByVoteReply(Vote vote);
 }

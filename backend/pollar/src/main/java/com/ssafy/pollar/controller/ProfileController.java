@@ -43,6 +43,7 @@ public class ProfileController {
 
             resultMap.put("userId",userDto.getUserId());
             resultMap.put("userNickname",userDto.getUserNickname());
+            resultMap.put("userProfilePhoto",userDto.getUserProfilePhoto());
 
             List<FollowingDto> followerIdList = followingService.followerList(profileDto.getLoginUserId(), profileDto.getProfileUserId());
             List<FollowingDto> followingIdList = followingService.followingList(profileDto.getLoginUserId(), profileDto.getProfileUserId());

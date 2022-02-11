@@ -22,6 +22,9 @@ public class UserDto {
     private String userEmail;
     private Date userBirthday;
     private Boolean userGender;
+    private long followerCount;
+    private long participateVoteCount;
+    private long createVoteCount;
     private String userProfilePhoto;
     @ApiModelProperty(value = "유저가 선택한 카테고리 id목록", notes="id를 이용해서 Category 테이블에서 검색")
     private List<Long> categories;
@@ -46,5 +49,20 @@ public class UserDto {
         this.userBirthday = user.getUserBirthday();
         this.userGender = user.getUserGender();
         this.userProfilePhoto = user.getUserProfilePhoto();
+    }
+
+    public UserDto(String userId,String userNickname,String userProfilePhoto){// 검색바의 유저 정보
+        this.userId = userId;
+        this.userNickname = userNickname;
+        this.userProfilePhoto = userProfilePhoto;
+    }
+
+    public UserDto(String userId,String userNickname,String userProfilePhoto,long followerCount,long participateVoteCount, long createVoteCount){// 검색 결과의 유저정보
+        this.userId = userId;
+        this.userNickname = userNickname;
+        this.userProfilePhoto = userProfilePhoto;
+        this.followerCount = followerCount;
+        this.participateVoteCount = participateVoteCount;
+        this.createVoteCount = createVoteCount;
     }
 }

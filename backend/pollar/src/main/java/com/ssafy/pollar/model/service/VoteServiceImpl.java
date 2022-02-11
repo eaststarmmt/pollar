@@ -164,7 +164,7 @@ public class VoteServiceImpl implements VoteService {
     @Override
     public void userVoteSelection(String userId, Long selectionId) throws Exception {   //유저가 선택지에 투표
         VoteParticipate voteParticipate = VoteParticipate.builder()
-                .userPariticipate(userRepository.findByUserId(userId).get())
+                .userParticipate(userRepository.findByUserId(userId).get())
                 .voteParticipate(voteSelectRepository.findById(selectionId).get())
                 .build();
         voteParticipateRepository.save(voteParticipate);
@@ -173,7 +173,7 @@ public class VoteServiceImpl implements VoteService {
     @Override
     public void cancelUserVoteSelection(String userId, Long selectionId) throws Exception { //유저 투표 취소
 
-        voteParticipateRepository.delete(voteParticipateRepository.findByUserPariticipateAndVoteParticipate(userRepository.findByUserId(userId).get(),voteSelectRepository.findById(selectionId).get()).get());
+        voteParticipateRepository.delete(voteParticipateRepository.findByUserParticipateAndVoteParticipate(userRepository.findByUserId(userId).get(),voteSelectRepository.findById(selectionId).get()).get());
 
     }
 

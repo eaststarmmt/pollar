@@ -10,8 +10,9 @@ import java.util.List;
 import java.util.Optional;
 
 public interface VoteParticipateRepository extends JpaRepository<VoteParticipate,Long> {
-    Optional<VoteParticipate> findByUserPariticipateAndVoteParticipate(User user, VoteSelect voteSelect);
+    Optional<VoteParticipate> findByUserParticipateAndVoteParticipate(User user, VoteSelect voteSelect);
+    long existsAllByUserParticipate(User user);
 
-    @Query(value = "select u from VoteParticipate vp join vp.userPariticipate u where vp.voteParticipate=?1")
+    @Query(value = "select u from VoteParticipate vp join vp.userParticipate u where vp.voteParticipate=?1")
     List<User> getUserList(VoteSelect select);
 }

@@ -28,6 +28,4 @@ public class Category {
     @Column(name = "categoryNameSmall" ,length = 20)
     private String categoryNameSmall;
 
-
-
 }
