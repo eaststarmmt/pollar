@@ -52,7 +52,7 @@ public class VoteDto {
     public VoteDto(long voteId, String voteName, String author,String voteContent,Boolean voteType,LocalDateTime voteCreateTime
             ,LocalDateTime voteExpirationTime ,Boolean userAnonymousType,Boolean voteAnonymousType
             ,List<String> voteCategoriesName,List<SelectionDto> voteSelects,long voteLikeCount, long voteReplyCount,String userProfilePhoto
-            ,long voteParticipateCount,Boolean isVoted,Boolean isLiked){
+            ,long voteParticipateCount,Boolean isVoted,Boolean isLiked,long userVoteSelection ){
         this.voteId = voteId;
         this.voteName = voteName;
         this.author = author;
@@ -70,6 +70,7 @@ public class VoteDto {
         this.voteParticipateCount = voteParticipateCount;
         this.isUserVoted = isVoted;
         this.isUserLiked = isLiked;
+        this.userVoteSelection = userVoteSelection;
     }
 
     @ApiModelProperty(position = 1, value = "피드 아이디", notes="자동으로 생성되므로 작성 보내지 않는다")
@@ -114,5 +115,7 @@ public class VoteDto {
     private Boolean isUserVoted;
     @ApiModelProperty(position = 21, value = "좋아요 여부")
     private Boolean isUserLiked;
+    @ApiModelProperty(position = 22, value = "투표 참여 여부")
+    private long userVoteSelection ;
 
 }
