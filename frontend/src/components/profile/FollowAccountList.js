@@ -78,7 +78,9 @@ export default function FollowAccountList({ listType, setOpenModal, listOwnerId 
               ) : null
             }
             disablePadding
-            onClick={() => handleAccountClick(account.followingId)}
+            onClick={() =>
+              handleAccountClick(isFollowerList ? account.followingId : account.followerId)
+            }
           >
             <ListItemButton>
               <ListItemAvatar>
