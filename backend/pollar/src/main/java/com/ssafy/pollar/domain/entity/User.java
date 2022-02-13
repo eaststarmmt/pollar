@@ -52,7 +52,7 @@ public class User implements UserDetails {
     @OneToMany(mappedBy = "userCategory")
     private List<UserCategory> UserCategories = new ArrayList<>();
 
-    @OneToMany(mappedBy = "userPariticipate")
+    @OneToMany(mappedBy = "userParticipate")
     private List<VoteParticipate> userParticipates = new ArrayList<>();
 
     @OneToMany(mappedBy = "userVoteLike")
