@@ -30,7 +30,7 @@ public class ProfileController {
     private static final String FAIL = "fail";
 
     @ApiOperation(value = "유저 프로필 정보")
-    @GetMapping("/userInfo")
+    @GetMapping("/userinfo")
     public ResponseEntity<Map<String,Object>> profileInfo(@RequestParam String logInUserId, @RequestParam String profileUserId){
         Map<String,Object> resultMap = new HashMap<>();
         HttpStatus status = null;
@@ -80,7 +80,7 @@ public class ProfileController {
     }
 
     @ApiOperation(value = "좋아요한 투표")
-    @PostMapping("/likes")
+    @GetMapping("/likes")
     public ResponseEntity<Map<String,Object>> profileLikeVotes(@RequestParam String logInUserId, @RequestParam String profileUserId){
         Map<String,Object> resultMap = new HashMap<>();
         HttpStatus status = null;
@@ -99,13 +99,13 @@ public class ProfileController {
     }
 
     @ApiOperation(value = "참여한 투표")
-    @PostMapping("/participates")
-    public ResponseEntity<Map<String,Object>> profileUserParticipateVote(@RequestBody ProfileDto profileDto){
+    @GetMapping("/participates")
+    public ResponseEntity<Map<String,Object>> profileUserParticipateVote(@RequestParam String logInUserId, @RequestParam String profileUserId){
         Map<String,Object> resultMap = new HashMap<>();
         HttpStatus status = null;
         List<VoteDto> voteDtoList = new ArrayList<>();
         try {
-            voteDtoList = profileService.getProfileParticipateVotes(profileDto.getLoginUserId(),profileDto.getProfileUserId());
+            voteDtoList = profileService.getProfileParticipateVotes(logInUserId,profileUserId);
             resultMap.put("uploadsVoteList",voteDtoList);
             status = HttpStatus.OK;
             resultMap.put("message",SUCCESS);
