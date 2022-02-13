@@ -67,8 +67,8 @@ public class VoteController {
         int voteId = (int) map.get("voteId");
         voteService.insertLike(userId, (long)voteId);
         // 좋아요 알림
-        String receiveId = voteService.detail((long)map.get("voteId")).getAuthor();
-        notificationService.feedLikeNotification((long)map.get("voteId"),(String)map.get("userId"),receiveId);
+        String receiveId = voteService.detail((long)voteId).getAuthor();
+        notificationService.feedLikeNotification((long)voteId,(String)map.get("userId"),receiveId);
         return new ResponseEntity<>(SUCCESS,HttpStatus.OK);
     }
 
