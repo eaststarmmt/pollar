@@ -18,4 +18,7 @@ public interface VoteLikeRepository extends JpaRepository<VoteLike,Long> {
 
     @Query(value = "select u.userId from VoteLike vl join vl.userVoteLike u where vl.voteLike.voteId=?1")
     List<String> getLikeListByQuery(Long voteId);
+
+    @Query(value = "select vl from VoteLike vl where vl.userVoteLike=?1")
+    Optional<List<VoteLike>> findAllByUserVoteLikesByQuery(User user);
 }

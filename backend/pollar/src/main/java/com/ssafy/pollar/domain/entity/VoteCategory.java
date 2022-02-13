@@ -11,7 +11,7 @@ import javax.persistence.*;
 @Getter
 public class VoteCategory {
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "voteCategoryId")
     private long voteCategoryId;
 

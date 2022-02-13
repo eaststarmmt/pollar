@@ -45,6 +45,29 @@ public class VoteDto {
         this.voteReplyCount = voteReplyCount;
     }
 
+    public VoteDto(long voteId, String voteName, String author,String voteContent,Boolean voteType,LocalDateTime voteCreateTime
+            ,LocalDateTime voteExpirationTime ,Boolean userAnonymousType,Boolean voteAnonymousType
+            ,List<String> voteCategoriesName,List<SelectionDto> voteSelects,long voteLikeCount, long voteReplyCount,String userProfilePhoto
+            ,long voteParticipateCount,Boolean isVoted,Boolean isLiked){
+        this.voteId = voteId;
+        this.voteName = voteName;
+        this.author = author;
+        this.voteContent = voteContent;
+        this.voteType = voteType;
+        this.voteCreateTime = voteCreateTime;
+        this.voteExpirationTime = voteExpirationTime;
+        this.userAnonymousType = userAnonymousType;
+        this.voteAnonymousType = voteAnonymousType;
+        this.voteCategoriesName = voteCategoriesName;
+        this.voteSelects = voteSelects;
+        this.voteLikeCount = voteLikeCount;
+        this.voteReplyCount = voteReplyCount;
+        this.userProfilePhoto = userProfilePhoto;
+        this.voteParticipateCount = voteParticipateCount;
+        this.isUserVoted = isVoted;
+        this.isUserLiked = isLiked;
+    }
+
     @ApiModelProperty(position = 1, value = "피드 아이디", notes="자동으로 생성되므로 작성 보내지 않는다")
     private Long voteId;
     @ApiModelProperty(position = 2, value = "피드 제목")
@@ -77,5 +100,17 @@ public class VoteDto {
     private long voteLikeCount;
     @ApiModelProperty(position = 16, value = "피드를 댓글 수")
     private long voteReplyCount;
+    @ApiModelProperty(position = 17, value = "투표 카테고리 이름")
+    private List<String> voteCategoriesName;
+    @ApiModelProperty(position = 18, value = "작성자 사진")
+    private String userProfilePhoto;
+    @ApiModelProperty(position = 19, value = "총 투표수")
+    private long voteParticipateCount;
+    @ApiModelProperty(position = 20, value = "투표 여부")
+    private Boolean isUserVoted;
+    @ApiModelProperty(position = 21, value = "좋아요 여부")
+    private Boolean isUserLiked;
+
+
 
 }
