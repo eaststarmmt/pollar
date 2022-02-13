@@ -258,7 +258,7 @@ public class UserController {
             message = FAIL;
             status = HttpStatus.INTERNAL_SERVER_ERROR;
         }
-        return new ResponseEntity<String>(SUCCESS,status);
+        return new ResponseEntity<String>(message,status);
     }
 
     @GetMapping("/info/{userId}")

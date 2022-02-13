@@ -38,6 +38,7 @@ public class ProfileServiceImpl implements ProfileService{
         long voteParticipateCount;
         Boolean isLiked = false;
         Boolean isVoted = false;
+        long userVoteSelection;
         for(int i = 0 ; i < voteList.size(); i++){
             Vote vote = voteList.get(i);
             voteCategoryList = voteCategoryRepository.findAllByVoteCategory(vote).get();
@@ -54,6 +55,7 @@ public class ProfileServiceImpl implements ProfileService{
             voteLikesCount = voteLikeRepository.countLike(vote.getVoteId());
             voteReplyCount = replyRepository.countAllByVoteReply(vote);
             voteParticipateCount = 0;
+            userVoteSelection = 0;
             if(voteLikeRepository.findByUserVoteLikesAndVoteLikesByQuery(loggedUser,vote).isPresent()){ // 로그인 유저가 투표에 참여한경우
                 isLiked = true;
             }
@@ -61,14 +63,16 @@ public class ProfileServiceImpl implements ProfileService{
                 voteParticipateCount +=voteParticipateRepository.countAllByVoteParticipate(vote.getVoteSelects().get(j));
                 if(voteParticipateRepository.findByUserParticipateAndVoteParticipate(loggedUser,vote.getVoteSelects().get(j)).isPresent()){ // 로그인 유저가 투표에 참여한경우
                     isVoted = true;
-                    break;
+                }
+                if(voteParticipateRepository.findByUserParticipateAndVoteParticipate(profileUser,vote.getVoteSelects().get(j)).isPresent()){ // 프로필 유저가 투표한 선택지
+                    userVoteSelection = vote.getVoteSelects().get(j).getVoteSelectId();
                 }
             }
             voteDtoList.add(new VoteDto(
                     vote.getVoteId(),vote.getVoteName(),vote.getAuthor().getUsername(),vote.getVoteContent(),vote.getVoteType(),vote.getVoteCreateTime()
                     ,vote.getVoteExpirationTime(),vote.getUserAnonymouseType(),vote.getVoteAnonymouseType()
                     ,voteCategoryDtoList,selectionDtoList,voteLikesCount,voteReplyCount,profileUser.getUserProfilePhoto()
-                    ,voteParticipateCount,isVoted,isLiked
+                    ,voteParticipateCount,isVoted,isLiked,userVoteSelection
             ));
         }
         return voteDtoList;
@@ -119,7 +123,7 @@ public class ProfileServiceImpl implements ProfileService{
                     vote.getVoteId(),vote.getVoteName(),vote.getAuthor().getUsername(),vote.getVoteContent(),vote.getVoteType(),vote.getVoteCreateTime()
                     ,vote.getVoteExpirationTime(),vote.getUserAnonymouseType(),vote.getVoteAnonymouseType()
                     ,voteCategoryDtoList,selectionDtoList,voteLikesCount,voteReplyCount,profileUser.getUserProfilePhoto()
-                    ,voteParticipateCount,isVoted,isLiked
+                    ,voteParticipateCount,isVoted,isLiked,0
             ));
         }
         return voteDtoList;
@@ -137,6 +141,7 @@ public class ProfileServiceImpl implements ProfileService{
         long voteParticipateCount;
         Boolean isLiked = false;
         Boolean isVoted = false;
+        long userVoteSelection;
         long voteLikesCount;
         long voteReplyCount;
         for(int i = 0 ; i < voteParticipateList.size(); i++){
@@ -156,6 +161,7 @@ public class ProfileServiceImpl implements ProfileService{
             voteReplyCount = replyRepository.countAllByVoteReply(vote);
 
             voteParticipateCount = 0;
+            userVoteSelection = 0;
             if(voteLikeRepository.findByUserVoteLikesAndVoteLikesByQuery(loggedUser,vote).isPresent()){ // 로그인 유저가 투표에 참여한경우
                 isLiked = true;
             }
@@ -163,14 +169,16 @@ public class ProfileServiceImpl implements ProfileService{
                 voteParticipateCount +=voteParticipateRepository.countAllByVoteParticipate(vote.getVoteSelects().get(j));
                 if(voteParticipateRepository.findByUserParticipateAndVoteParticipate(loggedUser,vote.getVoteSelects().get(j)).isPresent()){ // 로그인 유저가 투표에 참여한경우
                     isVoted = true;
-                    break;
+                }
+                if(voteParticipateRepository.findByUserParticipateAndVoteParticipate(profileUser,vote.getVoteSelects().get(j)).isPresent()){ // 프로필 유저가 투표한 선택지
+                    userVoteSelection = vote.getVoteSelects().get(j).getVoteSelectId();
                 }
             }
             voteDtoList.add(new VoteDto(
                     vote.getVoteId(),vote.getVoteName(),vote.getAuthor().getUsername(),vote.getVoteContent(),vote.getVoteType(),vote.getVoteCreateTime()
                     ,vote.getVoteExpirationTime(),vote.getUserAnonymouseType(),vote.getVoteAnonymouseType()
                     ,voteCategoryDtoList,selectionDtoList,voteLikesCount,voteReplyCount,profileUser.getUserProfilePhoto()
-                    ,voteParticipateCount,isVoted,isLiked
+                    ,voteParticipateCount,isVoted,isLiked,userVoteSelection
             ));
         }
         return voteDtoList;
