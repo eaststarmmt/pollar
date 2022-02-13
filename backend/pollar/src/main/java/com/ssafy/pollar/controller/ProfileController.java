@@ -87,7 +87,7 @@ public class ProfileController {
         List<VoteDto> voteDtoList = new ArrayList<>();
         try {
             voteDtoList = profileService.getProfileLikeVotes(logInUserId,profileUserId);
-            resultMap.put("uploadsVoteList",voteDtoList);
+            resultMap.put("likesVoteList",voteDtoList);
             status = HttpStatus.OK;
             resultMap.put("message",SUCCESS);
         }catch (Exception e){
@@ -106,7 +106,7 @@ public class ProfileController {
         List<VoteDto> voteDtoList = new ArrayList<>();
         try {
             voteDtoList = profileService.getProfileParticipateVotes(logInUserId,profileUserId);
-            resultMap.put("uploadsVoteList",voteDtoList);
+            resultMap.put("participatesVoteList",voteDtoList);
             status = HttpStatus.OK;
             resultMap.put("message",SUCCESS);
         }catch (Exception e){

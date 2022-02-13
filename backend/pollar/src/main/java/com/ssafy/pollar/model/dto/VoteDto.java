@@ -1,7 +1,6 @@
 package com.ssafy.pollar.model.dto;
 
 import com.ssafy.pollar.domain.entity.*;
-import com.ssafy.pollar.model.repository.VoteRepository;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
@@ -20,8 +19,7 @@ import java.util.List;
 @ApiModel(value = "VoteDto : 피드정보", description = "피드의 상세 정보를 나타낸다.")
 public class VoteDto {
 
-
-    public VoteDto(Vote vote,long likeCount ,long parCount) {     // vote entity 받아와서 vote dto로 변환. list로 딸려있는 애들은 따로 요청해서 보내야 될거 같음
+    public VoteDto(Vote vote) {     // vote entity 받아와서 vote dto로 변환. list로 딸려있는 애들은 따로 요청해서 보내야 될거 같음
         this.voteId = vote.getVoteId();
         this.voteName = vote.getVoteName();
         this.voteContent = vote.getVoteContent();
@@ -31,8 +29,6 @@ public class VoteDto {
         this.voteAnonymousType = vote.getVoteAnonymouseType();
         this.voteCreateTime = vote.getVoteCreateTime();
         this.author=vote.getAuthor().getUserId();
-        this.voteLikeCount=likeCount;
-        this.voteParticipateCount=parCount;
     }
 
     public VoteDto(long voteId, String voteName){// 피드 검색용
@@ -52,7 +48,7 @@ public class VoteDto {
     public VoteDto(long voteId, String voteName, String author,String voteContent,Boolean voteType,LocalDateTime voteCreateTime
             ,LocalDateTime voteExpirationTime ,Boolean userAnonymousType,Boolean voteAnonymousType
             ,List<String> voteCategoriesName,List<SelectionDto> voteSelects,long voteLikeCount, long voteReplyCount,String userProfilePhoto
-            ,long voteParticipateCount,Boolean isVoted,Boolean isLiked){
+            ,long voteParticipateCount,Boolean isVoted,Boolean isLiked,long userVoteSelection){
         this.voteId = voteId;
         this.voteName = voteName;
         this.author = author;
@@ -70,6 +66,7 @@ public class VoteDto {
         this.voteParticipateCount = voteParticipateCount;
         this.isUserVoted = isVoted;
         this.isUserLiked = isLiked;
+        this.userVoteSelection = userVoteSelection;
     }
 
     @ApiModelProperty(position = 1, value = "피드 아이디", notes="자동으로 생성되므로 작성 보내지 않는다")
@@ -114,5 +111,7 @@ public class VoteDto {
     private Boolean isUserVoted;
     @ApiModelProperty(position = 21, value = "좋아요 여부")
     private Boolean isUserLiked;
+    @ApiModelProperty(position = 22, value = "투표 참여한 사람이 선택한 선택지")
+    private long userVoteSelection;
 
 }
