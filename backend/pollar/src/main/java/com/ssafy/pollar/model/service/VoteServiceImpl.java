@@ -202,6 +202,7 @@ public class VoteServiceImpl implements VoteService {
         return dtoList;
     }
 
+
     @Override
     public List<VoteDto> getUserMadeVoteList(String userId) throws Exception {      // 유저가 만든 투표리스트
         List<Vote> entityList = voteRepository.findAllByAuthor(userRepository.findByUserId(userId).get());
@@ -268,6 +269,18 @@ public class VoteServiceImpl implements VoteService {
         List<Vote> entityList = voteRepository.getTop3TrendingVote(LocalDateTime.now(),pageRequest);
         List<VoteDto> dtoList = convertEntityListToDtoList(entityList);
         return dtoList;
+    }
+
+    @Override
+    public List<Integer> getParticipateCountBySelections(Long voteId){  //해당 투표의 각 선택지 별 참여자수 반환
+        List<VoteSelect> selectList = voteSelectRepository.getAllByVoteSelect(voteRepository.findById(voteId).get());
+        List<Integer> participateCountList = new ArrayList<>();
+
+        for(VoteSelect select : selectList){
+            List<User> userList = voteParticipateRepository.getUserList(select);
+            participateCountList.add(userList.size());
+        }
+        return participateCountList;
     }
 
 

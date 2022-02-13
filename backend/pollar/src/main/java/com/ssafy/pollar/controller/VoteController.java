@@ -123,11 +123,14 @@ public class VoteController {
         return new ResponseEntity<>(list,HttpStatus.OK);
     }
 
-    @ApiOperation(value = "투표 참여자 수")
+    @ApiOperation(value = "투표 참여자 수 , 선택지 별 참여자 수")
     @GetMapping("{voteId}/vparcount")
-    public ResponseEntity<Long> getVoteParticipateCount(@PathVariable @ApiParam(value = "투표아이디") Long voteId)throws Exception{
+    public ResponseEntity<Map<String,Object>> getVoteParticipateCount(@PathVariable @ApiParam(value = "투표아이디") Long voteId)throws Exception{
+        Map<String,Object> resultMap = new HashMap<>();
         long cnt = voteService.getVoteUserList(voteId).size();
-        return new ResponseEntity<>(cnt,HttpStatus.OK);
+        resultMap.put("total",cnt);
+        resultMap.put("selectionCountsList",voteService.getParticipateCountBySelections(voteId));
+        return new ResponseEntity<>(resultMap,HttpStatus.OK);
     }
 
     @ApiOperation(value = "유저가 만든 투표리스트")
