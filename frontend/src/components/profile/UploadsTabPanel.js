@@ -1,18 +1,35 @@
 import PollDetailCard from '../polls/PollDetailCard';
 
 import { Grid, Typography } from '@mui/material';
-import posts from '../../_mocks_/blog';
 import GradAnimatedButton from '../common/GradAnimatedButton';
+import { useEffect, useState } from 'react';
+import { getUserUploadsList } from '../../services/api/ProfileApi';
+import { getLoggedUserId } from '../../utils/loggedUser';
 // ----------------------------------------------------------------------
 
-export default function UploadsTabPanel() {
+export default function UploadsTabPanel({ userId }) {
+  const [pollList, setPollList] = useState([]);
+
+  /* 사용자가 업로드한 투표 목록 요청 */
+  const getUploadsList = async () => {
+    const list = await getUserUploadsList(userId);
+    setPollList(list);
+  };
+
+  useEffect(() => {
+    if (typeof userId !== 'undefined') getUploadsList();
+  }, [userId]);
+
   return (
     <>
       {/* 업로드한 투표 리스트 */}
       <Grid container spacing={3}>
-        {posts.map((post, index) => (
-          <PollDetailCard key={post.id} post={post} index={index} />
-        ))}
+        {/* 작성자 익명 투표일 경우에 숨김처리 (사용자 본인 프로필일 경우 X) */}
+        {pollList.map((poll, index) =>
+          !poll.userAnonymousType || poll.author === getLoggedUserId() ? (
+            <PollDetailCard key={poll.voteId} poll={poll} index={index} />
+          ) : null
+        )}
       </Grid>
 
       {/* 투표 생성 버튼 */}

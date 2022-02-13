@@ -32,7 +32,6 @@ export default function FollowListModal({ openModal, type, listOwnerId }) {
     setOpen(false);
   };
 
-  // todo get Follower, Following list
   useEffect(() => {
     // 처음 Component 생성 시점일 경우에는 open이 'true'가 되는 것을 방지하기 위한 로직
     if (open === undefined) {

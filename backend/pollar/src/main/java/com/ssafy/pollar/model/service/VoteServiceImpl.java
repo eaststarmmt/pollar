@@ -42,7 +42,7 @@ public class VoteServiceImpl implements VoteService {
     private String uploadFolder;
 
     @Override
-    public void create(VoteDto voteDto, List<MultipartFile> votePhotos) throws Exception {  // 피드 생성
+    public Long create(VoteDto voteDto, List<MultipartFile> votePhotos) throws Exception {  // 피드 생성
 
         //userid로 작성자 User 객체 받아오기
         User author = userRepository.findByUserId(voteDto.getAuthor()).get();
@@ -63,7 +63,7 @@ public class VoteServiceImpl implements VoteService {
                 .voteCreateTime(LocalDateTime.now())
                 .author(author)
                 .build();
-        voteRepository.save(vote);  // DB에 전달 받은 vote 정보 저장
+        Long voteId = voteRepository.save(vote).getVoteId();  // DB에 전달 받은 vote 정보 저장
 
         // 투표 선택지 등록
         if(vote.getVoteType()) {   // 텍스트 투표 일때
@@ -101,6 +101,8 @@ public class VoteServiceImpl implements VoteService {
                     .build());
         }
 
+        return voteId;
+
     }
 
     @Override
@@ -111,18 +113,16 @@ public class VoteServiceImpl implements VoteService {
 
     @Override
     public VoteDto detail(Long voteId) throws Exception {   // 피드 상세보기
-        Optional<Vote> vote = voteRepository.findById(voteId);  // 아이디로 해당 투표 찾기
-        return new VoteDto(vote.get());     // 해당 투표를 dto로 변환 후 리턴
+        Vote vote = voteRepository.findById(voteId).get();  // 아이디로 해당 투표 찾기
+        long likeCount =countLike(vote.getVoteId());
+        long parCount = getVoteUserList(vote.getVoteId()).size();
+        return new VoteDto(vote,likeCount,parCount);     // 해당 투표를 dto로 변환 후 리턴
     }
 
     @Override
     public List<VoteDto> getVoteList() throws Exception {       //피드 전체 목록 반환
         List<Vote> list = voteRepository.findByOrderByVoteCreateTimeDesc(); //생성시간 내림차순으로 정렬 최신순으로
-        List<VoteDto> dtoList = new ArrayList<>();
-        for (Vote vote: list) {
-            VoteDto dto = new VoteDto(vote);
-            dtoList.add(dto);
-        }
+        List<VoteDto> dtoList =convertEntityListToDtoList(list);
         return dtoList;
     }
 
@@ -202,15 +202,11 @@ public class VoteServiceImpl implements VoteService {
         return dtoList;
     }
 
+
     @Override
     public List<VoteDto> getUserMadeVoteList(String userId) throws Exception {      // 유저가 만든 투표리스트
         List<Vote> entityList = voteRepository.findAllByAuthor(userRepository.findByUserId(userId).get());
-        List<VoteDto> dtoList = new ArrayList<>();
-
-        for (Vote entity: entityList) {
-            VoteDto dto = new VoteDto(entity);
-            dtoList.add(dto);
-        }
+        List<VoteDto> dtoList = convertEntityListToDtoList(entityList);
         return dtoList;
     }
 
@@ -222,12 +218,7 @@ public class VoteServiceImpl implements VoteService {
     @Override
     public List<VoteDto> getUserParticipateVoteList(String userId) throws Exception {   //유저가 참여한 투표 리스트
         List<Vote> entityList = voteRepository.getUserParticipateVoteList(userId);
-        List<VoteDto> dtoList = new ArrayList<>();
-
-        for (Vote entity: entityList) {
-            VoteDto dto = new VoteDto(entity);
-            dtoList.add(dto);
-        }
+        List<VoteDto> dtoList = convertEntityListToDtoList(entityList);
         return dtoList;
     }
 
@@ -240,12 +231,7 @@ public class VoteServiceImpl implements VoteService {
     @Override
     public List<VoteDto> getUserLikeVoteList(String userId) throws Exception {
         List<Vote> entityList = voteRepository.getUserLikeVoteList(userId);
-        List<VoteDto> dtoList = new ArrayList<>();
-
-        for (Vote entity: entityList) {
-            VoteDto dto = new VoteDto(entity);
-            dtoList.add(dto);
-        }
+        List<VoteDto> dtoList = convertEntityListToDtoList(entityList);
         return dtoList;
     }
 
@@ -258,11 +244,7 @@ public class VoteServiceImpl implements VoteService {
             List<Vote> temp = voteRepository.getUserInterestVoteList(cate);
             entityList.addAll(temp);
         }
-        List<VoteDto> dtoList = new ArrayList<>();
-        for (Vote entity: entityList) {
-            VoteDto dto = new VoteDto(entity);
-            dtoList.add(dto);
-        }
+        List<VoteDto> dtoList = convertEntityListToDtoList(entityList);
         return dtoList;
     }
 
@@ -276,22 +258,38 @@ public class VoteServiceImpl implements VoteService {
             entityList.addAll(temp);
         }
 
-        List<VoteDto> dtoList = new ArrayList<>();
-        for (Vote entity: entityList) {
-            VoteDto dto = new VoteDto(entity);
-            dtoList.add(dto);
-        }
+        List<VoteDto> dtoList = convertEntityListToDtoList(entityList);
         return dtoList;
     }
 
     @Override
-    public List<VoteDto> getTrendingVote()throws Exception{
+    public List<VoteDto> getTrendingVote()throws Exception{ // 인기투표
 
         PageRequest pageRequest = PageRequest.of(0,3);
         List<Vote> entityList = voteRepository.getTop3TrendingVote(LocalDateTime.now(),pageRequest);
-        List<VoteDto> dtoList = new ArrayList<>();
+        List<VoteDto> dtoList = convertEntityListToDtoList(entityList);
+        return dtoList;
+    }
+
+    @Override
+    public List<Integer> getParticipateCountBySelections(Long voteId){  //해당 투표의 각 선택지 별 참여자수 반환
+        List<VoteSelect> selectList = voteSelectRepository.getAllByVoteSelect(voteRepository.findById(voteId).get());
+        List<Integer> participateCountList = new ArrayList<>();
+
+        for(VoteSelect select : selectList){
+            List<User> userList = voteParticipateRepository.getUserList(select);
+            participateCountList.add(userList.size());
+        }
+        return participateCountList;
+    }
+
+
+    public List<VoteDto> convertEntityListToDtoList(List<Vote> entityList) throws Exception{    //엔티티리스트 -> dto리스트 함수화화
+       List<VoteDto> dtoList = new ArrayList<>();
         for (Vote entity: entityList) {
-            VoteDto dto = new VoteDto(entity);
+            long likeCount =countLike(entity.getVoteId());
+            long parCount = getVoteUserList(entity.getVoteId()).size();
+            VoteDto dto = new VoteDto(entity,likeCount,parCount);
             dtoList.add(dto);
         }
         return dtoList;

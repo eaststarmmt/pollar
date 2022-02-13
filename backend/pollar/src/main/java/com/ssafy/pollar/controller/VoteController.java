@@ -16,6 +16,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -31,9 +32,12 @@ public class VoteController {
     private static final String SUCCESS = "success";
     @ApiOperation(value = "피드생성", notes = "피드 정보를 입력한다.")
     @PostMapping("/create")
-    public ResponseEntity<String> createVote(@RequestPart(value = "voteDto") VoteDto voteDto, @RequestPart(value = "votePhotos", required = false) List<MultipartFile> votePhotos) throws Exception {
-        voteService.create(voteDto, votePhotos);
-        return new ResponseEntity<String>(SUCCESS, HttpStatus.OK);  // status 200과 success라는 문자열을 반환
+    public ResponseEntity<Map<String,Object>> createVote(@RequestPart(value = "voteDto") VoteDto voteDto, @RequestPart(value = "votePhotos", required = false) List<MultipartFile> votePhotos) throws Exception {
+        Long voteId = voteService.create(voteDto, votePhotos);
+        Map<String,Object> resultMap = new HashMap<>();
+        resultMap.put("message",SUCCESS);
+        resultMap.put("voteId",voteId);
+        return new ResponseEntity<>(resultMap, HttpStatus.OK);  // status 200과 success라는 문자열을 반환
     }
 
     @ApiOperation(value = "피드 삭제", notes = "해당 피드를 삭제한다.")
@@ -63,8 +67,8 @@ public class VoteController {
         int voteId = (int) map.get("voteId");
         voteService.insertLike(userId, (long)voteId);
         // 좋아요 알림
-        String receiveId = voteService.detail((long)map.get("voteId")).getAuthor();
-        notificationService.feedLikeNotification((long)map.get("voteId"),(String)map.get("userId"),receiveId);
+        String receiveId = voteService.detail((long)voteId).getAuthor();
+        notificationService.feedLikeNotification((long)voteId,(String)map.get("userId"),receiveId);
         return new ResponseEntity<>(SUCCESS,HttpStatus.OK);
     }
 
@@ -119,11 +123,14 @@ public class VoteController {
         return new ResponseEntity<>(list,HttpStatus.OK);
     }
 
-    @ApiOperation(value = "투표 참여자 수")
+    @ApiOperation(value = "투표 참여자 수 , 선택지 별 참여자 수")
     @GetMapping("{voteId}/vparcount")
-    public ResponseEntity<Long> getVoteParticipateCount(@PathVariable @ApiParam(value = "투표아이디") Long voteId)throws Exception{
+    public ResponseEntity<Map<String,Object>> getVoteParticipateCount(@PathVariable @ApiParam(value = "투표아이디") Long voteId)throws Exception{
+        Map<String,Object> resultMap = new HashMap<>();
         long cnt = voteService.getVoteUserList(voteId).size();
-        return new ResponseEntity<>(cnt,HttpStatus.OK);
+        resultMap.put("total",cnt);
+        resultMap.put("selectionCountsList",voteService.getParticipateCountBySelections(voteId));
+        return new ResponseEntity<>(resultMap,HttpStatus.OK);
     }
 
     @ApiOperation(value = "유저가 만든 투표리스트")

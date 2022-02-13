@@ -1,14 +1,27 @@
 import { Grid } from '@mui/material';
 import PollLikedCard from '../polls/PollLikedCard';
-import PollSummaryCard from '../polls/PollSummaryCard';
-import posts from '../../_mocks_/blog';
+import { useEffect, useState } from 'react';
+import { getUserLikesList } from '../../services/api/ProfileApi';
 
-export default function LikesTabPanel() {
+export default function LikesTabPanel({ userId }) {
+  const [pollList, setPollList] = useState([]);
+
+  /* 사용자가 '좋아요' 누른 투표 목록 요청 */
+  const getLikesList = async () => {
+    const list = await getUserLikesList(userId);
+    console.log(list);
+    setPollList(list);
+  };
+
+  useEffect(() => {
+    getLikesList();
+  }, []);
+
   return (
     <>
       <Grid container spacing={3}>
-        {posts.map((post, index) => (
-          <PollLikedCard key={post.id} post={post} index={index} />
+        {pollList.map((poll, index) => (
+          <PollLikedCard key={poll.voteId} poll={poll} index={index} />
         ))}
       </Grid>
     </>

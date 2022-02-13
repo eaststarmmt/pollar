@@ -64,7 +64,7 @@ public class SearchServiceImpl implements SearchService{
             userProfile = userList.get(i).getUserProfilePhoto();
             User nowUser = userRepository.findByUserNickname(searchUserNickname).get();
             followerCount = followingRepository.findAllByFollower(nowUser).get().size();
-            participateVoteCount = voteParticipateRepository.existsAllByUserParticipate(nowUser);
+            participateVoteCount = voteParticipateRepository.countAllByUserParticipate(nowUser);
             createVoteCount = voteRepository.findAllByAuthor(userRepository.findByUserNickname(searchUserNickname).get()).size();
             if(searchUserNickname.contains(userNickname)){
                 userDtoList.add(new UserDto(userId,searchUserNickname,userProfile,followerCount,participateVoteCount,createVoteCount));
@@ -111,7 +111,7 @@ public class SearchServiceImpl implements SearchService{
            feedAuthorName = vote.getAuthor().getUserNickname();
            feedContent = vote.getVoteContent();
            feedLikeCount = voteLikeRepository.countLike(feedId);
-           feedReplyCount = replyRepository.existsAllByVoteReply(vote);
+           feedReplyCount = replyRepository.countAllByVoteReply(vote);
            voteDtoList.add(new VoteDto(feedId,searchFeedName,feedAuthorName,feedContent,feedLikeCount,feedReplyCount));
         }
         return voteDtoList;

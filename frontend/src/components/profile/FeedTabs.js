@@ -28,7 +28,7 @@ const style = {
   py: 2,
 };
 
-function Posts() {
+export default function FeedTabs({ userId }) {
   const [value, setValue] = useState('1');
 
   const handleChange = (event, newValue) => {
@@ -52,13 +52,13 @@ function Posts() {
           </Box>
           <Box overflow="auto" sx={style}>
             <TabPanel value="1">
-              <UploadsTabPanel />
+              <UploadsTabPanel userId={userId} />
             </TabPanel>
             <TabPanel value="2">
-              <VotesTabPanel />
+              <VotesTabPanel userId={userId} />
             </TabPanel>
             <TabPanel value="3">
-              <LikesTabPanel />
+              <LikesTabPanel userId={userId} />
             </TabPanel>
           </Box>
         </TabContext>
@@ -66,5 +66,3 @@ function Posts() {
     </Container>
   );
 }
-
-export default Posts;
