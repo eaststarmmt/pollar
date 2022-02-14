@@ -272,11 +272,11 @@ public class VoteServiceImpl implements VoteService {
     }
 
     @Override
-    public List<VoteDto> getTrendingVote()throws Exception{ // 인기투표
+    public List<VoteDto> getTrendingVote(String userId)throws Exception{ // 인기투표
 
         PageRequest pageRequest = PageRequest.of(0,3);
         List<Vote> entityList = voteRepository.getTop3TrendingVote(LocalDateTime.now(),pageRequest);
-        List<VoteDto> dtoList = convertEntityListToDtoList(entityList);
+        List<VoteDto> dtoList = convertEntityListToDtoListWithUser(entityList,userId);
         return dtoList;
     }
 
