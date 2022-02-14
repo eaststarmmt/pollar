@@ -55,8 +55,8 @@ public class VoteController {
 
     @ApiOperation(value = "피드 전체목록")
     @GetMapping
-    public ResponseEntity<List<VoteDto>> getVoteList() throws Exception{
-        List<VoteDto> list = voteService.getVoteList();
+    public ResponseEntity<List<VoteDto>> getVoteList(@RequestBody @ApiParam(value = "로그인한 유저 아이디") String userId) throws Exception{
+        List<VoteDto> list = voteService.getVoteList(userId);
         return new ResponseEntity<>(list,HttpStatus.OK);
     }
 

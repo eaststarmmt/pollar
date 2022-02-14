@@ -11,7 +11,7 @@ public interface VoteService {
     Long create(VoteDto voteDto, List<MultipartFile> votePhotos) throws Exception;  // 게시글 만들기
     void delete(Long voteId) throws Exception;  // 게시글 삭제
     VoteDto detail(Long voteId) throws Exception;                // 게시글 상세보기
-    List<VoteDto> getVoteList() throws Exception;
+    List<VoteDto> getVoteList(String userId) throws Exception;
     void insertLike(String userId, Long voteId)throws Exception;
     void cancelLike(String userId , Long voteId)throws Exception;
     int countLike(Long voteId)throws Exception;

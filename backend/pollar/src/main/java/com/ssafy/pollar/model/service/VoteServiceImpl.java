@@ -6,6 +6,7 @@ import com.ssafy.pollar.model.dto.ParticipateDto;
 import com.ssafy.pollar.model.dto.SelectionDto;
 import com.ssafy.pollar.model.dto.VoteDto;
 import com.ssafy.pollar.model.repository.*;
+import com.ssafy.pollar.util.S3Uploader;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.PageRequest;
@@ -33,13 +34,15 @@ public class VoteServiceImpl implements VoteService {
     private final VoteSelectRepository voteSelectRepository;
     private final VoteLikeRepository voteLikeRepository;
     private final VoteParticipateRepository voteParticipateRepository;
+    private final ReplyRepository replyRepository;
 
 
 //    @Value("${file.path}")
 
     private final FollowingService followingService;
 
-    private String uploadFolder;
+
+    private final S3Uploader s3Uploader;
 
     @Override
     public Long create(VoteDto voteDto, List<MultipartFile> votePhotos) throws Exception {  // 피드 생성
@@ -76,17 +79,23 @@ public class VoteServiceImpl implements VoteService {
                 voteSelectRepository.save(voteSelect);
             }
         } else {    // 이미지 투표일때. 사진 저장까지 하면서 선택지 등록 해야됨
-            for(int i = 0; i < 2; i ++) {
-                String imageFileName = "vote" + "_" + votePhotos.get(i).getOriginalFilename();
-                Path imageFilePath = Paths.get(uploadFolder + imageFileName);
+            for(int i = 0; i < votePhotos.size(); i ++) {
+//                String imageFileName = "vote" + "_" + votePhotos.get(i).getOriginalFilename();
+//                String imageFilePath = Paths.get(imageFileName);
+                String imageFilePath = s3Uploader.upload(votePhotos.get(i),"votePhotos");
+
                 try {
-                    Files.write(imageFilePath, votePhotos.get(i).getBytes());   // votePhotos 리스트에서 이미지 순서대로 저장
+//                    Files.write(imageFilePath, votePhotos.get(i).getBytes());   // votePhotos 리스트에서 이미지 순서대로 저장
+                    System.out.println("save 전"+imageFilePath);
                     VoteSelect voteSelect = VoteSelect.builder()
                             .voteSelect(vote)
-                            .content(imageFilePath.toString())      // 경로도 되어있기 때문에 toString을 이용하여 string 타입으로 넣어준다
+                            .selectionTitle(voteDto.getVoteSelects().get(i).getSelectionTitle())
+                            .content(imageFilePath)      // 경로도 되어있기 때문에 toString을 이용하여 string 타입으로 넣어준다
                             .build();
                     voteSelectRepository.save(voteSelect);
+                    System.out.println("save 후"+imageFilePath);
                 } catch (Exception e) {
+                    System.out.println("에러러러러러");
                     e.printStackTrace();
                 }
             }
@@ -120,9 +129,9 @@ public class VoteServiceImpl implements VoteService {
     }
 
     @Override
-    public List<VoteDto> getVoteList() throws Exception {       //피드 전체 목록 반환
+    public List<VoteDto> getVoteList(String userId) throws Exception {       //피드 전체 목록 반환
         List<Vote> list = voteRepository.findByOrderByVoteCreateTimeDesc(); //생성시간 내림차순으로 정렬 최신순으로
-        List<VoteDto> dtoList =convertEntityListToDtoList(list);
+        List<VoteDto> dtoList =convertEntityListToDtoListWithUser(list,userId);
         return dtoList;
     }
 
@@ -244,7 +253,7 @@ public class VoteServiceImpl implements VoteService {
             List<Vote> temp = voteRepository.getUserInterestVoteList(cate);
             entityList.addAll(temp);
         }
-        List<VoteDto> dtoList = convertEntityListToDtoList(entityList);
+        List<VoteDto> dtoList = convertEntityListToDtoListWithUser(entityList,userId);
         return dtoList;
     }
 
@@ -258,7 +267,7 @@ public class VoteServiceImpl implements VoteService {
             entityList.addAll(temp);
         }
 
-        List<VoteDto> dtoList = convertEntityListToDtoList(entityList);
+        List<VoteDto> dtoList = convertEntityListToDtoListWithUser(entityList,userId);
         return dtoList;
     }
 
@@ -294,4 +303,39 @@ public class VoteServiceImpl implements VoteService {
         }
         return dtoList;
     }
+
+    public List<VoteDto> convertEntityListToDtoListWithUser(List<Vote> entityList,String userId) throws Exception{    //엔티티리스트 -> dto리스트 함수화화
+        List<VoteDto> dtoList = new ArrayList<>();
+        for (Vote entity: entityList) {
+            boolean isLiked=false;
+            boolean isVoted=false;
+            String userprofilePhoto = null;
+            long userselect = 0;
+            if(userId!=null){
+                User user = userRepository.findByUserId(userId).get();
+                userprofilePhoto = user.getUserProfilePhoto();
+                userselect = voteRepository.isParticipate(user.getUserId(),entity.getVoteId());
+                if(voteLikeRepository.findByUserVoteLikesAndVoteLikesByQuery(user,entity).isPresent())
+                    isLiked=true;
+                if(userselect!=0)
+                    isVoted=true;
+
+            }
+            long likeCount =countLike(entity.getVoteId());
+            long parCount = getVoteUserList(entity.getVoteId()).size();
+            long replyCount = replyRepository.countAllByVoteReply(entity);
+            List<String> voteCategoryNames = new ArrayList<>();
+            List<Category> categoryList = categoryRepository.getVoteCategories(entity.getVoteId());
+            for(Category category : categoryList){
+                voteCategoryNames.add(category.getCategoryNameSmall());
+            }
+            List<SelectionDto> selectionDtoList = getVoteSelectionList(entity.getVoteId());
+
+
+            VoteDto dto = new VoteDto(entity,likeCount,parCount,replyCount,userprofilePhoto,isVoted,isLiked,voteCategoryNames,selectionDtoList,userselect);
+            dtoList.add(dto);
+        }
+        return dtoList;
+    }
+
 }
