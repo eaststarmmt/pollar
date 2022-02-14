@@ -24,11 +24,9 @@ const FONT_PRIMARY = 'Public Sans, sans-serif';
 // @eazae
 const FONT_POLLAR = 'Roboto Slab, serif';
 
-const FONT_KR ='Noto Sans KR, sans-serif'
-
 const typography = {
   // [@eazae] join(): Adds all the elements of an array into a string, separated by the specified separator string.
-  fontFamily: [FONT_POLLAR, FONT_PRIMARY, FONT_KR].join(','),
+  fontFamily: [FONT_POLLAR, FONT_PRIMARY].join(','),
   fontWeightRegular: 400,
   fontWeightMedium: 600,
   fontWeightBold: 700,
@@ -74,7 +72,7 @@ const typography = {
     fontSize: pxToRem(16),
   },
   subtitle2: {
-    fontWeight: 600,
+    fontWeight: 500,
     lineHeight: 22 / 14,
     fontSize: pxToRem(14),
   },

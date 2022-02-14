@@ -1,16 +1,10 @@
-import { Link as RouterLink } from 'react-router-dom';
 // material
 import { styled } from '@mui/material/styles';
-import { Box, Card, Link, Container, Typography } from '@mui/material';
-// layouts
-// import AuthLayout from '../layouts/AuthLayout';
+import { Container } from '@mui/material';
 // components
 import Page from '../components/Page';
-import AuthSocial from '../components/login/AuthSocial';
-import MobileHidden from '../components/common/MobileHidden';
-// import RegisterForm from '../components/signup/RegisterForm';
-// import SelectInterests from '../components/signup/SelectInterests';
-import Index from '../components/signup/Index';
+import SignupWizard from '../components/signup/SignupWizard';
+
 // ----------------------------------------------------------------------
 
 const RootStyle = styled(Page)(({ theme }) => ({
@@ -19,99 +13,24 @@ const RootStyle = styled(Page)(({ theme }) => ({
   },
 }));
 
-const SectionStyle = styled(Card)(({ theme }) => ({
-  width: '100%',
-  maxWidth: 464,
-  display: 'flex',
-  flexDirection: 'column',
-  justifyContent: 'center',
-  margin: theme.spacing(2, 0, 2, 2),
-}));
-
 const ContentStyle = styled('div')(({ theme }) => ({
-  maxWidth: 580,
+  maxWidth: 880,
   margin: 'auto',
   display: 'flex',
-  minHeight: '100vh',
+  // minHeight: '100vh',
   flexDirection: 'column',
   justifyContent: 'center',
-  padding: theme.spacing(12, 0),
+  padding: theme.spacing(5, 0),
 }));
 
 // ----------------------------------------------------------------------
 
 export default function SignupPage() {
   return (
-    <RootStyle title="Register | Minimal-UI">
-      {/* <AuthLayout>
-        Already have an account? &nbsp;
-        <Link underline="none" variant="subtitle2" component={RouterLink} to="/login">
-          Login
-        </Link>
-      </AuthLayout> */}
-      {/* 
-      <MobileHidden width="mdDown">
-        <SectionStyle>
-          <Typography variant="h3" sx={{ px: 5, mt: 10, mb: 5 }}>
-            Manage the job more effectively with Minimal
-          </Typography>
-          <img alt="register" src="/static/illustrations/illustration_register.png" />
-        </SectionStyle>
-      </MobileHidden> */}
-
+    <RootStyle title="Signup">
       <Container>
         <ContentStyle>
-          <Card
-            sx={{
-              px: 8,
-              py: 10,
-              backgroundColor: '#fffd',
-              backdropFilter: 'saturate(200%) blur(30px)',
-              boxShadow: '2px 2px 20px 10px rgba(0, 0, 0, 0.1)',
-              overflow: 'visible',
-            }}
-          >
-            <Box sx={{ mb: 5 }}>
-              <Typography variant="h3" gutterBottom color="primary">
-                Sign Up
-              </Typography>
-              <Typography sx={{ color: 'text.secondary' }}>Join us in Pollar!</Typography>
-            </Box>
-
-            {/* <AuthSocial /> */}
-
-            {/* <RegisterForm /> */}
-            <Index />
-
-            <Typography variant="body2" align="center" sx={{ color: 'text.secondary', mt: 3 }}>
-              By registering, I agree to Minimal&nbsp;
-              <Link underline="always" sx={{ color: 'text.primary' }}>
-                Terms of Service
-              </Link>
-              &nbsp;and&nbsp;
-              <Link underline="always" sx={{ color: 'text.primary' }}>
-                Privacy Policy
-              </Link>
-              .
-            </Typography>
-
-            {/* <SelectInterests /> */}
-
-            {/* <MobileHidden width="smUp">
-            <Typography variant="subtitle2" sx={{ mt: 3, textAlign: 'center' }}>
-              Already have an account?&nbsp;
-              <Link to="/login" component={RouterLink}>
-                Login
-              </Link>
-            </Typography>
-          </MobileHidden> */}
-            <Typography variant="subtitle2" sx={{ mt: 3, textAlign: 'center' }}>
-              Already have an account?&nbsp;
-              <Link to="/login" component={RouterLink}>
-                Login
-              </Link>
-            </Typography>
-          </Card>
+          <SignupWizard />
         </ContentStyle>
       </Container>
     </RootStyle>

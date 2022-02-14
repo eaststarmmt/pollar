@@ -1,7 +1,7 @@
 // @mui material components
 import Container from '@mui/material/Container';
 
-import { Box, Icon, Tab, Typography } from '@mui/material';
+import { Box, Tab } from '@mui/material';
 import { useState } from 'react';
 import { TabContext, TabList, TabPanel } from '@mui/lab';
 import UploadsTabPanel from './UploadsTabPanel';
@@ -18,7 +18,7 @@ const style = {
   xl, extra-large: 1536px
   */
   mx: { xs: -4, sm: -5 },
-  mt: -0.5,
+  mt: -0.4,
   mb: -10,
   height: '60vh',
   boxShadow: 10,

@@ -5,9 +5,10 @@ import { alpha } from '@mui/material/styles';
 function createGradient(color1, color2) {
   return `linear-gradient(to bottom, ${color1}, ${color2})`;
 }
-
 //@eazae
 const BACKGROUND = '#F5F5FA';
+//@eazae: for 'Neumorphism' theme
+// const BACKGROUND = '#E4EBF5';
 
 // SETUP COLORS
 const GREY = {
@@ -50,15 +51,15 @@ const SECONDARY = {
 const INFO = {
   lighter: '#D0F2FF',
   light: '#74CAFF',
-  main: '#8585bc',
-  dark: '#5D5FEF',
+  main: '#1890FF',
+  dark: '#0C53B7',
   darker: '#04297A',
   contrastText: '#fff',
 };
 const SUCCESS = {
   lighter: '#E9FCD4',
   light: '#AAF27F',
-  main: '#54D62C',
+  main: '#b6b6d7',
   dark: '#229A16',
   darker: '#08660D',
   contrastText: GREY[800],
@@ -67,14 +68,14 @@ const WARNING = {
   lighter: '#FFF7CD',
   light: '#FFE16A',
   main: '#FFC107',
-  dark: '#EF7147',
+  dark: '#B78103',
   darker: '#7A4F01',
   contrastText: GREY[800],
 };
 const ERROR = {
   lighter: '#FFE7D9',
   light: '#FFA48D',
-  main: '#EA4962',
+  main: '#FF4842',
   dark: '#B72136',
   darker: '#7A0C2E',
   contrastText: '#fff',
@@ -108,7 +109,7 @@ const palette = {
   gradients: GRADIENTS,
   chart: CHART_COLORS,
   divider: GREY[500_24],
-  text: { primary: GREY[800], secondary: GREY[600], disabled: GREY[500] },
+  text: { primary: GREY[800], secondary: GREY[600], disabled: GREY[500], info: SECONDARY.main },
   background: { paper: '#fff', default: BACKGROUND, neutral: GREY[200] },
   action: {
     active: GREY[600],

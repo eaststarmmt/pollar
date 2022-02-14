@@ -25,7 +25,12 @@ export default function VotesTabPanel({ userId }) {
           {/* 투표자 익명 투표일 경우에는 숨김처리 (사용자 본인 프로필일 경우 X) */}
           {pollList.map((poll, index) =>
             !poll.voteAnonymousType || userId === getLoggedUserId() ? (
-              <PollVoteCard key={poll.voteId} poll={poll} index={index} />
+              <PollVoteCard
+                key={poll.voteId}
+                poll={poll}
+                index={index}
+                isOwner={userId === getLoggedUserId()}
+              />
             ) : null
           )}
         </Grid>

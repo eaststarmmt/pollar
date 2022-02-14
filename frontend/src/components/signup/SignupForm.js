@@ -1,6 +1,15 @@
 import React, { useState } from 'react';
 
-import { Stack, TextField, IconButton, InputAdornment } from '@mui/material';
+import {
+  Stack,
+  TextField,
+  IconButton,
+  InputAdornment,
+  Container,
+  Grid,
+  Collapse,
+  Alert,
+} from '@mui/material';
 import { Icon } from '@iconify/react';
 import eyeFill from '@iconify/icons-eva/eye-fill';
 import eyeOffFill from '@iconify/icons-eva/eye-off-fill';
@@ -9,6 +18,7 @@ import Radio from '@mui/material/Radio';
 import RadioGroup from '@mui/material/RadioGroup';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import FormLabel from '@mui/material/FormLabel';
+import CloseIcon from '@mui/icons-material/Close';
 
 import {
   checkId,
@@ -19,8 +29,10 @@ import {
 } from '../../services/api/UserApi';
 
 function SignupForm(props) {
-  const { setNext, setUser, user } = props;
+  const { setConfirm, setUser, user } = props;
   const [showPassword, setShowPassword] = useState(false);
+  // 이메일 인증 누락 시 Alert
+  const [openAlert, setOpenAlert] = useState(false);
 
   // error State
   const [errorState, setErrorState] = useState({
@@ -260,7 +272,28 @@ function SignupForm(props) {
   };
 
   return (
-    <div>
+    <Container sx={{ width: '80%' }}>
+      <Collapse in={openAlert}>
+        <Alert
+          severity="error"
+          action={
+            <IconButton
+              aria-label="close"
+              color="inherit"
+              size="small"
+              onClick={() => {
+                setOpenAlert(false);
+              }}
+            >
+              <CloseIcon fontSize="inherit" />
+            </IconButton>
+          }
+          variant="filled"
+          sx={{ mb: 2 }}
+        >
+          로그인 실패! 입력정보를 확인하세요
+        </Alert>
+      </Collapse>
       <form>
         <Stack spacing={3}>
           <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2}>
@@ -269,7 +302,7 @@ function SignupForm(props) {
               fullWidth
               autoComplete="userId"
               type="text"
-              label="userId"
+              label="Username(ID)"
               value={user.userId}
               onChange={(e) =>
                 setUser({
@@ -288,68 +321,103 @@ function SignupForm(props) {
             />
           </Stack>
           <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2}>
-            <TextField
-              required
-              fullWidth
-              autoComplete="email"
-              type="email"
-              label="Email address"
-              value={user.userEmail}
-              onChange={(e) =>
-                setUser({
-                  ...user,
-                  userEmail: e.target.value,
-                })
-              }
-              onKeyUp={(e) => checkEmailValid(e.target.value)}
-              onBlur={(e) => checkEmailUnique(e.target.value)}
-              error={errorState.emailRegex ? errorState.emailRegex : errorState.emailUnique}
-              helperText={
-                errorState.emailRegex
-                  ? errorMsg.emailRegex
-                  : errorState.emailUnique
-                  ? errorMsg.emailUnique
-                  : emailSend && message
-              }
-            />
-
-            {!user.userEmail || errorState.emailUnique ? (
-              <Button fullWidth size="large" variant="contained" disabled>
-                이메일 인증
-              </Button>
-            ) : (
-              <Button required fullWidth size="large" variant="contained" onClick={handleEmailSend}>
-                이메일 인증
-              </Button>
-            )}
+            <Grid container spacing={1} alignItems="center">
+              <Grid item xs={8}>
+                <TextField
+                  required
+                  fullWidth
+                  autoComplete="email"
+                  type="email"
+                  label="Email address"
+                  value={user.userEmail}
+                  onChange={(e) =>
+                    setUser({
+                      ...user,
+                      userEmail: e.target.value,
+                    })
+                  }
+                  onKeyUp={(e) => checkEmailValid(e.target.value)}
+                  onBlur={(e) => checkEmailUnique(e.target.value)}
+                  error={errorState.emailRegex ? errorState.emailRegex : errorState.emailUnique}
+                  helperText={
+                    errorState.emailRegex
+                      ? errorMsg.emailRegex
+                      : errorState.emailUnique
+                      ? errorMsg.emailUnique
+                      : emailSend && message
+                  }
+                  disabled={emailSend}
+                />
+              </Grid>
+              <Grid item xs={4}>
+                {!user.userEmail || errorState.emailUnique ? (
+                  <Button fullWidth size="large" variant="contained" disabled>
+                    이메일 인증
+                  </Button>
+                ) : (
+                  <Button
+                    required
+                    fullWidth
+                    size="large"
+                    variant="contained"
+                    onClick={handleEmailSend}
+                    disabled={emailSend}
+                  >
+                    이메일 인증
+                  </Button>
+                )}
+              </Grid>
+            </Grid>
           </Stack>
           <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2}>
-            <TextField
-              required
-              fullWidth
-              autoComplete="email-token"
-              type="text"
-              label="Certification Number"
-              value={tokenNumber.token}
-              onChange={(e) =>
-                setTokenNumber({
-                  ...tokenNumber,
-                  token: e.target.value,
-                })
-              }
-              error={tokenState.tokenState}
-              helperText={tokenMessage}
-            />
+            <Grid container spacing={1} alignItems="center">
+              <Grid item xs={8}>
+                <TextField
+                  required
+                  fullWidth
+                  autoComplete="email-token"
+                  type="text"
+                  label="인증번호 입력"
+                  value={tokenNumber.token}
+                  onChange={(e) =>
+                    setTokenNumber({
+                      ...tokenNumber,
+                      token: e.target.value,
+                    })
+                  }
+                  error={tokenState.tokenState}
+                  helperText={tokenMessage}
+                  disabled={!emailSend}
+                />
+              </Grid>
+              <Grid item xs={4}>
+                <Button
+                  fullWidth
+                  size="large"
+                  variant="contained"
+                  onClick={handleTokenSend}
+                  disabled={!tokenNumber.token}
+                >
+                  {!tokenNumber.token ? '입력대기중' : '인증확인'}
+                </Button>
 
-            {!tokenNumber.token ? (
-              <Button fullWidth size="large" variant="contained" disabled>
-                인증번호를 입력하세요
-              </Button>
-            ) : (
-              <Button required fullWidth size="large" variant="contained" onClick={handleTokenSend}>
-                인증확인
-              </Button>
-            )}
+                {/* {!tokenNumber.token ? (
+                  <Button fullWidth size="large" variant="contained" disabled>
+                    인증번호를 입력하세요
+                  </Button>
+                ) : (
+                  <Button
+                    required
+                    fullWidth
+                    size="large"
+                    variant="contained"
+                    onClick={handleTokenSend}
+                  >
+                    인증확인
+                  </Button>
+                )} */}
+              </Grid>
+            </Grid>
           </Stack>
           <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2}>
             <TextField
@@ -382,7 +450,7 @@ function SignupForm(props) {
             fullWidth
             autoComplete="password"
             type={showPassword ? 'text' : 'password'}
-            label="비밀번호"
+            label="Password"
             value={user.password}
             InputProps={{
               endAdornment: (
@@ -403,48 +471,53 @@ function SignupForm(props) {
             error={errorState.passwordRegex}
             helperText={errorState.passwordRegex && errorMsg.passwordRegex}
           />
-          <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2}>
-            <TextField
-              required
-              id="date"
-              type="date"
-              sx={{ width: 200 }}
-              onChange={(e) =>
-                setUser({
-                  ...user,
-                  userBirthday: e.target.value,
-                })
-              }
-              InputLabelProps={{
-                shrink: true,
-                required: true,
-              }}
-            />
-            <FormLabel id="gender-radio-group">Gender</FormLabel>
-            <RadioGroup
-              row
-              aria-labelledby="demo-controlled-radio-buttons-group"
-              name="controlled-radio-buttons-group"
-              value={user.userGender}
-              onChange={(e) =>
-                setUser({
-                  ...user,
-                  userGender: e.target.value,
-                })
-              }
-            >
-              <FormControlLabel value={false} control={<Radio />} label="Male" />
-              <FormControlLabel value={true} control={<Radio />} label="Female" />
-            </RadioGroup>
+          <Stack direction={{ xs: 'column', md: 'row' }} spacing={2}>
+            <Stack direction={{ xs: 'column', sm: 'row' }} alignItems="center" spacing={1}>
+              <FormLabel id="gender-radio-group">Birthday</FormLabel>
+              <TextField
+                required
+                id="date"
+                type="date"
+                sx={{ width: 200 }}
+                onChange={(e) =>
+                  setUser({
+                    ...user,
+                    userBirthday: e.target.value,
+                  })
+                }
+                InputLabelProps={{
+                  shrink: true,
+                  required: true,
+                }}
+              />
+            </Stack>
+            <Stack direction={{ xs: 'column', sm: 'row' }} alignItems="center" spacing={2}>
+              <FormLabel id="gender-radio-group">Gender</FormLabel>
+              <RadioGroup
+                row
+                aria-labelledby="demo-controlled-radio-buttons-group"
+                name="controlled-radio-buttons-group"
+                value={user.userGender}
+                onChange={(e) =>
+                  setUser({
+                    ...user,
+                    userGender: e.target.value,
+                  })
+                }
+              >
+                <FormControlLabel value={false} control={<Radio />} label="Male" />
+                <FormControlLabel value={true} control={<Radio />} label="Female" />
+              </RadioGroup>
+            </Stack>
           </Stack>
           {!user.userId ||
           !user.password ||
           !user.userNickname ||
           !user.userEmail ||
           !user.userBirthday ? (
-            <Button>필수 항목을 모두 작성해주세요</Button>
+            <Button variant="outlined">필수 항목을 모두 작성해주세요</Button>
           ) : tokenNumber.userEmail == user.userEmail && !tokenState.tokenValid ? (
-            <Button fullWidth size="large" variant="contained" onClick={() => setNext(true)}>
+            <Button fullWidth size="large" variant="contained" onClick={() => setConfirm(true)}>
               다음
             </Button>
           ) : (
@@ -452,7 +525,7 @@ function SignupForm(props) {
           )}
         </Stack>
       </form>
-    </div>
+    </Container>
   );
 }
 

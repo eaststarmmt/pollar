@@ -1,9 +1,5 @@
-import Container from '@mui/material/Container';
-
-import { Box, Grid, Paper, Typography } from '@mui/material';
-import { useState } from 'react';
-import { TabContext, TabList, TabPanel } from '@mui/lab';
-// import { TabContext } from '@mui/lab';
+import { Box } from '@mui/material';
+import { useEffect, useState } from 'react';
 import { styled } from '@mui/system';
 import TabsUnstyled from '@mui/base/TabsUnstyled';
 import TabsListUnstyled from '@mui/base/TabsListUnstyled';
@@ -13,8 +9,10 @@ import TabUnstyled, { tabUnstyledClasses } from '@mui/base/TabUnstyled';
 import { useParams } from 'react-router-dom';
 import NeumorphicPaper from '../common/NeumorphicPaper';
 
-import posts from '../../_mocks_/blog';
-import PollDetailCard from './PollDetailCard';
+import RecentsTabPanel from './RecentsTabPanel';
+import InterestsTabPanel from './InterestsTabPanel';
+import FollowingTabPanel from './FollowingTabPanel';
+import { getLoggedUserId } from '../../utils/loggedUser';
 
 const blue = {
   // 50: '#b6b6d7',
@@ -109,43 +107,38 @@ export default function PollListTabs() {
   const { type } = useParams();
   // Navbar를 통해서 들어온 경우에는 default로 첫번째 Tab에 focusing
   const [value, setValue] = useState(type ? type : 'interests');
+  const [isUserLogged, setIsUserLogged] = useState(false);
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
   };
+
+  useEffect(() => {
+    // 로그인된 사용자인지 검사
+    setIsUserLogged(typeof getLoggedUserId() !== 'undefined');
+  }, []);
+
   return (
     <>
       <Box>
         <TabsUnstyled defaultValue={0}>
           <TabsList sx={{ position: 'relative', mt: 3, zIndex: 999 }}>
-            <Tab>관심분야</Tab>
-            <Tab>팔로잉</Tab>
             <Tab>최신순</Tab>
+            <Tab>팔로잉</Tab>
+            <Tab>관심분야</Tab>
           </TabsList>
-          <NeumorphicPaper sx={{ mt: -3, mx: 10, pt: 5, px: 10, zIndex: 0, height: '70vh' }}>
+          <NeumorphicPaper sx={{ mt: -3, mx: 10, pt: 5, px: 0, zIndex: 0, height: '70vh' }}>
             <TabsPanel value={0}>
-              {/* 업로드한 투표 리스트 */}
-              <Grid container spacing={3}>
-                {posts.map((post, index) => (
-                  <PollDetailCard key={post.id} post={post} index={index} />
-                ))}
-              </Grid>
+              {/* 최신순 (전체) 투표 리스트 */}
+              <RecentsTabPanel />
             </TabsPanel>
             <TabsPanel value={1}>
-              {/* 업로드한 투표 리스트 */}
-              <Grid container spacing={3}>
-                {posts.map((post, index) => (
-                  <PollDetailCard key={post.id} post={post} index={index} />
-                ))}
-              </Grid>
+              {/* 사용자 팔로잉 투표 리스트 */}
+              {isUserLogged ? <FollowingTabPanel /> : '로그인 후 조회가능한 목록입니다'}
             </TabsPanel>
             <TabsPanel value={2}>
-              {/* 업로드한 투표 리스트 */}
-              <Grid container spacing={3}>
-                {posts.map((post, index) => (
-                  <PollDetailCard key={post.id} post={post} index={index} />
-                ))}
-              </Grid>
+              {/* 사용자 관심분야 투표 리스트 */}
+              {isUserLogged ? <InterestsTabPanel /> : '로그인 후 조회가능한 목록입니다'}
             </TabsPanel>
           </NeumorphicPaper>
         </TabsUnstyled>

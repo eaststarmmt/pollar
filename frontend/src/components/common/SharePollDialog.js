@@ -21,7 +21,7 @@ export default function SharePollDialog({ openDialog, pollId }) {
   const [isCopied, setIsCopied] = useState(false);
 
   // todo
-  const shareUrl = `https://pollar.com/poll/${pollId}`;
+  const shareUrl = `${process.env.REACT_APP_BASE_URL}/poll/${pollId}`;
 
   const handleClose = () => {
     setOpen(false);

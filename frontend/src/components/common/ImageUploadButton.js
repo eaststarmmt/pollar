@@ -1,16 +1,23 @@
-import { Stack, Avatar } from '@mui/material';
+import { Button, IconButton, Stack, Avatar } from '@mui/material';
 import { styled } from '@mui/system';
+import profile from '../../_mocks_/profile';
 import { modifyProfilePhoto } from '../../services/api/UserApi';
-import { useState, useRef } from 'react';
+import { getProfileInfo } from '../../services/api/ProfileApi';
+import { useEffect, useState, useRef } from 'react';
+import { useNavigate, useParams } from 'react-router-dom';
 import { getLoggedUserId, getLoggedUserPhoto } from '../../utils/loggedUser';
+import { createIntstanceWithAuth } from '../../services/axios';
 
 const Input = styled('input')({
   display: 'none',
 });
 
-export default function ImageUploadButton({ size }) {
+export default function ImageUploadButton({ size, userId }) {
   // 로그인되어있는 사용자의 Id, 이미지 확인
-  const loggedUserId = getLoggedUserId();
+  //// const loggedUserId = getLoggedUserId();
+  let loggedUserId = getLoggedUserId();
+  if (typeof userId !== 'undefined') loggedUserId = userId;
+
   const loggedUserPhoto = getLoggedUserPhoto();
   console.log('==========================================');
   console.log('현재 로그인한 아이디: ' + loggedUserId);

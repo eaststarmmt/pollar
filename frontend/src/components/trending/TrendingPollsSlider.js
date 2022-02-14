@@ -1,4 +1,4 @@
-import { Box, Card, Container, IconButton, Stack } from '@mui/material';
+import { Box, IconButton, Stack } from '@mui/material';
 
 import { useState } from 'react';
 // todo 임시 UI 작업해놓은 것
@@ -6,9 +6,20 @@ import './tempstyle.css';
 import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import PollTrendingCard from '../polls/PollTrendingCard';
+import { getTrendingPollList } from '../../services/api/PollApi';
+import { useEffect } from 'react';
 
 export default function TrendingPollsSlider() {
   const [selectedIndex, setSelectedIndex] = useState(0);
+
+  const [pollList, setPollList] = useState([]);
+
+  /* Trending(인기) 투표 목록 요청 */
+  const getPollList = async () => {
+    const list = await getTrendingPollList();
+    console.log(list);
+    setPollList(list);
+  };
 
   const checkNext = () => {
     const labels = document.querySelectorAll('#slider label');
@@ -18,69 +29,37 @@ export default function TrendingPollsSlider() {
 
   const check = (index) => setSelectedIndex(index);
 
+  useEffect(() => {
+    getPollList();
+  }, []);
+
   return (
     <>
-      <Stack
-        direction="row"
-        justifyContent="space-between"
-        alignItems="center"
-        // sx={{ width: '50vw' }}
-      >
+      <Stack direction="row" justifyContent="space-between" alignItems="center">
         <IconButton color="primary" aria-label="prev item" onClick={checkNext}>
           <ArrowBackIosIcon />
         </IconButton>
-        {/* <div className="md:w-2/4 md:mb-0 mb-6 flex flex-col text-center items-center"> */}
         <Box>
           <section
             id="slider"
             className="w-16 h-20 inline-flex items-center justify-center mb-5 flex-shrink-0"
           >
-            <input
-              type="radio"
-              name="slider"
-              id="s1"
-              checked={selectedIndex === 0}
-              onClick={() => check(0)}
-            />
-            <input
-              type="radio"
-              name="slider"
-              id="s2"
-              checked={selectedIndex === 1}
-              onClick={() => check(1)}
-            />
-            <input
-              type="radio"
-              name="slider"
-              id="s3"
-              checked={selectedIndex === 2}
-              onClick={() => check(2)}
-            />
-            <label htmlFor="s1" id="slide1">
-              <PollTrendingCard />
-            </label>
-            <label htmlFor="s2" id="slide2">
-              <PollTrendingCard />
-              {/* <Card
-                sx={{
-                  height: '100%',
-                  width: '100%',
-                }}
-              >
-                <img
-                  className="fea"
-                  src="https://picsum.photos/200/300"
-                  height="100%"
-                  width="100%"
-                />
-              </Card> */}
-            </label>
-            <label htmlFor="s3" id="slide3">
-              <PollTrendingCard />
-            </label>
+            {pollList.map((poll, index) => (
+              <input
+                type="radio"
+                name="slider"
+                id={`trending${index + 1}`}
+                checked={selectedIndex === index}
+                onChange={() => check(index)}
+              />
+            ))}
+            {pollList.map((poll, index) => (
+              <label htmlFor={`trending${index + 1}`} id={`slide${index + 1}`}>
+                <PollTrendingCard poll={poll} />
+              </label>
+            ))}
           </section>
         </Box>
-        {/* </div> */}
         <IconButton color="primary" aria-label="next item" onClick={checkNext}>
           <ArrowForwardIosIcon />
         </IconButton>

@@ -9,7 +9,7 @@ import FavoriteRoundedIcon from '@mui/icons-material/FavoriteRounded';
 import FavoriteBorderRoundedIcon from '@mui/icons-material/FavoriteBorderRounded';
 import ShareIcon from '@mui/icons-material/Share';
 // material
-import { alpha, styled } from '@mui/material/styles';
+import { styled } from '@mui/material/styles';
 import {
   Box,
   Link,
@@ -26,9 +26,8 @@ import {
 } from '@mui/material';
 import SvgIconStyle from '../common/SvgIconStyle';
 import stringToColor from '../../utils/stringToColor';
-import { checkExpired } from '../../utils/formatTime';
 import { requestPollLike, requestPollUnlike } from '../../services/api/PollApi';
-import { fDateTimeSuffix } from '../../utils/formatTime';
+import { checkExpired, fDateTimeSuffix } from '../../utils/formatTime';
 import { useState } from 'react';
 import SharePollDialog from '../common/SharePollDialog';
 
@@ -122,7 +121,11 @@ export default function PollLikedCard({ poll }) {
   };
 
   /* '좋아요(좋아요해제)' 버튼 클릭시 */
-  const handleToggleLikeClick = async () => {
+  const handleToggleLikeClick = async (event) => {
+    // 뒤의 Card의 onClick 이벤트가 발생하지 않도록 막음
+    event.stopPropagation();
+    event.preventDefault();
+
     const result = isLiked ? await requestPollUnlike(voteId) : await requestPollLike(voteId);
     if (result === 'success') {
       setIsLiked((curr) => !curr);
@@ -133,17 +136,18 @@ export default function PollLikedCard({ poll }) {
   };
 
   /* 공유 버튼 클릭 시 */
-  const handleShareClick = async () => {
+  const handleShareClick = async (event) => {
+    // 뒤의 Card의 onClick 이벤트가 발생하지 않도록 막음
+    event.stopPropagation();
+    event.preventDefault();
+
     setOpenShareDialog(true);
   };
 
   return (
     <Grid item xs={12} sm={12} md={12}>
       <Card sx={{ position: 'relative', backgroundColor: false ? '#ddd' : '#fff' }}>
-        <CardActionArea
-          disableRipple
-          // onClick={handleCardClick}
-        >
+        <CardActionArea disableRipple onClick={handleCardClick}>
           <SvgIconStyle
             color="paper"
             src="/static/icons/shape-avatar.svg"
@@ -164,17 +168,11 @@ export default function PollLikedCard({ poll }) {
                 sx={{ bgcolor: stringToColor(`${author}`) }}
               />
               <Stack direction="row" sx={{ width: '100%' }} spacing={2}>
-                <Typography
-                  // to="#"
-                  color="inherit"
-                  variant="h5"
-                  // underline="hover"
-                  // component={RouterLink}
-                >
+                <Typography color="inherit" variant="h5">
                   {voteName}
                 </Typography>
                 {voteType ? (
-                  <PhotoLibraryIcon color="action" sx={{ pt: 1 }} />
+                  <PhotoLibraryIcon color="disabled" sx={{ pt: 1 }} />
                 ) : (
                   <TextSnippetIcon color="disabled" sx={{ pt: 1 }} />
                 )}

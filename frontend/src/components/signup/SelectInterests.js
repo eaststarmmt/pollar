@@ -21,8 +21,6 @@ export default function SelectInterests({ setConfirm, setUser, user }) {
     setConfirm(categories);
   };
 
-  // console.log(user);
-
   const getList = async () => {
     const list = await getAllCategories();
     // setCategoryList(list);
@@ -144,7 +142,7 @@ export default function SelectInterests({ setConfirm, setUser, user }) {
               key={index}
               label={item.categoryNameSmall}
               onDelete={() => handleDelete(item)}
-              color="secondary"
+              color="success"
             />
           ))}
         </Stack>
@@ -157,7 +155,9 @@ export default function SelectInterests({ setConfirm, setUser, user }) {
             <CategoryGroup key={index} bigCategoryGroup={bigCategoryGroup} />
           ))}
         </Stack>
-        <Button onClick={handleCommit}>확인</Button>
+        <Button variant="contained" onClick={handleCommit} sx={{ marginTop: 5 }}>
+          선택완료
+        </Button>
       </Stack>
     </>
   );

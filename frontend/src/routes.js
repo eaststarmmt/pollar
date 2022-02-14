@@ -44,11 +44,6 @@ export default function Router() {
       children: [{ path: ':id', element: <PollDetailPage /> }],
     },
     {
-      path: '/settings',
-      element: <NavLayout />,
-      children: [{ path: '', element: <SettingsPage /> }],
-    },
-    {
       path: '/about',
       element: <FullLayout />,
       children: [{ path: '', element: <AboutPage /> }],
