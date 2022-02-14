@@ -313,12 +313,15 @@ public class VoteServiceImpl implements VoteService {
             long userselect = 0;
             if(userId!=null){
                 User user = userRepository.findByUserId(userId).get();
-                userprofilePhoto = user.getUserProfilePhoto();
-                userselect = voteRepository.isParticipate(user.getUserId(),entity.getVoteId());
+                if(user.getUserProfilePhoto()!=null)
+                    userprofilePhoto = user.getUserProfilePhoto();
                 if(voteLikeRepository.findByUserVoteLikesAndVoteLikesByQuery(user,entity).isPresent())
                     isLiked=true;
-                if(userselect!=0)
+
+                if(voteSelectRepository.isParticipate(user.getUserId(),entity.getVoteId()).isPresent()){
                     isVoted=true;
+                    userselect = voteSelectRepository.isParticipate(user.getUserId(),entity.getVoteId()).get().getVoteSelectId();
+                }
 
             }
             long likeCount =countLike(entity.getVoteId());
