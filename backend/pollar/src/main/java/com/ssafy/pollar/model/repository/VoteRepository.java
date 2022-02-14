@@ -3,6 +3,7 @@ package com.ssafy.pollar.model.repository;
 import com.ssafy.pollar.domain.entity.Category;
 import com.ssafy.pollar.domain.entity.User;
 import com.ssafy.pollar.domain.entity.Vote;
+import com.ssafy.pollar.domain.entity.VoteSelect;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -24,7 +25,6 @@ public interface VoteRepository extends JpaRepository<Vote,Long> {
     List<Vote> findByOrderByVoteCreateTimeDesc();           //투표 최신순 정렬
     @Query(value = "select  v from VoteParticipate vp join vp.voteParticipate vs join vs.voteSelect v where v.voteExpirationTime > ?1 group by v.voteId order by count(v.voteId) desc")
     List<Vote> getTop3TrendingVote(LocalDateTime now, Pageable pageable);
-    @Query(value = "select vs.voteSelectId from User u join u.userParticipates up join up.voteParticipate vs join vs.voteSelect v where u.userId=?1 and v.voteId=?2")
-    Long isParticipate(String userId, Long voteId);
+
 
 }
