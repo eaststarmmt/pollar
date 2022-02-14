@@ -22,10 +22,12 @@ public class UserDto {
     private String userEmail;
     private Date userBirthday;
     private Boolean userGender;
+    private long followingCount;
     private long followerCount;
     private long participateVoteCount;
     private long createVoteCount;
     private String userProfilePhoto;
+    private Boolean isFollow;
     @ApiModelProperty(value = "유저가 선택한 카테고리 id목록", notes="id를 이용해서 Category 테이블에서 검색")
     private List<Long> categories;
     @ApiModelProperty(value = "유저를 팔로잉한 id목록", notes="id를 이용해서 User 테이블에서 검색")
@@ -57,12 +59,15 @@ public class UserDto {
         this.userProfilePhoto = userProfilePhoto;
     }
 
-    public UserDto(String userId,String userNickname,String userProfilePhoto,long followerCount,long participateVoteCount, long createVoteCount){// 검색 결과의 유저정보
+    public UserDto(String userId,String userNickname,String userProfilePhoto
+            ,long followingCount,long followerCount,long participateVoteCount, long createVoteCount,Boolean isFollow){// 검색 결과의 유저정보
         this.userId = userId;
         this.userNickname = userNickname;
         this.userProfilePhoto = userProfilePhoto;
         this.followerCount = followerCount;
         this.participateVoteCount = participateVoteCount;
         this.createVoteCount = createVoteCount;
+        this.followingCount = followingCount;
+        this.isFollow = isFollow;
     }
 }

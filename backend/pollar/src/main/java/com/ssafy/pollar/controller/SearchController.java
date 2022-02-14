@@ -42,11 +42,11 @@ public class SearchController {
 
     @ApiOperation(value = "검색한 결과로 나오는 유저들")
     @GetMapping("/userlist")
-    public ResponseEntity<Map<String,Object>> userSearchList(@RequestParam String userNickname){
+    public ResponseEntity<Map<String,Object>> userSearchList(@RequestParam String userId, @RequestParam String userNickname){
         HashMap<String,Object> resultMap = new HashMap<>();
         HttpStatus status = null;
         try {
-            List<UserDto> userList = searchService.searchResultUser(userNickname);
+            List<UserDto> userList = searchService.searchResultUser(userId,userNickname);
             resultMap.put("searchUserList",userList);
             resultMap.put("message",SUCCESS);
             status = HttpStatus.OK;
@@ -82,6 +82,23 @@ public class SearchController {
         try {
             List<VoteDto> voteList = searchService.searchCategory(categoryName);
             resultMap.put("feedList",voteList);
+            resultMap.put("message",SUCCESS);
+            status = HttpStatus.OK;
+        }catch (Exception e){
+            resultMap.put("message",FAIL);
+            status = HttpStatus.INTERNAL_SERVER_ERROR;
+        }
+        return new ResponseEntity<>(resultMap,status);
+    }
+
+    @ApiOperation(value = "유저 전체 리스트")
+    @GetMapping("/alluserlist")
+    public ResponseEntity<Map<String ,Object>> allUserListSearch(@RequestParam String userId){
+        HashMap<String,Object> resultMap = new HashMap<>();
+        HttpStatus status = null;
+        try {
+            List<UserDto> userDtoList = searchService.searchAllUser(userId);
+            resultMap.put("allUserList",userDtoList);
             resultMap.put("message",SUCCESS);
             status = HttpStatus.OK;
         }catch (Exception e){

@@ -48,7 +48,8 @@ public class SearchServiceImpl implements SearchService{
     }
 
     @Override
-    public List<UserDto> searchResultUser(String userNickname) throws Exception {
+    public List<UserDto> searchResultUser(String logInUserId,String userNickname) throws Exception {
+        User user = userRepository.findByUserId(logInUserId).get();
         List<UserDto> userDtoList = new ArrayList<>();
 
         List<User> userList = userRepository.findAll();
@@ -56,18 +57,24 @@ public class SearchServiceImpl implements SearchService{
         String searchUserNickname;
         String userProfile;
         long followerCount;
+        long followingCount;
         long participateVoteCount;
         long createVoteCount;
+        boolean isFollow = false;
         for(int i = 0 ; i < userList.size(); i++){
             userId = userList.get(i).getUserId();
             searchUserNickname = userList.get(i).getUserNickname();
             userProfile = userList.get(i).getUserProfilePhoto();
             User nowUser = userRepository.findByUserNickname(searchUserNickname).get();
-            followerCount = followingRepository.findAllByFollower(nowUser).get().size();
+            followingCount = followingRepository.countAllByFollowee(nowUser);
+            followerCount = followingRepository.countAllByFollower(nowUser);
             participateVoteCount = voteParticipateRepository.countAllByUserParticipate(nowUser);
             createVoteCount = voteRepository.findAllByAuthor(userRepository.findByUserNickname(searchUserNickname).get()).size();
+            if(followingRepository.findByFollowerAndAndFollowee(nowUser,user).isPresent()){
+                isFollow = true;
+            }
             if(searchUserNickname.contains(userNickname)){
-                userDtoList.add(new UserDto(userId,searchUserNickname,userProfile,followerCount,participateVoteCount,createVoteCount));
+                userDtoList.add(new UserDto(userId,searchUserNickname,userProfile,followingCount,followerCount,participateVoteCount,createVoteCount,isFollow));
             }
         }
 
@@ -115,5 +122,36 @@ public class SearchServiceImpl implements SearchService{
            voteDtoList.add(new VoteDto(feedId,searchFeedName,feedAuthorName,feedContent,feedLikeCount,feedReplyCount));
         }
         return voteDtoList;
+    }
+
+    @Override
+    public List<UserDto> searchAllUser(String logInUserId) throws Exception {
+        List<UserDto> userDtoList = new ArrayList<>();
+        User user = userRepository.findByUserId(logInUserId).get();
+        List<User> userList = userRepository.findAll();
+        String userId;
+        String searchUserNickname;
+        String userProfile;
+        long followingCount;
+        long followerCount;
+        long participateVoteCount;
+        long createVoteCount;
+        boolean isFollow = false;
+        for(int i = 0 ; i < userList.size(); i++){
+            userId = userList.get(i).getUserId();
+            searchUserNickname = userList.get(i).getUserNickname();
+            userProfile = userList.get(i).getUserProfilePhoto();
+            User nowUser = userRepository.findByUserId(userId).get();
+            followingCount = followingRepository.countAllByFollowee(nowUser);
+            followerCount = followingRepository.countAllByFollower(nowUser);
+            participateVoteCount = voteParticipateRepository.countAllByUserParticipate(nowUser);
+            createVoteCount = voteRepository.findAllByAuthor(userRepository.findByUserId(userId).get()).size();
+            if(followingRepository.findByFollowerAndAndFollowee(nowUser,user).isPresent()){
+                isFollow = true;
+            }
+            userDtoList.add(new UserDto(userId,searchUserNickname,userProfile,followingCount,followerCount,participateVoteCount,createVoteCount,isFollow));
+        }
+
+        return userDtoList;
     }
 }
