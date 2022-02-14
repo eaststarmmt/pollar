@@ -3,8 +3,10 @@ package com.ssafy.pollar.model.service;
 import com.ssafy.pollar.domain.entity.Category;
 import com.ssafy.pollar.domain.entity.User;
 import com.ssafy.pollar.domain.entity.UserCategory;
+import com.ssafy.pollar.domain.entity.UserNotificationState;
 import com.ssafy.pollar.model.dto.UserDto;
 import com.ssafy.pollar.model.repository.CategoryRepository;
+import com.ssafy.pollar.model.repository.UserNotificationStateRepository;
 import com.ssafy.pollar.model.repository.UserRepository;
 import com.ssafy.pollar.model.repository.UserCategoryRepository;
 import com.ssafy.pollar.util.S3Uploader;
@@ -38,6 +40,7 @@ public class UserServiceImpl implements UserService{
     private final UserRepository userRepository;
     private final UserCategoryRepository userCategoryRepository;
     private final CategoryRepository categoryRepository;
+    private final UserNotificationStateRepository userNotificationStateRepository;
 
     private final S3Uploader s3Uploader;
 
@@ -59,7 +62,11 @@ public class UserServiceImpl implements UserService{
                 .build();
         // User에 user 정보 저장
         userRepository.save(user);
-
+        userNotificationStateRepository.save(UserNotificationState.builder().userId(user)
+                .allNotificationState(true)
+                .followNotificationState(true)
+                .feedNotificationState(true)
+                .build());
         // User가 선택한 카테고리별 Id를 찾아서 User Id와 함께 UserCategory에 추가
        for (long categoryId : userDto.getCategories()){
             Category category = categoryRepository.findById(categoryId).get();

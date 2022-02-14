@@ -49,6 +49,9 @@ public class User implements UserDetails {
     @Column(name = "userProfilePhoto" ,length = 1000)
     private String userProfilePhoto;
 
+    @OneToOne(mappedBy = "userId")
+    private UserNotificationState userNotificationState;
+
     @OneToMany(mappedBy = "userCategory")
     private List<UserCategory> UserCategories = new ArrayList<>();
 

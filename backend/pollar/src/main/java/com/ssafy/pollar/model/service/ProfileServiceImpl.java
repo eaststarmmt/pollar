@@ -56,6 +56,8 @@ public class ProfileServiceImpl implements ProfileService{
             voteReplyCount = replyRepository.countAllByVoteReply(vote);
             voteParticipateCount = 0;
             userVoteSelection=0;
+            isLiked = false;
+            isVoted = false;
             if(voteLikeRepository.findByUserVoteLikesAndVoteLikesByQuery(loggedUser,vote).isPresent()){ // 로그인 유저가 투표에 참여한경우
                 isLiked = true;
             }
@@ -109,6 +111,8 @@ public class ProfileServiceImpl implements ProfileService{
             voteReplyCount = replyRepository.countAllByVoteReply(vote);
 
             voteParticipateCount = 0;
+            isLiked = false;
+            isVoted = false;
             if(voteLikeRepository.findByUserVoteLikesAndVoteLikesByQuery(loggedUser,vote).isPresent()){ // 로그인 유저가 투표에 참여한경우
                 isLiked = true;
             }
@@ -162,6 +166,8 @@ public class ProfileServiceImpl implements ProfileService{
 
             voteParticipateCount = 0;
             userVoteSelection = 0;
+            isLiked = false;
+            isVoted = false;
             if(voteLikeRepository.findByUserVoteLikesAndVoteLikesByQuery(loggedUser,vote).isPresent()){ // 로그인 유저가 투표에 참여한경우
                 isLiked = true;
             }
