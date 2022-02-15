@@ -21,6 +21,10 @@ public class ReplyDto {
     private Long replyId;
     @ApiModelProperty(value = "댓글을 작성한 유저 id")
     private String replyUser;
+    @ApiModelProperty(value = "댓글 작성 유저 닉네임")
+    private String replyUserNickname;
+    @ApiModelProperty(value = "댓글 작성 유저 프로필")
+    private String replyUserProfile;
     @ApiModelProperty(value = "댓글이 작성된 피드의 id")
     private Long voteReply;
     @ApiModelProperty(value = "댓글의 내용")
@@ -33,6 +37,8 @@ public class ReplyDto {
     public ReplyDto(Reply reply) {
         this.replyId = reply.getReplyId();
         this.replyUser = reply.getReplyUser().getUserId();
+        this.replyUserNickname = reply.getReplyUser().getUserNickname();
+        this.replyUserProfile = reply.getReplyUser().getUserProfilePhoto();
         this.voteReply = reply.getVoteReply().getVoteId();
         this.replyContent = reply.getReplyContent();
         this.replyCreateTime = reply.getReplyCreateTime();
