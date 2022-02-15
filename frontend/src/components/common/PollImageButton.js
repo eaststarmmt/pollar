@@ -152,7 +152,7 @@ export default function PollImageButton({
             pb: (theme) => `calc(${theme.spacing(1)} + 6px)`,
           }}
         >
-          {selection.selectionTitle}
+          {/* {selection.selectionTitle} */}
           {/* 선택지 hover 효과 */}
           <ImageMarked className="MuiImageMarked-root">투표하기</ImageMarked>
         </Typography>

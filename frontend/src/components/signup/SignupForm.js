@@ -198,11 +198,12 @@ function SignupForm(props) {
 
   const handleEmailSend = async (e) => {
     e.preventDefault();
+    setEmailSend(true);
+    setMessage('인증번호가 발송되었습니다. 5분안에 인증번호를 입력하세요.');
     try {
       const result = await emailConfirm(user.userEmail);
       if (result) {
-        setMessage('인증번호가 발송되었습니다. 5분안에 인증번호를 입력하세요.');
-        setEmailSend(true);
+        // setMessage('인증번호가 발송되었습니다. 5분안에 인증번호를 입력하세요.');
         setTokenNumber({
           ...tokenNumber,
           userEmail: user.userEmail,

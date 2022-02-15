@@ -9,7 +9,6 @@ import MobileHidden from '../common/MobileHidden';
 //
 import Searchbar from './Searchbar';
 import AccountPopover from './AccountPopover';
-import NotificationsPopover from './NotificationsPopover';
 // recoil
 import { useRecoilState } from 'recoil';
 import { loggedUserState } from '../../atoms/atoms';
@@ -23,6 +22,7 @@ import NavSection from './NavSection';
 import { Link } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import { getLoggedUserInfo } from '../../utils/loggedUser';
+import NotificationsPopover from '../notification/NotificationsPopover';
 
 // ----------------------------------------------------------------------
 
@@ -57,7 +57,7 @@ Navbar.propTypes = {
 
 export default function Navbar({ onOpenSidebar, isFullLayout }) {
   const [loggedUser, setLoggedUser] = useRecoilState(loggedUserState);
-  // todo 문제점: 새로고침 시 recoil state 날라감 (line 90)
+  // 문제점: 새로고침 시 recoil state 날라감 (line 90)
   // JWT 검사로 변경 필요
   const [loggedUserInfo, setLoggedUserInfo] = useState();
 
