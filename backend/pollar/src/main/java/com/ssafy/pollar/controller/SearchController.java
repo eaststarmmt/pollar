@@ -2,6 +2,7 @@ package com.ssafy.pollar.controller;
 
 import com.ssafy.pollar.model.dto.UserDto;
 import com.ssafy.pollar.model.dto.VoteDto;
+import com.ssafy.pollar.model.dto.feedSearchDto;
 import com.ssafy.pollar.model.service.SearchService;
 import com.ssafy.pollar.model.service.UserService;
 import io.swagger.annotations.ApiOperation;
@@ -64,7 +65,7 @@ public class SearchController {
         HashMap<String,Object> resultMap = new HashMap<>();
         HttpStatus status = null;
         try {
-            List<VoteDto> voteList = searchService.searchFeed(feedName);
+            List<feedSearchDto> voteList = searchService.searchFeed(feedName);
             resultMap.put("feedList",voteList);
             resultMap.put("message",SUCCESS);
             status = HttpStatus.OK;
@@ -81,7 +82,7 @@ public class SearchController {
         HashMap<String,Object> resultMap = new HashMap<>();
         HttpStatus status = null;
         try {
-            List<VoteDto> voteList = searchService.searchFeed(feedName);
+            List<feedSearchDto> voteList = searchService.searchFeed(feedName);
             resultMap.put("feedList",voteList);
             resultMap.put("message",SUCCESS);
             status = HttpStatus.OK;

@@ -7,6 +7,7 @@ import com.ssafy.pollar.domain.entity.VoteSelect;
 import com.ssafy.pollar.model.dto.SelectionDto;
 import com.ssafy.pollar.model.dto.UserDto;
 import com.ssafy.pollar.model.dto.VoteDto;
+import com.ssafy.pollar.model.dto.feedSearchDto;
 import com.ssafy.pollar.model.repository.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -36,7 +37,14 @@ public class SearchServiceImpl implements SearchService{
         String userId;
         String searchUserNickname;
         String userProfile;
-        for(int i = 0 ; i < userList.size(); i++){
+        if(userNickname.trim().length()==0){
+            return userDtoList;
+        }
+        long userListLen = userList.size();
+        if(userList.size()>5){
+            userListLen = 5;
+        }
+        for(int i = 0 ; i < userListLen; i++){
             userId = userList.get(i).getUserId();
             searchUserNickname = userList.get(i).getUserNickname();
             userProfile = userList.get(i).getUserProfilePhoto();
@@ -90,26 +98,43 @@ public class SearchServiceImpl implements SearchService{
     }
 
     @Override
-    public List<VoteDto> searchFeed(String feedName) throws Exception {// 검색창에 나오는 피드 정보
-        List<VoteDto> voteDtoList = new ArrayList<>();
-
+    public List<feedSearchDto> searchFeed(String feedName) throws Exception {// 검색창에 나오는 피드 정보
+        List<feedSearchDto> voteDtoList = new ArrayList<>();
         List<Vote> voteList = voteRepository.findAll();
         long feedId;
         String searchFeedName;
         String feedAuthorName;
         long feedLikeCount;
         long feedReplyCount;
+        long voteParticipateCount;
         String userPhoto;
+        List<VoteCategory> voteCategoryList;
+        List<VoteSelect> voteSelectList;
         for(int i = 0 ; i < voteList.size(); i++){
             Vote vote = voteList.get(i);
+            voteCategoryList = voteCategoryRepository.findAllByVoteCategory(vote).get();
+            List<String> voteCategoryDtoList = new ArrayList<>();
+            for(int j = 0 ; j < voteCategoryList.size(); j++){
+                voteCategoryDtoList.add(voteCategoryList.get(j).getCategory().getCategoryNameSmall());
+            }
+            voteSelectList = voteSelectRepository.getAllByVoteSelect(vote);
+            List<SelectionDto> selectionDtoList = new ArrayList<>();
+            for(int j = 0 ; j < voteSelectList.size(); j++){
+                selectionDtoList.add(new SelectionDto(voteSelectList.get(j)));
+            }
             feedId = vote.getVoteId();
             searchFeedName = vote.getVoteName();
             feedAuthorName = vote.getAuthor().getUserNickname();
             feedLikeCount = voteLikeRepository.countLike(vote.getVoteId());
             feedReplyCount = replyRepository.countAllByVoteReply(vote);
             userPhoto = vote.getAuthor().getUserProfilePhoto();
+            voteParticipateCount = 0;
+            for(int j = 0 ; j < vote.getVoteSelects().size(); j++){
+                voteParticipateCount +=voteParticipateRepository.countAllByVoteParticipate(vote.getVoteSelects().get(j));
+            }
             if(searchFeedName.contains(feedName)){
-                voteDtoList.add(new VoteDto(feedId,searchFeedName,feedAuthorName,userPhoto,feedLikeCount,feedReplyCount));
+                voteDtoList.add(new feedSearchDto(feedId,searchFeedName,feedAuthorName,vote.getVoteType()
+                        ,voteCategoryDtoList,selectionDtoList,feedLikeCount,feedReplyCount,userPhoto,voteParticipateCount));
             }
         }
 
