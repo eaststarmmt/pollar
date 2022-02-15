@@ -4,28 +4,21 @@ import searchFill from '@iconify/icons-eva/search-fill';
 import {
   Box,
   Input,
-  Card,
-  Grid,
+  Chip,
   Typography,
   Avatar,
   Button,
   InputAdornment,
-  ClickAwayListener,
   IconButton,
-  InputLabel,
   MenuItem,
   FormControl,
   Select,
   Stack,
   Drawer,
-  List,
-  Divider,
-  ListItem,
 } from '@mui/material';
-import ListItemIcon from '@mui/material/ListItemIcon';
-import ListItemText from '@mui/material/ListItemText';
-import InboxIcon from '@mui/icons-material/MoveToInbox';
-import MailIcon from '@mui/icons-material/Mail';
+import TextSnippetIcon from '@mui/icons-material/TextSnippet';
+import ImageIcon from '@mui/icons-material/Image';
+import { Link } from 'react-router-dom';
 import { styled, alpha } from '@mui/material/styles';
 import {
   getUserSearchPage,
@@ -33,7 +26,8 @@ import {
   getFeedSearchBar,
 } from '../../services/api/SearchApi';
 import { useEffect } from 'react';
-
+import { useNavigate, useLocation } from 'react-router-dom';
+import { textAlign } from '@mui/system';
 const APPBAR_MOBILE = 64;
 const APPBAR_DESKTOP = 92;
 
@@ -59,21 +53,25 @@ const SearchbarStyle = styled('div')(({ theme }) => ({
 
 //------------------------------------------------------------
 export default function SearchDrawer(user) {
+  const navigate = useNavigate();
+  const location = useLocation();
+
   // api data
   const [param, setParam] = useState({
     userId: '',
     searchInfo: '',
   });
   // 검색 옵션
-  const [option, setOption] = useState('');
+  const [option, setOption] = useState(1);
   // open
   const [state, setState] = useState({
     top: false,
   });
-  console.log(option);
+
   //옵션 선택
   const handleChange = (event) => {
     setOption(event.target.value);
+    setSearchList([]);
   };
 
   //검색바 정보
@@ -89,7 +87,6 @@ export default function SearchDrawer(user) {
 
   //검색한 결과 페이지 이동
   const handleSearch = async () => {
-    console.log(param);
     if (option === 1) {
       const data = await getUserSearchPage(param);
       console.log(data);
@@ -99,22 +96,22 @@ export default function SearchDrawer(user) {
   };
 
   //검색바
-  const getUserList = async () => {
+  const getList = async () => {
     if (option === 1) {
       const data = await getUserSearchBar(param);
-      console.log(data.searchList)
-      setSearchList(data.searchList);
+
+      setSearchList(data.searchUserList);
     } else if (option === 2) {
       const data = await getFeedSearchBar(param);
       setSearchList(data.feedList);
-      console.log(searchList)
+      console.log(searchList);
+    } else {
+      setSearchList([]);
     }
   };
 
-  console.log(searchList)
   useEffect(() => {
-    getUserList();
-    
+    getList();
   }, [param.searchInfo]);
 
   const toggleDrawer = (anchor, open) => (event) => {
@@ -125,15 +122,51 @@ export default function SearchDrawer(user) {
     setState({ ...state, [anchor]: open });
   };
 
+  const UserNavigate = (e) => {
+    if (location.pathname.length == 15) {
+      var path = location.pathname.slice(0, 15);
+      if (path === '/users/profile/') {
+        navigate(e, { replace: true });
+      } else {
+        navigate(`/users/profile/${e}`, { replace: true });
+      }
+    } else {
+      navigate(`/users/profile/${e}`, { replace: true });
+    }
+  };
+
+  const FeedNavigate = (e) => {
+    if (location.pathname.length == 7) {
+      var path = location.pathname.slice(0, 7);
+      if (path === '/polls/') {
+
+        navigate(e, { replace: true });
+      } else {
+        navigate(e, { replace: true });
+      }
+    } else {
+      navigate(`/poll/${e}`, { replace: true });
+    }
+  };
+
   const userlist = () => (
     <>
-      {true && (
+      {searchList.length > 0 && (
         <>
           {searchList.map((user, index) => (
-            // <Grid xs={3} justify="center" align="center" key={index}>
             <Button
-              sx={{ width: 'auto', marginTop: 2 }}
-              href={`users/profile/${user.userId}`}
+              sx={{
+                width: 'auto',
+                justifyContent: 'flex-start',
+                marginLeft: 20,
+                marginRight: 10,
+                marginTop: 0.1,
+                marginBottom: 0.1,
+              }}
+              onClick={() => {
+                setState({ top: false });
+                UserNavigate(user.userId);
+              }}
               key={index}
             >
               <Avatar
@@ -154,7 +187,6 @@ export default function SearchDrawer(user) {
                 &nbsp;&nbsp;@{user.userId}
               </Typography>
             </Button>
-            // </Grid>
           ))}
         </>
       )}
@@ -165,33 +197,53 @@ export default function SearchDrawer(user) {
       {searchList.length > 0 && (
         <>
           {searchList.map((vote, index) => (
-            // <Grid xs={3} justify="center" align="center" key={index}>
             <Button
-            sx={{ width: 'auto', marginTop: 2 }}
-            href={`polls/detail/${vote.userId}`}
-            key={index}
+              sx={{
+                width: 'auto',
+                justifyContent: 'flex-start',
+                marginLeft: 20,
+                marginRight: 10,
+              }}
+              onClick={() => {
+                setState({ top: false });
+                FeedNavigate(vote.voteId);
+              }}
+              key={index}
             >
-              <Stack>
-              <Avatar
-                src={vote.userProfilePhoto}
-                alt="Profile Photo"
-                shadow="xl"
-                sx={{
-                  width: '2rem',
-                  height: '2rem',
-                  border: 1,
-                  borderColor: '#c5cae9',
-                }}
-              />
-              <Typography component="span" variant="caption" color="text.secondary">
-                &nbsp;&nbsp;{user.voteName}
-              </Typography>
+              <Stack sx={{ justifyContent: 'center', alignItems: 'center' }}>
+                <Avatar
+                  src={vote.userProfilePhoto}
+                  alt="Profile Photo"
+                  shadow="xl"
+                  sx={{
+                    width: '1.5rem',
+                    height: '1.5rem',
+                    border: 1,
+                    borderColor: '#c5cae9',
+                  }}
+                />
+                <Typography
+                  sx={{
+                    fontSize: '8px',
+                    textAlign: 'center',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    paddingRight: 1,
+                  }}
+                  color="text.secondary"
+                >
+                  &nbsp;&nbsp;{vote.author}
+                </Typography>
               </Stack>
-              <Typography component="span" variant="overline">
+              {vote.voteType === 1 ? (
+                <TextSnippetIcon />
+              ) : (
+                <ImageIcon sx={{ fontSize: '1.5rem', marginLeft: 2 }} />
+              )}
+              <Typography component="span" variant="BUTTON">
                 &nbsp;&nbsp;{vote.voteName}
               </Typography>
             </Button>
-            // </Grid>
           ))}
         </>
       )}
@@ -206,25 +258,24 @@ export default function SearchDrawer(user) {
       </IconButton>
       <Drawer anchor="top" open={state['top']} onClose={toggleDrawer('top', false)}>
         <Box
-          sx={{ width: 'auto', height: 80 }}
+          sx={{ width: 'auto', height: 100 }}
           role="presentation"
           onClick={toggleDrawer('top', false)}
           onKeyDown={toggleDrawer('top', false)}
         ></Box>
         <SearchbarStyle>
-          <Box sx={{ width: 150, padding: 2 }}>
+          <Box sx={{ width: 180, padding: 2, alignItems: 'center' }}>
             <FormControl fullWidth>
-              <InputLabel>검색설정</InputLabel>
+              {/* <InputLabel>검색설정</InputLabel> */}
               <Select
                 // labelId="demo-simple-select-label"
                 id="demo-simple-select"
                 value={option}
                 onChange={handleChange}
-                placeholder="검색설정"
+                sx={{ width: 150, height: 40 }}
               >
                 <MenuItem value={1}>유저검색</MenuItem>
                 <MenuItem value={2}>피드검색</MenuItem>
-                <MenuItem value={3}>카테고리검색</MenuItem>
               </Select>
             </FormControl>
           </Box>
@@ -232,13 +283,13 @@ export default function SearchDrawer(user) {
             autoFocus
             fullWidth
             disableUnderline
-            placeholder="Search…"
+            placeholder="검색 카테고리를 설정후 검색어를 입력해주세요."
             startAdornment={
               <InputAdornment position="start">
                 <Box
                   component={Icon}
                   icon={searchFill}
-                  sx={{ color: 'text.disabled', width: 20, height: 20 }}
+                  sx={{ color: 'text.disabled', width: '100%', height: 20 }}
                 />
               </InputAdornment>
             }

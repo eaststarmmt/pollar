@@ -24,6 +24,7 @@ export default function UserDetailCard(props) {
               height: 'auto',
               justifyContent: 'center',
               alignItems: 'center',
+              position: 'relative'
               
             }}
           >

@@ -27,7 +27,7 @@ export default function PollDetailPage() {
   useEffect(() => {
     getVote();
     loadReply();
-  }, [])
+  }, [id])
   
   return (
     <>

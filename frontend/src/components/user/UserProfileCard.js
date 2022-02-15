@@ -15,11 +15,8 @@ export default function UserProfileCard() {
   // 사용자 계정 정보
   const [profileInfo, setProfileInfo] = useState();
 
-  console.log(profileInfo);
   const getAccountInfo = async () => {
-    // console.log(loggedUserId);
     const data = await getProfileInfo(loggedUserId);
-    console.log(data);
     setProfileInfo(data);
   };
 
@@ -33,7 +30,7 @@ export default function UserProfileCard() {
     data.totalVoteCount = await getTotalVotesCount(loggedUserId);
     setProfileInfo(data);
   };
-  console.log(profileInfo);
+
   useEffect(() => {
     // 사용자 계정정보 요청
     getAccountInfo();
