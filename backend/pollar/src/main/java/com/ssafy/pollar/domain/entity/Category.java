@@ -19,7 +19,7 @@ public class Category {
     @OneToMany(mappedBy = "category")
     private List<UserCategory> UserCategories = new ArrayList<>();
 
-    @OneToMany(mappedBy = "voteCategory")
+    @OneToMany(mappedBy = "category")
     private List<VoteCategory> voteCategories = new ArrayList<>();
 
     @Column(name = "categoryNameBig" ,length = 20)
