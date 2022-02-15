@@ -4,7 +4,7 @@ import { Alert, Box, Button, Chip, Collapse, IconButton, Stack, Typography } fro
 import CloseIcon from '@mui/icons-material/Close';
 
 export default function CategoryModal(props) {
-  const { vote, setVote, setVoteInterest, close } = props;
+  const { vote, setVote, setVoteInterest, close, voteInterest } = props;
   // 전체 카테고리
   const [categoryList, setCategoryList] = useState([]);
   // 사용자 선택 관심분야 (초기값: 관심분야 수정일 경우)
@@ -18,15 +18,15 @@ export default function CategoryModal(props) {
     // setSelectedInterestList(interestList);
     // 관심분야 목록에서 id만 뽑아서 전달
     const categories = interestList.map((item) => item.categoryId);
-    setVote({ 
-      ...vote, 
-      voteCategories: categories });
-    const categoryname = interestList.map((item) => item.categoryNameSmall);
-    setVoteInterest(categoryname);
+    setVote({
+      ...vote,
+      voteCategories: categories,
+    });
+    // const categoryname = interestList.map((item) => item.categoryNameSmall);
+    setVoteInterest(interestList);
     // setConfirm(categories);
     close();
   };
-
 
   const getList = async () => {
     const list = await getAllCategories();
@@ -47,7 +47,7 @@ export default function CategoryModal(props) {
         <Typography variant="body2" align="left" sx={{ color: 'text.secondary', mt: 1 }}>
           {bigCategoryGroup[0]}
         </Typography>
-        <Stack direction="row" spacing={1}>
+        <Stack direction="row" spacing={1} sx={{ flexWrap: 'wrap' }}>
           {bigCategoryGroup[1].map((item) => (
             <Chip
               key={item.categoryId}
@@ -92,11 +92,13 @@ export default function CategoryModal(props) {
   useEffect(() => {
     // 관심분야 목록 API 호출
     getList();
+    //? 모달창을 다시 열었을 경우 기존에 선택한 카테고리들이 남아있도록 해야함
+    setInterestList(voteInterest);
   }, [vote]);
 
   return (
     <>
-      <Stack sx={{ width: '100%' }}>
+      <Stack sx={{ overflow: 'scroll' }}>
         <Collapse in={openLimitedAlert}>
           <Alert
             severity="error"
@@ -162,7 +164,9 @@ export default function CategoryModal(props) {
           ))}
         </Stack>
         <br />
-        <Button onClick={handleCommit} variant="contained">저장</Button>
+        <Button onClick={handleCommit} variant="contained">
+          저장
+        </Button>
       </Stack>
     </>
   );

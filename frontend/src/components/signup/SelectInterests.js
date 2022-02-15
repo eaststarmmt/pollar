@@ -16,7 +16,8 @@ export default function SelectInterests({ setConfirm, setUser, user }) {
   const handleCommit = () => {
     // setSelectedInterestList(interestList);
     // 관심분야 목록에서 id만 뽑아서 전달
-    const categories = interestList.map((item) => item.categoryId);
+    const listCopy = interestList;
+    const categories = listCopy.map((item) => item.categoryId);
     setUser({ ...user, categories });
     setConfirm(categories);
   };
@@ -44,12 +45,20 @@ export default function SelectInterests({ setConfirm, setUser, user }) {
         >
           {bigCategoryGroup[0]}
         </Typography>
-        <Stack direction="row" spacing={1}>
+        <Stack
+          overflow="auto"
+          whiteSpace="nowrap"
+          direction="row"
+          spacing={1}
+          // display="inline-flex"
+          sx={{ flexWrap: 'wrap' }}
+        >
           {bigCategoryGroup[1].map((item) => (
             <Chip
               key={item.categoryId}
               label={item.categoryNameSmall}
               onClick={() => selectCategory(item)}
+              sx={{ mb: 1 }}
             />
           ))}
         </Stack>
@@ -62,9 +71,9 @@ export default function SelectInterests({ setConfirm, setUser, user }) {
     const filteredList = interestList.filter(
       (item) => item.categoryNameSmall !== unselected.categoryNameSmall
     );
-    setInterestList(filteredList);
     // 삭제한 카테고리는 다시 전체 목록에 반영
-    console.log(filteredList);
+    setInterestList(filteredList);
+    // console.log(filteredList);
   };
 
   /* 관심분야 선택 추가 */
@@ -73,7 +82,6 @@ export default function SelectInterests({ setConfirm, setUser, user }) {
       setOpenLimitedAlert(true);
     } else {
       // 중복검사
-      console.log(interestList);
       let existing = false;
       for (let i of interestList) {
         if (selected.categoryId === i.categoryId) {
@@ -87,14 +95,16 @@ export default function SelectInterests({ setConfirm, setUser, user }) {
   };
 
   useEffect(() => {
-    setInterestList(user.categories);
+    console.log(interestList);
+    setInterestList(interestList);
+    // setInterestList(user.categories);
     // 관심분야 목록 API 호출
     getList();
   }, [user]);
 
   return (
     <>
-      <Stack sx={{ width: '100%' }}>
+      <Stack>
         <Collapse in={openLimitedAlert}>
           <Alert
             severity="error"
@@ -146,7 +156,7 @@ export default function SelectInterests({ setConfirm, setUser, user }) {
               key={index}
               label={item.categoryNameSmall}
               onDelete={() => handleDelete(item)}
-              color="success"
+              color="secondary"
             />
           ))}
         </Stack>

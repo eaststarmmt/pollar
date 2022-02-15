@@ -46,12 +46,13 @@ function BasicForm(props) {
     userAnonymous: '투표가 익명으로 생성되며 투표자도 익명으로 투표됩니다.',
   };
 
-  useEffect(() => {
-    voteInterest.map((item) => {
-      console.log(item);
-    });
-  }, [voteInterest]);
   console.log(voteInterest);
+  // useEffect(() => {
+  //   voteInterest.map((item) => {
+  //     console.log(item);
+  //   });
+  // }, [voteInterest]);
+
   return (
     <>
       <Box>
@@ -98,17 +99,16 @@ function BasicForm(props) {
           />
         </Stack>
         <Stack direction={{ xs: 'column', sm: 'row' }} spacing={6} paddingTop={2} paddingBottom={2}>
-        <Typography variant="h4" paddingTop={1}>
+          <Typography variant="h4" paddingTop={1}>
             투표 카테고리
           </Typography>
-          <Stack 
-          justifyContent="center"
-          alignItems="center"
-          >
-            <Button onClick={handleOpen} variant="contained"  >카테고리 선택</Button>
+          <Stack justifyContent="center" alignItems="center">
+            <Button onClick={handleOpen} variant="contained">
+              카테고리 선택
+            </Button>
             <Stack direction={{ xs: 'column', sm: 'row' }} paddingTop={2}>
               {voteInterest.map((item, index) => (
-                <Chip key={index} label={item} variant="filled" />
+                <Chip key={index} label={item.categoryNameSmall} variant="filled" />
               ))}
             </Stack>
             <Modal
@@ -117,17 +117,18 @@ function BasicForm(props) {
               aria-labelledby="modal-modal-title"
               aria-describedby="modal-modal-description"
             >
-              <Box sx={style}>
+              <Box sx={style} overflow="auto">
                 <CategoryModal
                   vote={vote}
                   setVote={setVote}
                   setVoteInterest={setVoteInterest}
                   close={handleClose}
+                  voteInterest={voteInterest}
                 />
               </Box>
             </Modal>
           </Stack>
-        <Typography variant="h4" paddingTop={1}>
+          <Typography variant="h4" paddingTop={1}>
             투표 마감시간
           </Typography>
           <Stack>
@@ -183,7 +184,6 @@ function BasicForm(props) {
         </Typography>
         <Typography variant="caption" paddingTop={1}>
           &nbsp;투표는 2개 이상의 선택지를 반드시 생성하여야 합니다. <br />
-
         </Typography>
         <RadioGroup
           row

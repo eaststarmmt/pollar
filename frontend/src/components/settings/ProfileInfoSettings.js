@@ -3,7 +3,7 @@ import { Icon } from '@iconify/react';
 import eyeFill from '@iconify/icons-eva/eye-fill';
 import eyeOffFill from '@iconify/icons-eva/eye-off-fill';
 import CloseIcon from '@mui/icons-material/Close';
-import { Link as RouterLink, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { getLoggedUserId, setLoggedUserInfo } from '../../utils/loggedUser';
 // material
 import {
@@ -16,27 +16,15 @@ import {
   RadioGroup,
   FormControlLabel,
   Radio,
-  getTouchRippleUtilityClass,
   Typography,
   Box,
   Collapse,
   Alert,
 } from '@mui/material';
-import { LoadingButton } from '@mui/lab';
-import { signup } from '../../services/api/AuthApi';
 
-import tododo from '../../assets/images/profile.jpeg';
 import { getUserInfo } from '../../services/api/UserApi';
 
-import {
-  checkId,
-  checkNickname,
-  checkEmail,
-  emailConfirm,
-  emailToken,
-  modifyUserInfo,
-  modifyUserPw,
-} from '../../services/api/UserApi';
+import { checkNickname, modifyUserInfo, modifyUserPw } from '../../services/api/UserApi';
 import ProfileImageUploadButton from '../common/ProfileImageUploadButton';
 
 // ----------------------------------------------------------------------
@@ -136,9 +124,6 @@ export default function ProfileInfoSettings() {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    // alert(`변경된 닉네임: ${user.userNickname}`);
-    // alert(`변경된 패스워드: ${newPassword}`);
-    // setUser({ ...user, userNickname: newNickname, password: newPassword });
     const updatedInfo = { ...user, userNickname: newNickname, password: newPassword };
     console.log(updatedInfo);
     let result = await modifyUserPw(newPassword);
@@ -153,8 +138,6 @@ export default function ProfileInfoSettings() {
     } else {
       alert('실패');
     }
-
-    // navigate('/', { replace: true });
   };
 
   const getUserAccountInfo = async () => {
@@ -275,17 +258,10 @@ export default function ProfileInfoSettings() {
                 required
                 fullWidth
                 autoComplete="text"
-                // placeholder={user.userNickname}
                 type="text"
                 label="닉네임"
                 value={newNickname}
                 onChange={(e) => setNewNickname(e.target.value)}
-                // onChange={(e) =>
-                //   setUser({
-                //     ...user,
-                //     userNickname: e.target.value,
-                //   })
-                // }
                 onKeyUp={() => checkNickValid()}
                 onBlur={() => checkNickUnique()}
                 // UserIdRegex가 true. -> 유효하지 않다
@@ -317,12 +293,6 @@ export default function ProfileInfoSettings() {
                   ),
                 }}
                 onChange={(e) => setNewPassword(e.target.value)}
-                // onChange={(e) =>
-                //   setUser({
-                //     ...user,
-                //     password: e.target.value,
-                //   })
-                // }
                 onBlur={() => checkPwValid()}
                 error={errorState.passwordRegex}
                 helperText={errorState.passwordRegex && errorMsg.passwordRegex}

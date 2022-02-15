@@ -26,12 +26,6 @@ const SignupStepper = ({ activeStep }) => {
         {steps.map((label, index) => {
           const stepProps = {};
           const labelProps = {};
-          // if (isStepOptional(index)) {
-          //   labelProps.optional = <Typography variant="caption">Optional</Typography>;
-          // }
-          // if (isStepSkipped(index)) {
-          //   stepProps.completed = false;
-          // }
           return (
             <Step key={label} {...stepProps}>
               <StepLabel {...labelProps}>{label}</StepLabel>
@@ -152,22 +146,14 @@ export default function SignupWizard() {
           </Box>
           <SignupStepper activeStep={activeStep} />
         </Stack>
-        {/* {activeStep === steps.length ? (
-          <Fragment>
-            <Typography sx={{ mt: 2, mb: 1 }}>환영합니다! 회원가입이 완료되었습니다</Typography>
-            <ImageUploadButton size={'20rem'} />
-            <Box sx={{ display: 'flex', flexDirection: 'row', pt: 2 }}>
-              <Box sx={{ flex: '1 1 auto' }} />
-              <Button onClick={handleNavigateLogin}>로그인하러 가기</Button>
-            </Box>
-          </Fragment>
-        ) : ( */}
         <Fragment>
           <Box sx={{ display: 'flex', justifyContent: 'center', width: '100%' }}>
             {activeStep === 0 ? (
               <SignupForm setConfirm={handleNext} setUser={setUser} user={user} />
             ) : activeStep === 1 ? (
-              <SelectInterests setConfirm={handleNext} setUser={setUser} user={user} />
+              <Box overflow="auto">
+                <SelectInterests setConfirm={handleNext} setUser={setUser} user={user} />
+              </Box>
             ) : (
               <Stack width="100%" spacing={3} alignItems="center">
                 <Typography sx={{ mt: 2, mb: 1, width: '100%', textAlign: 'center' }}>
@@ -181,7 +167,6 @@ export default function SignupWizard() {
                     pt: 2,
                   }}
                 >
-                  {/* <Box sx={{ flex: '1 1 auto' }} /> */}
                   <Button
                     onClick={handleNavigateLogin}
                     sx={{
@@ -198,24 +183,7 @@ export default function SignupWizard() {
               </Stack>
             )}
           </Box>
-
-          {/* <Box sx={{ display: 'flex', flexDirection: 'row', pt: 2 }}>
-              <Button color="inherit" disabled={activeStep < 2} onClick={handleBack} sx={{ mr: 1 }}>
-                뒤로
-              </Button>
-              <Box sx={{ flex: '1 1 auto' }} />
-              {isStepOptional(activeStep) && (
-                <Button color="inherit" onClick={handleSkip} sx={{ mr: 1 }}>
-                  나중에 하기
-                </Button>
-              )}
-
-              <Button onClick={handleNext}>
-                {activeStep === steps.length - 1 ? '회원가입 완료' : '확인'}
-              </Button>
-            </Box> */}
         </Fragment>
-        {/* )} */}
       </Card>
     </>
   );

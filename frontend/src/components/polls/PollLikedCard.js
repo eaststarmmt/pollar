@@ -178,9 +178,9 @@ export default function PollLikedCard({ poll }) {
                 )}
               </Stack>
               {voteCategoriesName.length > 0
-                ? voteCategoriesName.map((item, index) => {
-                    <Chip label={item} size="small" sx={{ fontSize: 12 }} />;
-                  })
+                ? voteCategoriesName.map((item, index) => (
+                    <Chip label={item} size="small" sx={{ fontSize: 12 }} />
+                  ))
                 : null}
               <InfoStyle sx={{ width: '100%' }}>
                 {POLL_INFO.map((info, index) => (

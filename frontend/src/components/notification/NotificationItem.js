@@ -11,11 +11,11 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { formatDistanceToNow } from 'date-fns';
 import PropTypes from 'prop-types';
 import { Icon } from '@iconify/react';
-import img from '../../assets/images/profile.jpeg';
 import clockFill from '@iconify/icons-eva/clock-fill';
 import { readNotifications } from '../../services/api/NotificationApi';
+import stringToColor from '../../utils/stringToColor';
 
-function renderContent(notificationType, notificationContents) {
+function renderContent(notificationType, notificationContents, sendId, voteId) {
   const title = (
     <>
       <Typography variant="subtitle2">
@@ -27,25 +27,35 @@ function renderContent(notificationType, notificationContents) {
     </>
   );
 
+  // 피드관련
   if (notificationType === 2) {
     return {
-      avatar: <img src={img} alt="123" />,
-      //      avatar: <img alt={notification.title} src="/static/icons/ic_notification_package.svg" />,
+      avatar: (
+        <Avatar
+          alt={notificationContents}
+          sx={{ bgcolor: stringToColor(`${notificationContents}`) }}
+        />
+      ),
       title,
     };
   }
+  //
   if (notificationType === 4) {
     return {
-      avatar: <img src={img} alt="123" />,
-      //      avatar: <img alt={notification.title} src="/static/icons/ic_notification_shipping.svg" />,
+      avatar: (
+        <Avatar
+          alt={sendId}
+          // src={sendId}
+          sx={{ bgcolor: stringToColor(`${sendId}`) }}
+        />
+      ),
       title,
     };
   }
-  return {
-    avatar: <img src={img} alt="123" />,
-    //    avatar: <img alt={notification.title} src={notification.avatar} />,
-    title,
-  };
+  // return {
+  //   avatar: <img src={img} alt="123" />,
+  //   title,
+  // };
 }
 
 NotificationItem.propTypes = {
@@ -63,7 +73,7 @@ export default function NotificationItem({ notification }) {
     sendId,
     voteId,
   } = notification;
-  const { avatar, title } = renderContent(notificationType, notificationContents);
+  const { avatar, title } = renderContent(notificationType, notificationContents, sendId, voteId);
   const navigate = useNavigate();
 
   /* 알림 클릭 시 읽음처리 + 관련 action 처리 */

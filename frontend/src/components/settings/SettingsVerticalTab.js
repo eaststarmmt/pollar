@@ -20,10 +20,7 @@ function TabPanel(props) {
       {...other}
     >
       {value === index && (
-        <Box sx={{ p: 5, alignItems: 'flex-end', justifyContent: 'center' }}>
-          {children}
-          {/* <Typography>{children}</Typography> */}
-        </Box>
+        <Box sx={{ p: 5, alignItems: 'flex-end', justifyContent: 'center' }}>{children}</Box>
       )}
     </div>
   );
@@ -76,6 +73,8 @@ export default function SettingsVerticalTab() {
           borderBottomLeftRadius: 20,
           pl: 5,
           py: 5,
+          left: 0,
+          width: 'auto',
         }}
       >
         <Tab label="Profile Info&nbsp;" {...a11yProps(0)} />

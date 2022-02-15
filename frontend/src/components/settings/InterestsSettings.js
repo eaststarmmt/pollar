@@ -2,6 +2,7 @@ import SelectInterests from '../signup/SelectInterests';
 import { useEffect, useState } from 'react';
 import { setUserInterests, getUserInterests } from '../../services/api/CategoryApi';
 import { getLoggedUserId } from '../../utils/loggedUser';
+import { Box } from '@mui/material';
 
 export default function InterestsSettings() {
   const [user, setUser] = useState({
@@ -31,5 +32,9 @@ export default function InterestsSettings() {
     getAccountUserInfo();
   }, []);
 
-  return <SelectInterests setConfirm={handleUpdateInterests} setUser={setUser} user={user} />;
+  return (
+    <Box overflow="auto" sx={{ maxWidth: '600px' }}>
+      <SelectInterests setConfirm={handleUpdateInterests} setUser={setUser} user={user} />
+    </Box>
+  );
 }
