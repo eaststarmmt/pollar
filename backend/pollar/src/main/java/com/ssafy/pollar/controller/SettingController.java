@@ -5,6 +5,7 @@ import com.ssafy.pollar.model.dto.FollowingDto;
 import com.ssafy.pollar.model.dto.UserDto;
 import com.ssafy.pollar.model.service.*;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -30,7 +31,7 @@ public class SettingController {
 
     @ApiOperation(value = "유저 전체 키기")
     @PutMapping("/allon")
-    public ResponseEntity<Map<String,Object>> allNotificationOn(@RequestBody UserDto userDto){
+    public ResponseEntity<Map<String,Object>> allNotificationOn(@RequestBody @ApiParam(value = "로그인 아이디 정보 userId", required = true) UserDto userDto){
         Map<String,Object> resultMap = new HashMap<>();
         HttpStatus status = null;
         try {
@@ -47,7 +48,7 @@ public class SettingController {
 
     @ApiOperation(value = "유저 전체 끄기")
     @PutMapping("/alloff")
-    public ResponseEntity<Map<String,Object>> allNotificationOff(@RequestBody UserDto userDto){
+    public ResponseEntity<Map<String,Object>> allNotificationOff(@RequestBody @ApiParam(value = "로그인 아이디 정보 userId", required = true) UserDto userDto){
         Map<String,Object> resultMap = new HashMap<>();
         HttpStatus status = null;
         try {
@@ -64,7 +65,7 @@ public class SettingController {
 
     @ApiOperation(value = "팔로우 알람 키기")
     @PutMapping("/followon")
-    public ResponseEntity<Map<String,Object>> followNotificationOn(@RequestBody UserDto userDto){
+    public ResponseEntity<Map<String,Object>> followNotificationOn(@RequestBody @ApiParam(value = "로그인 아이디 정보 userId", required = true) UserDto userDto){
         Map<String,Object> resultMap = new HashMap<>();
         HttpStatus status = null;
         try {
@@ -81,7 +82,7 @@ public class SettingController {
 
     @ApiOperation(value = "팔로우 알람 끄기")
     @PutMapping("/followoff")
-    public ResponseEntity<Map<String,Object>> followNotificationOff(@RequestBody UserDto userDto){
+    public ResponseEntity<Map<String,Object>> followNotificationOff(@RequestBody @ApiParam(value = "로그인 아이디 정보 userId", required = true) UserDto userDto){
         Map<String,Object> resultMap = new HashMap<>();
         HttpStatus status = null;
         try {
@@ -98,7 +99,7 @@ public class SettingController {
 
     @ApiOperation(value = "피드 알람 키기")
     @PutMapping("/feedon")
-    public ResponseEntity<Map<String,Object>> feedNotificationOn(@RequestBody UserDto userDto){
+    public ResponseEntity<Map<String,Object>> feedNotificationOn(@RequestBody @ApiParam(value = "로그인 아이디 정보 userId", required = true) UserDto userDto){
         Map<String,Object> resultMap = new HashMap<>();
         HttpStatus status = null;
         try {
@@ -115,7 +116,7 @@ public class SettingController {
 
     @ApiOperation(value = "피드 알람 끄기")
     @PutMapping("/feedoff")
-    public ResponseEntity<Map<String,Object>> feedNotificationOff(@RequestBody UserDto userDto){
+    public ResponseEntity<Map<String,Object>> feedNotificationOff(@RequestBody @ApiParam(value = "로그인 아이디 정보 userId", required = true) UserDto userDto){
         Map<String,Object> resultMap = new HashMap<>();
         HttpStatus status = null;
         try {

@@ -212,7 +212,7 @@ public class UserServiceImpl implements UserService{
     @Override
     public void modifyPassword(UserDto userDto) throws Exception {
         User user = userRepository.findByUserId(userDto.getUserId()).get();
-        user.passwordUpdate(userDto.getPassword());
+        user.passwordUpdate(passwordEncoder.encode(userDto.getPassword()));
         userRepository.save(user);
     }
 

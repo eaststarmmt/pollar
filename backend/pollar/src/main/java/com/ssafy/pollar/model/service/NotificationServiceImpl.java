@@ -71,7 +71,7 @@ public class NotificationServiceImpl implements NotificationService{
         // voteId, sendId: 좋아요 누른사람, receiveId: 투표 생성자
         String sendNick = userRepository.findByUserId(sendId).get().getUserNickname();
         String voteName = voteService.detail(voteId).getVoteName();
-        String comment = sendNick + "가 "+ voteName + "에 좋아요를 누르셧습니다.";
+        String comment = "\\'"+sendNick +"\\'"+ "가 "+ voteName + "에 좋아요를 누르셨습니다.";
         UserNotificationState userNotificationState = userNotificationStateRepository.findByUserId(userRepository.findByUserId(receiveId).get()).get();
         if(!userNotificationState.getFeedNotificationState()){
             return;
@@ -97,7 +97,7 @@ public class NotificationServiceImpl implements NotificationService{
     public void followNotification(String sendId,String receiveId) throws Exception{
         String sendNick = userRepository.findByUserId(sendId).get().getUserNickname();
         String receiveNick = userRepository.findByUserId(receiveId).get().getUserNickname();
-        String comment = sendNick + "가 팔로우 요청 하였습니다.";
+        String comment = "\\'"+ sendNick +"\\'"+ "가 팔로우 요청 하였습니다.";
         UserNotificationState userNotificationState = userNotificationStateRepository.findByUserId(userRepository.findByUserId(receiveId).get()).get();
         if(!userNotificationState.getFollowNotificationState()){
             return;

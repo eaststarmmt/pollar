@@ -58,16 +58,21 @@ public VoteDto(Vote vote,long likeCount ,long parCount) {     // vote entity 받
 
 }
 
-    public VoteDto(long voteId, String voteName){// 피드 검색용
+    public VoteDto(long voteId, String voteName,String author,String userProfilePhoto, long voteLikeCount, long voteReplyCount){// 피드 검색용
         this.voteId = voteId;
         this.voteName =voteName;
+        this.author = author;
+        this.userProfilePhoto = userProfilePhoto;
+        this.voteLikeCount = voteLikeCount;
+        this.voteReplyCount = voteReplyCount;
     }
 
-    public VoteDto(long voteId, String voteName, String author, String voteContent, long voteLikeCount, long voteReplyCount){// 피드 카테고리 검색
+    public VoteDto(long voteId, String voteName, String author, String voteContent,String userProfilePhoto, long voteLikeCount, long voteReplyCount){// 피드 카테고리 검색
         this.voteId = voteId;
         this.voteName = voteName;
         this.author = author;
         this.voteContent = voteContent;
+        this.userProfilePhoto = userProfilePhoto;
         this.voteLikeCount = voteLikeCount;
         this.voteReplyCount = voteReplyCount;
     }

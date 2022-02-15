@@ -5,6 +5,7 @@ import com.ssafy.pollar.model.dto.VoteDto;
 import com.ssafy.pollar.model.service.SearchService;
 import com.ssafy.pollar.model.service.UserService;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -25,7 +26,7 @@ public class SearchController {
 
     @ApiOperation(value = "검색바에 나오는 유저들")
     @GetMapping("/usernickname")
-    public ResponseEntity<Map<String,Object>> userSearch(@RequestParam String userNickname){
+    public ResponseEntity<Map<String,Object>> userSearch(@RequestParam @ApiParam(value = "검색 닉네임 userNickname", required = true) String userNickname){
         HashMap<String,Object> resultMap = new HashMap<>();
         HttpStatus status = null;
         try {
@@ -42,7 +43,7 @@ public class SearchController {
 
     @ApiOperation(value = "검색한 결과로 나오는 유저들")
     @GetMapping("/userlist")
-    public ResponseEntity<Map<String,Object>> userSearchList(@RequestParam String userId, @RequestParam String userNickname){
+    public ResponseEntity<Map<String,Object>> userSearchList(@RequestParam @ApiParam(value = "로그인 아이디 userId", required = true) String userId, @RequestParam @ApiParam(value = "검색 닉네임 userNickname", required = true) String userNickname){
         HashMap<String,Object> resultMap = new HashMap<>();
         HttpStatus status = null;
         try {
@@ -59,7 +60,24 @@ public class SearchController {
 
     @ApiOperation(value = "검색바에 나오는 피드 정보")
     @GetMapping("/feedname")
-    public ResponseEntity<Map<String,Object>> feedSearch(@RequestParam String feedName){
+    public ResponseEntity<Map<String,Object>> feedSearch(@RequestParam @ApiParam(value = "피드 제목 feedName", required = true) String feedName){
+        HashMap<String,Object> resultMap = new HashMap<>();
+        HttpStatus status = null;
+        try {
+            List<VoteDto> voteList = searchService.searchFeed(feedName);
+            resultMap.put("feedList",voteList);
+            resultMap.put("message",SUCCESS);
+            status = HttpStatus.OK;
+        }catch (Exception e){
+            resultMap.put("message",FAIL);
+            status = HttpStatus.INTERNAL_SERVER_ERROR;
+        }
+        return new ResponseEntity<>(resultMap,status);
+    }
+
+    @ApiOperation(value = "검색 결과에 나오는 피드 정보")
+    @GetMapping("/feedlist")
+    public ResponseEntity<Map<String,Object>> feedSearchList(@RequestParam @ApiParam(value = "로그인 아이디 userId", required = true) String userId, @RequestParam @ApiParam(value = "피드 제목 feedName", required = true) String feedName){
         HashMap<String,Object> resultMap = new HashMap<>();
         HttpStatus status = null;
         try {
@@ -76,7 +94,7 @@ public class SearchController {
 
     @ApiOperation(value = "카테고리 검색 결과로 나오는 피드 리스트")
     @GetMapping("/category")
-    public ResponseEntity<Map<String,Object>> feedCategorySearch(@RequestParam String categoryName){
+    public ResponseEntity<Map<String,Object>> feedCategorySearch(@RequestParam @ApiParam(value = "카테고리 이름 categoryName", required = true) String categoryName){
         HashMap<String,Object> resultMap = new HashMap<>();
         HttpStatus status = null;
         try {
@@ -93,7 +111,7 @@ public class SearchController {
 
     @ApiOperation(value = "유저 전체 리스트")
     @GetMapping("/alluserlist")
-    public ResponseEntity<Map<String ,Object>> allUserListSearch(@RequestParam String userId){
+    public ResponseEntity<Map<String ,Object>> allUserListSearch(@RequestParam @ApiParam(value = "로그인 userId", required = true) String userId){
         HashMap<String,Object> resultMap = new HashMap<>();
         HttpStatus status = null;
         try {
