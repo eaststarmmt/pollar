@@ -37,7 +37,11 @@ export default function SelectInterests({ setConfirm, setUser, user }) {
   function CategoryGroup({ bigCategoryGroup }) {
     return (
       <Box>
-        <Typography variant="body2" align="left" sx={{ color: 'text.secondary', mt: 1 }}>
+        <Typography
+          variant="body2"
+          align="left"
+          sx={{ color: 'text.secondary', mt: 1, pl: 1, mb: 0.5 }}
+        >
           {bigCategoryGroup[0]}
         </Typography>
         <Stack direction="row" spacing={1}>
@@ -133,7 +137,7 @@ export default function SelectInterests({ setConfirm, setUser, user }) {
             이미 선택한 관심분야입니다.
           </Alert>
         </Collapse>
-        <Typography variant="body1" align="left" sx={{ color: 'text.secondary', mt: 3, mb: 1 }}>
+        <Typography variant="body1" align="left" sx={{ color: 'text', mt: 3, mb: 1 }}>
           선택한 관심분야
         </Typography>
         <Stack direction="row" spacing={1}>
@@ -146,7 +150,7 @@ export default function SelectInterests({ setConfirm, setUser, user }) {
             />
           ))}
         </Stack>
-        <Typography variant="body1" align="left" sx={{ color: 'text.secondary', mt: 3, mb: 1 }}>
+        <Typography variant="body1" align="left" sx={{ color: 'text', mt: 3, mb: 1 }}>
           카테고리 전체목록
         </Typography>
 

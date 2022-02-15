@@ -22,9 +22,6 @@ import MenuPopover from '../../components/MenuPopover';
 import NotificationItem from './NotificationItem';
 import { getNotificationList, readNotifications } from '../../services/api/NotificationApi';
 
-// todo Replace mock data with API
-// import NOTIFICATIONS from '../../_mocks_/notification';
-
 // ----------------------------------------------------------------------
 
 export default function NotificationsPopover() {
@@ -103,11 +100,12 @@ export default function NotificationsPopover() {
         <Box sx={{ display: 'flex', alignItems: 'center', py: 2, px: 2.5 }}>
           <Box sx={{ flexGrow: 1 }}>
             <Typography variant="subtitle1">Notifications</Typography>
-            <Typography variant="body2" sx={{ color: 'text.secondary' }}>
+            <Typography component="span" variant="body2" sx={{ color: 'text.secondary' }}>
               You have{' '}
               <Typography
                 variant="body2"
                 display="inline"
+                component="span"
                 sx={{ color: 'text.info', fontWeight: 'bold' }}
               >
                 {totalUnRead}

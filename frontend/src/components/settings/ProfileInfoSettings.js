@@ -1,9 +1,10 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Icon } from '@iconify/react';
 import eyeFill from '@iconify/icons-eva/eye-fill';
 import eyeOffFill from '@iconify/icons-eva/eye-off-fill';
+import CloseIcon from '@mui/icons-material/Close';
 import { Link as RouterLink, useNavigate } from 'react-router-dom';
-import { getLoggedUserId, getLoggedUserInfo, getLoggedUserPhoto } from '../../utils/loggedUser'
+import { getLoggedUserId, setLoggedUserInfo } from '../../utils/loggedUser';
 // material
 import {
   Stack,
@@ -16,6 +17,10 @@ import {
   FormControlLabel,
   Radio,
   getTouchRippleUtilityClass,
+  Typography,
+  Box,
+  Collapse,
+  Alert,
 } from '@mui/material';
 import { LoadingButton } from '@mui/lab';
 import { signup } from '../../services/api/AuthApi';
@@ -30,73 +35,45 @@ import {
   emailConfirm,
   emailToken,
   modifyUserInfo,
-  modifyUserPw
+  modifyUserPw,
 } from '../../services/api/UserApi';
-import ImageUploadButton from '../common/ImageUploadButton';
+import ProfileImageUploadButton from '../common/ProfileImageUploadButton';
 
 // ----------------------------------------------------------------------
 
 export default function ProfileInfoSettings() {
-  const loggedUserId = getLoggedUserId();
-  const loggedUser = getLoggedUserInfo();
+  // 설정 성공적으로 반영 시 Alert
+  const [openSuccessAlert, setOpenSuccessAlert] = useState(false);
 
   const [showPassword, setShowPassword] = useState(false);
+  const [newPassword, setNewPassword] = useState('');
+  const [newNickname, setNewNickname] = useState('');
+
   const navigate = useNavigate();
 
-  // yyyy-mm-dd로 변경
-  // let convertedDate = convertDateFormat(loggedUser.userBirthday)
-  // console.log("================생일 타입 변경========================")
-  // console.log(typeof loggedUser.userBirthday) string 타입
-  let year = loggedUser.userBirthday.slice(0,4)
-  // console.log(year)
-  let month = loggedUser.userBirthday.slice(5, 7)
-  // console.log(month)
-  let day = loggedUser.userBirthday.slice(8, 10)
-  // console.log(day)
-  let birthday = [year, month, day].join('-')
-  // console.log(birthday)
-  // console.log("========================================")
-
-  const [user, setUser] = useState({
-    userId: loggedUser.userId,
-    password: '',
-    userNickname: loggedUser.userNickname,
-    userEmail: loggedUser.userEmail,
-    userBirthday: birthday,
-    userGender: loggedUser.userGender,
-    categories: [],
-    userProfilePhoto: loggedUser.userProfilePhoto,
-  });
+  let year, month, day;
+  const [birthday, setBirthday] = useState('');
+  const [user, setUser] = useState();
 
   // error State
   const [errorState, setErrorState] = useState({
-    UserIdRegex: false,
-    UserIdUnique: false,
     nickNameRegex: false,
     nickNameUnique: false,
     passwordRegex: false,
     passwordConfirm: false,
-    emailRegex: false,
-    emailUnique: false,
   });
 
   // error Message
   const errorMsg = {
-    IDRegex: '숫자와 영문 조합으로 6~16자까지 가능합니다.',
-    IDUnique: '중복되는 아이디가 있습니다.',
-    IDUniqueTrue: '유효한 아이디입니다.',
     nicknameRegex: '한글,영어,숫자 조합으로 2~16자 까지 가능하며 특수문자는 불가능합니다.',
     nicknameUnique: '중복되는 닉네임이 있습니다.',
     passwordRegex: '영어, 숫자, 특수문자를 최소 한개씩 포함하며 4~12자까지 가능합니다.',
     passwordConfirm: '비밀번호가 일치하지 않습니다',
-    emailRegex: '이메일 형식으로 입력해주세요.',
-    emailUnique: '중복되는 이메일이 있습니다. ',
   };
 
-
   // userNickname Validation
-  const checkNickValid = (nickname) => {
-    var checkNick = /^[ㄱ-ㅎ|가-힣|a-z|A-Z|0-9|]{1,15}$/.test(loggedUser.userNickname);
+  const checkNickValid = () => {
+    var checkNick = /^[ㄱ-ㅎ|가-힣|a-z|A-Z|0-9|]{1,15}$/.test(newNickname);
     if (!checkNick) {
       setErrorState({
         ...errorState,
@@ -110,18 +87,18 @@ export default function ProfileInfoSettings() {
     }
   };
 
-  const checkOriginNick = (nickname) => {
-    if(nickname == loggedUser.userNickname) {
+  const checkOriginNick = () => {
+    if (newNickname == user.userNickname) {
       return true;
     } else {
       return false;
     }
-  }
+  };
 
   // userNickname duplicate check
-  const checkNickUnique = async (nick) => {
-    const result = await checkNickname(nick);
-    const sameOriginNick = await checkOriginNick(nick)
+  const checkNickUnique = async () => {
+    const result = await checkNickname(newNickname);
+    const sameOriginNick = checkOriginNick();
     // console.log(result)
     if (result || sameOriginNick) {
       setErrorState({
@@ -139,9 +116,9 @@ export default function ProfileInfoSettings() {
 
   // password confirm
   // 비밀번호는 그냥 수정으로 보내기. null값으로 잡은 다음에 setState로 변경해서 modify 전송
-  const checkPwValid = (e) => {
+  const checkPwValid = () => {
     var checkpw = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[$@$!%*#?&])[A-Za-z\d$@$!%*#?&]{4,12}$/.test(
-      user.password
+      newPassword
     );
     // console.log(checkpw)
     if (!checkpw) {
@@ -155,142 +132,213 @@ export default function ProfileInfoSettings() {
         passwordRegex: false,
       });
     }
-  }; 
-
-  const handleSubmit = (event) => {
-    event.preventDefault();
-    alert(`변경된 닉네임: ${user.userNickname}`);
-    alert(`변경된 패스워드: ${user.password}`);
-    modifyUserPw(user)
-    modifyUserInfo(user)
-    navigate('/', { replace: true });
   };
 
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+    // alert(`변경된 닉네임: ${user.userNickname}`);
+    // alert(`변경된 패스워드: ${newPassword}`);
+    // setUser({ ...user, userNickname: newNickname, password: newPassword });
+    const updatedInfo = { ...user, userNickname: newNickname, password: newPassword };
+    console.log(updatedInfo);
+    let result = await modifyUserPw(newPassword);
+    if (result === 'success') result = await modifyUserInfo(updatedInfo);
+    // (await modifyUserPw(newPassword)) === 'success' &&
+    //   (await modifyUserInfo(updatedInfo)) === 'success';
+
+    if (result === 'success') {
+      setOpenSuccessAlert(true);
+      const updatedInfo = await getUserInfo(getLoggedUserId());
+      setLoggedUserInfo(updatedInfo);
+    } else {
+      alert('실패');
+    }
+
+    // navigate('/', { replace: true });
+  };
+
+  const getUserAccountInfo = async () => {
+    const data = await getUserInfo(getLoggedUserId());
+    setUser(data);
+    setNewNickname(data.userNickname);
+
+    // yyyy-mm-dd로 변경
+    year = data.userBirthday.slice(0, 4);
+    month = data.userBirthday.slice(5, 7);
+    day = data.userBirthday.slice(8, 10);
+    setBirthday([year, month, day].join('-'));
+  };
+
+  useEffect(() => {
+    getUserAccountInfo();
+  }, []);
+
   return (
-    <>
+    <Box mt={4}>
       {/* 한주님 작업공간: 프로필사진 / 닉네임 / 비밀번호 2가지만 변경가능
       <br /> - 비밀번호 확인 방식?
       <br /> - 회원탈퇴 추가
       <br /> - 아래코드 다 삭제하고 하시면 됩니다! (예전 회원가입코드에서 단순 복붙해온 것) */}
       {/* 아이디, 닉네임, 사진, 이메일,  */}
-      <form onSubmit={handleSubmit}>
-        <Stack spacing={2}>
-          {/* 아이디는 수정 불가 */}
-          <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2}>
-            <TextField
-              disabled
-              fullWidth
-              autoComplete="userId"
-              type="text"
-              label="userId"
-              value={loggedUserId}
-            />
-          </Stack>
-          {/* 이메일 */}
-          <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2}>
-            <TextField
-              disabled
-              fullWidth
-              autoComplete="email"
-              type="email"
-              label="Email address"
-              value={loggedUser.userEmail}
-            />
-          </Stack>
-          {/* 닉네임 */}
-          <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2}>
-            <TextField
-              required
-              fullWidth
-              autoComplete="userNickname"
-              type="text"
-              label="Nickname"
-              value={user.userNickname}
-              onChange={(e) =>
-                setUser({
-                  ...user,
-                  userNickname: e.target.value,
-                })
-              }
-              onKeyUp={(e) => checkNickValid(e.target.value)}
-              onBlur={(e) => checkNickUnique(e.target.value)}
-              // UserIdRegex가 true. -> 유효하지 않다
-              error={
-                errorState.nickNameRegex ? errorState.nickNameRegex : errorState.nickNameUnique
-              }
-              helperText={
-                errorState.nickNameRegex
-                  ? errorMsg.nicknameRegex
-                  : errorState.nickNameUnique && errorMsg.nicknameUnique
-              }
-            />
-          </Stack>
-          {/* 비밀번호 그냥 적고 수정 */}
-          <TextField
-            required
-            fullWidth
-            autoComplete="password"
-            type={showPassword ? 'text' : 'password'}
-            label="비밀번호"
-            value={user.password}
-            InputProps={{
-              endAdornment: (
-                <InputAdornment position="end">
-                  <IconButton edge="end" onClick={() => setShowPassword((prev) => !prev)}>
-                    <Icon icon={showPassword ? eyeFill : eyeOffFill} />
-                  </IconButton>
-                </InputAdornment>
-              ),
-            }}
-            onChange={(e) =>
-              setUser({
-                ...user,
-                password: e.target.value,
-              })
-            }
-            onBlur={(e) => checkPwValid(e)}
-            error={errorState.passwordRegex}
-            helperText={errorState.passwordRegex && errorMsg.passwordRegex}
-          />
-          {/* 생일 / 성별 */}
-          <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2}>
-            <TextField
-              disabled
-              id="date"
-              type="date"
-              sx={{ width: 200 }}
-              value={birthday}
-              InputLabelProps={{
-                shrink: true,
-                required: true,
+      <Collapse in={openSuccessAlert}>
+        <Alert
+          severity="success"
+          action={
+            <IconButton
+              aria-label="close"
+              color="inherit"
+              size="small"
+              onClick={() => {
+                setOpenSuccessAlert(false);
               }}
-            />
-            <FormLabel id="gender-radio-group">Gender</FormLabel>
-            <RadioGroup
-              row
-              aria-labelledby="demo-controlled-radio-buttons-group"
-              name="controlled-radio-buttons-group"
-              value={loggedUser.userGender}
             >
-              <FormControlLabel value={false} control={<Radio />} label="Male" />
-              <FormControlLabel value={true} control={<Radio />} label="Female" />
-            </RadioGroup>
-            <ImageUploadButton />
+              <CloseIcon fontSize="inherit" />
+            </IconButton>
+          }
+          variant="filled"
+          sx={{ mb: 2 }}
+        >
+          성공적으로 반영되었습니다.
+        </Alert>
+      </Collapse>
+      {user ? (
+        <form onSubmit={handleSubmit}>
+          <Stack spacing={4}>
+            <Stack direction="row" justifyContent="space-between" spacing={5}>
+              <ProfileImageUploadButton size={'15rem'} prevImage={user.userProfilePhoto} />
+              <Stack spacing={2} width="100%">
+                <TextField
+                  id="userid-read-only-input"
+                  label="아이디"
+                  defaultValue={user.userId}
+                  InputProps={{
+                    readOnly: true,
+                  }}
+                  variant="standard"
+                />
+                <TextField
+                  id="email-read-only-input"
+                  label="이메일"
+                  defaultValue={user.userEmail}
+                  InputProps={{
+                    readOnly: true,
+                  }}
+                  variant="standard"
+                />
+                {/* 생일 / 성별 */}
+                <Stack spacing={2}>
+                  <TextField
+                    id="date"
+                    type="date"
+                    label="생일"
+                    sx={{ width: 200 }}
+                    value={birthday}
+                    InputProps={{
+                      readOnly: true,
+                    }}
+                    variant="standard"
+                  />
+                  {/* </Stack> */}
+                  <Stack direction={{ xs: 'column', sm: 'row' }} alignItems="center" spacing={2}>
+                    <FormLabel id="gender-radio-group" sx={{ fontSize: 12 }}>
+                      성별
+                    </FormLabel>
+                    <RadioGroup
+                      row
+                      aria-labelledby="demo-controlled-radio-buttons-group"
+                      name="controlled-radio-buttons-group"
+                      value={user.userGender}
+                      disabled
+                    >
+                      <FormControlLabel
+                        value={false}
+                        control={<Radio />}
+                        label="남성"
+                        disabled={user.userGender}
+                      />
+                      <FormControlLabel
+                        value={true}
+                        control={<Radio />}
+                        label="여성"
+                        disabled={!user.userGender}
+                      />
+                    </RadioGroup>
+                  </Stack>
+                </Stack>
+              </Stack>
+            </Stack>
+
+            {/* 닉네임 */}
+            <Stack spacing={2}>
+              <Typography variant="subtitle1">닉네임 변경</Typography>
+              <TextField
+                required
+                fullWidth
+                autoComplete="text"
+                // placeholder={user.userNickname}
+                type="text"
+                label="닉네임"
+                value={newNickname}
+                onChange={(e) => setNewNickname(e.target.value)}
+                // onChange={(e) =>
+                //   setUser({
+                //     ...user,
+                //     userNickname: e.target.value,
+                //   })
+                // }
+                onKeyUp={() => checkNickValid()}
+                onBlur={() => checkNickUnique()}
+                // UserIdRegex가 true. -> 유효하지 않다
+                error={
+                  errorState.nickNameRegex ? errorState.nickNameRegex : errorState.nickNameUnique
+                }
+                helperText={
+                  errorState.nickNameRegex
+                    ? errorMsg.nicknameRegex
+                    : errorState.nickNameUnique && errorMsg.nicknameUnique
+                }
+              />
+              <Typography variant="subtitle1">비밀번호 수정</Typography>
+              {/* 비밀번호 그냥 적고 수정 */}
+              <TextField
+                required
+                fullWidth
+                autoComplete="password"
+                type={showPassword ? 'text' : 'password'}
+                label="새 비밀번호"
+                value={newPassword}
+                InputProps={{
+                  endAdornment: (
+                    <InputAdornment position="end">
+                      <IconButton edge="end" onClick={() => setShowPassword((prev) => !prev)}>
+                        <Icon icon={showPassword ? eyeFill : eyeOffFill} />
+                      </IconButton>
+                    </InputAdornment>
+                  ),
+                }}
+                onChange={(e) => setNewPassword(e.target.value)}
+                // onChange={(e) =>
+                //   setUser({
+                //     ...user,
+                //     password: e.target.value,
+                //   })
+                // }
+                onBlur={() => checkPwValid()}
+                error={errorState.passwordRegex}
+                helperText={errorState.passwordRegex && errorMsg.passwordRegex}
+              />
+            </Stack>
+
+            {!newNickname || !newPassword ? (
+              <Button>수정할 항목들을 입력해주세요</Button>
+            ) : (
+              <Button fullWidth size="large" variant="contained" type="submit">
+                정보 수정
+              </Button>
+            )}
           </Stack>
-          {
-          !user.password ||
-          !user.userNickname ? (
-            <Button>필수 항목을 모두 작성해주세요</Button>
-          ) 
-          : (
-            <Button fullWidth size="large" variant="contained" type='submit' >
-              정보 수정
-            </Button>
-          )}
-        </Stack>
-      </form>
-    </>
+        </form>
+      ) : null}
+    </Box>
   );
 }
-
-

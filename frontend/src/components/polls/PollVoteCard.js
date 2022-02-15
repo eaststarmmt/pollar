@@ -21,6 +21,7 @@ import stringToColor from '../../utils/stringToColor';
 import { fDateTimeSuffix } from '../../utils/formatTime';
 import { useEffect, useState } from 'react';
 import { cancelPollVote } from '../../services/api/PollApi';
+import { checkExpired } from '../../utils/formatTime';
 
 // ----------------------------------------------------------------------
 
@@ -28,6 +29,14 @@ const CardMediaStyle = styled('div')({
   position: 'relative',
   paddingTop: 'calc(100% * 3 / 4)',
 });
+
+// const TitleStyle = styled(Link)({
+//   height: 44,
+//   overflow: 'hidden',
+//   WebkitLineClamp: 2,
+//   display: '-webkit-box',
+//   WebkitBoxOrient: 'vertical',
+// });
 
 const AvatarStyle = styled(Avatar)(({ theme }) => ({
   zIndex: 9,
@@ -65,7 +74,15 @@ const CoverTextStyle = styled('div')(({ color }) => ({
   alignItems: 'center',
   textAlign: 'center',
   backgroundColor: color,
+  // objectFit: 'cover',
+  // padding: 1,
+  // overflow: 'hidden',
+  // display: 'inline-block',
   position: 'absolute',
+  // justifyContent: 'center',
+  // lineHeight: '1.5',
+  // verticalAlign: 'bottom',
+  // textSizeAdjust: '80%',
 }));
 
 // ----------------------------------------------------------------------
@@ -83,6 +100,7 @@ export default function PollVoteCard({ poll, isOwner }) {
     voteName,
     voteType,
     voteCreateTime,
+    voteExpiredTime,
     userAnonymousType,
     voteAnonymousType,
     voteCategoriesName,
@@ -223,7 +241,8 @@ export default function PollVoteCard({ poll, isOwner }) {
                   </Box>
                 ))}
               </InfoStyle>
-              {isOwner ? (
+              {/* 사용자 본인의 프로필인 경우 && 마감되지 않은 투표일 경우에만 투표취소 가능  */}
+              {isOwner && !checkExpired(voteExpiredTime) ? (
                 <Button
                   variant="text"
                   color="error"

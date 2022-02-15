@@ -27,3 +27,7 @@ export function getLoggedUserInfo() {
   const user = JSON.parse(localStorage.getItem('user'));
   return user;
 }
+
+export function setLoggedUserInfo(data) {
+  localStorage.setItem('user', JSON.stringify(data));
+}

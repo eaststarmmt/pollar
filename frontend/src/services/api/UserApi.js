@@ -1,9 +1,4 @@
-import {
-  instance,
-  instanceWithAuth,
-  fileInstance,
-  createIntstanceWithAuth,
-} from '../../services/axios';
+import { instance, createMultipartInstance, fileInstance } from '../../services/axios';
 import { getLoggedUserId } from '../../utils/loggedUser';
 
 // 공통되는 경로는 다음과 같이 별도로 정의해둠
@@ -67,39 +62,30 @@ export const modifyUserInfo = async (user) => {
     userId: getLoggedUserId(),
     userNickname: user.userNickname,
   });
-  console.log('========================================');
-  console.log('========================================');
-  console.log(response.data);
-  console.log('========================================');
   return response.data;
 };
 
-export const modifyUserPw = async (user) => {
-  const response = await instance.put(COMMON + 'modifypass', {
+/* 비밀번호 수정 */
+export const modifyUserPw = async (newPassword) => {
+  const response = await instance.put(COMMON + '/modifypass', {
     userId: getLoggedUserId(),
-    password: user.password,
+    password: newPassword,
   });
-  console.log('========================================');
-  console.log('========================================');
-  console.log(response.data);
-  console.log('========================================');
+  return response.data;
 };
 
-// 회원 정보 얻어오기
+/* 회원 정보 불러오기 */
 export const getUserInfo = async (userId) => {
-  const response = await instance.get(COMMON + 'info' + `/${userId}`, {
+  const response = await instance.get(COMMON + '/info' + `/${userId}`, {
     profileUserId: userId,
     loginUserId: getLoggedUserId(),
   });
-  console.log('========================================');
-  console.log('========================================');
-  console.log(response.data);
-  console.log('========================================');
+  return response.data;
 };
 
 // 프로필 이미지 수정
 // ProfileApi 에서 기본 유저 정보 호출해서 사용하기
 export const modifyProfilePhoto = async (formData) => {
   const response = await fileInstance.put(COMMON + '/photo', formData);
-  console.log(response);
+  return response.data;
 };

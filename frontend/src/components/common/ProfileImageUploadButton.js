@@ -1,59 +1,34 @@
-import { Button, IconButton, Stack, Avatar } from '@mui/material';
-import { styled } from '@mui/system';
-import profile from '../../_mocks_/profile';
+import { Stack, Avatar } from '@mui/material';
 import { modifyProfilePhoto } from '../../services/api/UserApi';
-import { getProfileInfo } from '../../services/api/ProfileApi';
 import { useEffect, useState, useRef } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
-import { getLoggedUserId, getLoggedUserPhoto } from '../../utils/loggedUser';
+import { getLoggedUserId, setLoggedUserInfo } from '../../utils/loggedUser';
 
-const Input = styled('input')({
-  display: 'none',
-});
-
-export default function ImageUploadButton({ size, userId, prevImage }) {
-  // 로그인되어있는 사용자의 Id, 이미지 확인
-  //// const loggedUserId = getLoggedUserId();
+export default function ProfileImageUploadButton({ size, userId, prevImage }) {
   let loggedUserId = getLoggedUserId();
+  // 회원가입 시 필요(localStorage에 아직 없음)
   if (typeof userId !== 'undefined') loggedUserId = userId;
 
-  // const loggedUserPhoto = getLoggedUserPhoto();
-  // console.log('==========================================');
-  // console.log('현재 로그인한 아이디: ' + loggedUserId);
-  // console.log('유저 프로필 이미지 주소: ' + loggedUserPhoto);
-  // console.log('==========================================');
-
-  // 이미지 상태값으로 사용해서 변경해주기
-
-  // const [image, setImage] = useState(loggedUserPhoto);
   const [image, setImage] = useState(prevImage);
   const fileInput = useRef(null);
   // 아래 주소 default로 넣어놔도 좋을듯
   // https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png
 
-  // console.log(image);
-  const onChange = (e) => {
+  const onChange = async (e) => {
     if (e.target.files[0]) {
       const formData = new FormData();
-      let variable = [
-        {
-          userId: loggedUserId,
-        },
-      ];
-      // formData.append(
-      //   "userDto",
-      //   new Blob([JSON.stringify(variable)], { type: "application/json" })
-      // )
       formData.append(
         'userDto',
         new Blob([JSON.stringify({ userId: loggedUserId })], { type: 'application/json' })
       );
-      // formData.append("userDto", loggedUserId);
       formData.append('userProfilePhoto', e.target.files[0]);
 
-      // setImage(e.target.files[0]);
-      // console.log(e.target.files[0]);
-      modifyProfilePhoto(formData);
+      // 서버 요청
+      const result = await modifyProfilePhoto(formData);
+      if (result === 'success') {
+        //todo localStorage에 갱신
+        // const updatedData = await getUser
+        // setLoggedUserInfo();
+      }
     } else {
       //업로드 취소할 시
       setImage(prevImage);
@@ -80,7 +55,6 @@ export default function ImageUploadButton({ size, userId, prevImage }) {
         <Avatar
           alt="user profile photo"
           src={image}
-          // sx={{ width: 56, height: 56, cursor: 'pointer' }}
           sx={{ width: `${size}`, height: `${size}`, cursor: 'pointer' }}
           onClick={() => {
             fileInput.current.click();

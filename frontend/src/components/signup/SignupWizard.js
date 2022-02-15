@@ -14,7 +14,7 @@ import SignupForm from './SignupForm';
 import { Link as RouterLink, useNavigate } from 'react-router-dom';
 
 import { Fragment, useState } from 'react';
-import ImageUploadButton from '../common/ImageUploadButton';
+import ProfileImageUploadButton from '../common/ProfileImageUploadButton';
 import { signup } from '../../services/api/AuthApi';
 
 const steps = ['기본정보', '관심분야 선택', '프로필 완성'];
@@ -152,7 +152,7 @@ export default function SignupWizard() {
           </Box>
           <SignupStepper activeStep={activeStep} />
         </Stack>
-        {activeStep === steps.length ? (
+        {/* {activeStep === steps.length ? (
           <Fragment>
             <Typography sx={{ mt: 2, mb: 1 }}>환영합니다! 회원가입이 완료되었습니다</Typography>
             <ImageUploadButton size={'20rem'} />
@@ -161,45 +161,45 @@ export default function SignupWizard() {
               <Button onClick={handleNavigateLogin}>로그인하러 가기</Button>
             </Box>
           </Fragment>
-        ) : (
-          <Fragment>
-            <Box sx={{ display: 'flex', justifyContent: 'center', width: '100%' }}>
-              {activeStep === 0 ? (
-                <SignupForm setConfirm={handleNext} setUser={setUser} user={user} />
-              ) : activeStep === 1 ? (
-                <SelectInterests setConfirm={handleNext} setUser={setUser} user={user} />
-              ) : (
-                <Stack width="100%" spacing={3} alignItems="center">
-                  <Typography sx={{ mt: 2, mb: 1, width: '100%', textAlign: 'center' }}>
-                    환영합니다! 회원가입이 완료되었습니다
-                  </Typography>
-                  <ImageUploadButton size={'20rem'} userId={user.userId} />
-                  <Box
+        ) : ( */}
+        <Fragment>
+          <Box sx={{ display: 'flex', justifyContent: 'center', width: '100%' }}>
+            {activeStep === 0 ? (
+              <SignupForm setConfirm={handleNext} setUser={setUser} user={user} />
+            ) : activeStep === 1 ? (
+              <SelectInterests setConfirm={handleNext} setUser={setUser} user={user} />
+            ) : (
+              <Stack width="100%" spacing={3} alignItems="center">
+                <Typography sx={{ mt: 2, mb: 1, width: '100%', textAlign: 'center' }}>
+                  환영합니다! 회원가입이 완료되었습니다
+                </Typography>
+                <ProfileImageUploadButton size={'20rem'} userId={user.userId} />
+                <Box
+                  sx={{
+                    display: 'flex',
+                    flexDirection: 'row',
+                    pt: 2,
+                  }}
+                >
+                  {/* <Box sx={{ flex: '1 1 auto' }} /> */}
+                  <Button
+                    onClick={handleNavigateLogin}
                     sx={{
-                      display: 'flex',
-                      flexDirection: 'row',
-                      pt: 2,
+                      position: 'absolute',
+                      right: 0,
+                      bottom: 0,
+                      marginRight: 10,
+                      marginBottom: 5,
                     }}
                   >
-                    {/* <Box sx={{ flex: '1 1 auto' }} /> */}
-                    <Button
-                      onClick={handleNavigateLogin}
-                      sx={{
-                        position: 'absolute',
-                        right: 0,
-                        bottom: 0,
-                        marginRight: 10,
-                        marginBottom: 5,
-                      }}
-                    >
-                      로그인하러 가기
-                    </Button>
-                  </Box>
-                </Stack>
-              )}
-            </Box>
+                    로그인하러 가기
+                  </Button>
+                </Box>
+              </Stack>
+            )}
+          </Box>
 
-            {/* <Box sx={{ display: 'flex', flexDirection: 'row', pt: 2 }}>
+          {/* <Box sx={{ display: 'flex', flexDirection: 'row', pt: 2 }}>
               <Button color="inherit" disabled={activeStep < 2} onClick={handleBack} sx={{ mr: 1 }}>
                 뒤로
               </Button>
@@ -214,8 +214,8 @@ export default function SignupWizard() {
                 {activeStep === steps.length - 1 ? '회원가입 완료' : '확인'}
               </Button>
             </Box> */}
-          </Fragment>
-        )}
+        </Fragment>
+        {/* )} */}
       </Card>
     </>
   );

@@ -1,12 +1,9 @@
 // @mui material components
 import { Box, Typography, Button, Container, Grid, Avatar, Stack, Chip } from '@mui/material';
-import SettingsIcon from '@mui/icons-material/Settings';
 // Images
-import profilePicture from '../../assets/images/profile.jpeg';
 import FollowListModal from './FollowListModal';
 import { useState } from 'react';
 import MobileHidden from '../common/MobileHidden';
-import { useNavigate } from 'react-router-dom';
 import FollowButton from './FollowButton';
 
 function Profile({ profileInfo, isOwnerAccount, setTriggerRefresh }) {
@@ -181,7 +178,6 @@ function Profile({ profileInfo, isOwnerAccount, setTriggerRefresh }) {
                 </Stack>
               </Stack>
             </Stack>
-            {/* <ImageUploadButton /> */}
             <FollowListModal
               openModal={openFollowListModal}
               type={modalListType}
