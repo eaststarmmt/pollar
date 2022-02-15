@@ -31,7 +31,7 @@ public class User implements UserDetails {
     @Column(length = 16 , name = "userId", unique = true)
     private String userId;
 
-    @Column(length = 16, name = "password")
+    @Column(name = "password")
     private String password;
 
     @Column(length = 16 , name = "userNickname")
@@ -69,8 +69,8 @@ public class User implements UserDetails {
 
     // user안에 update메소드를 만들어서 request를 param으로 바꿔서
     // setter => update
-    private void update(User user){// builder와 사용 목적이 같다.
-        this.uid = user.uid;
+    public void passwordUpdate(String password){// builder와 사용 목적이 같다.
+        this.password = password;
     }
 
     // Jwt 토큰을 위해 UserDetails

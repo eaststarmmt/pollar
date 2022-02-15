@@ -15,6 +15,7 @@ import org.apache.tomcat.util.http.fileupload.FileUpload;
 import org.apache.tomcat.util.http.fileupload.FileUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.parameters.P;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.transaction.annotation.Transactional;
@@ -41,7 +42,7 @@ public class UserServiceImpl implements UserService{
     private final UserCategoryRepository userCategoryRepository;
     private final CategoryRepository categoryRepository;
     private final UserNotificationStateRepository userNotificationStateRepository;
-
+    private final PasswordEncoder passwordEncoder;
     private final S3Uploader s3Uploader;
 
 //    @Value("${custom.path.upload-images}")
@@ -54,7 +55,7 @@ public class UserServiceImpl implements UserService{
         User user = User.builder()
 //                .uid(userDto.getUid())
                 .userId(userDto.getUserId())
-                .password(userDto.getPassword())
+                .password(passwordEncoder.encode(userDto.getPassword()))
                 .userNickname(userDto.getUserNickname())
                 .userEmail(userDto.getUserEmail())
                 .userBirthday(userDto.getUserBirthday())
@@ -145,7 +146,8 @@ public class UserServiceImpl implements UserService{
         if(userDto.getUserId() == null || userDto.getPassword()==null){
             return false;
         }else{
-            if(!userRepository.findByUserIdAndPassword(userDto.getUserId(),userDto.getPassword()).isPresent()){
+            String dbPassword = getPassword(userDto.getUserId());
+            if(!passwordEncoder.matches(userDto.getPassword(),dbPassword)){
                 return false;
             }else{
                 return true;
@@ -157,7 +159,6 @@ public class UserServiceImpl implements UserService{
     @Override
     public void modifyProfile(UserDto userDto, MultipartFile userProfilePhoto) throws Exception {
         UUID uuid = UUID.randomUUID();
-
 
         User usercur = userRepository.findByUserId(userDto.getUserId()).get();
         // 통신 I/O
@@ -210,20 +211,8 @@ public class UserServiceImpl implements UserService{
     @Transactional
     @Override
     public void modifyPassword(UserDto userDto) throws Exception {
-        User usercur = userRepository.findByUserId(userDto.getUserId()).get();
-
-        User user = User.builder()
-                .uid(usercur.getUid())
-                .userId(usercur.getUserId())
-                .password(userDto.getPassword())
-                .userNickname((usercur.getUserNickname()))
-                .userEmail((usercur.getUserEmail()))
-                .userBirthday((usercur.getUserBirthday()))
-                .userGender((usercur.getUserGender()))
-                .userProfilePhoto(usercur.getUserProfilePhoto())
-                .build();
-
-        // User에 user 정보 저장
+        User user = userRepository.findByUserId(userDto.getUserId()).get();
+        user.passwordUpdate(userDto.getPassword());
         userRepository.save(user);
     }
 
@@ -232,6 +221,13 @@ public class UserServiceImpl implements UserService{
         User user = userRepository.findByUserId(userId).get();
         UserDto userDto = new UserDto(user);
         return userDto;
+    }
+
+    @Override
+    public String getPassword(String userId) throws Exception {
+        User user = userRepository.findByUserId(userId).get();
+        String password = user.getPassword();
+        return password;
     }
 
 }

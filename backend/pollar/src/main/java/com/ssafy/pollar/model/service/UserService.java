@@ -18,5 +18,5 @@ public interface UserService {
     String findId(String userEmail) throws Exception;
     void modifyPassword(UserDto userDto) throws Exception;
     UserDto getUserInfo(String userId) throws  Exception;
-
+    String getPassword(String userId) throws Exception;
 }

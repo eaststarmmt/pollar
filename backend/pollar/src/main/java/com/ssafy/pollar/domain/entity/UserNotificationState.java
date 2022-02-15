@@ -33,4 +33,13 @@ public class UserNotificationState {
     @Column(name = "feedNotificationState")
     private Boolean feedNotificationState;
 
+    public void allNotificationUpdate(boolean allNotificationState){
+        this.allNotificationState = allNotificationState;
+    }
+    public void followNotificationUpdate(boolean followNotificationState){
+        this.followNotificationState = followNotificationState;
+    }
+    public void feedNotificationUpdate(boolean feedNotificationState){
+        this.feedNotificationState = feedNotificationState;
+    }
 }

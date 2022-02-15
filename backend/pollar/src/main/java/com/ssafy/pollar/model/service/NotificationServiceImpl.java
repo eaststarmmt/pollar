@@ -17,6 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 @Service
@@ -72,14 +73,13 @@ public class NotificationServiceImpl implements NotificationService{
         String voteName = voteService.detail(voteId).getVoteName();
         String comment = sendNick + "가 "+ voteName + "에 좋아요를 누르셧습니다.";
         UserNotificationState userNotificationState = userNotificationStateRepository.findByUserId(userRepository.findByUserId(receiveId).get()).get();
-        if(!userNotificationState.getAllNotificationState()){
-            return;
-        }else if(!userNotificationState.getFeedNotificationState()){
+        if(!userNotificationState.getFeedNotificationState()){
             return;
         }
         Notification notification = Notification.builder()
                 .notificationType(2)
                 .notificationContents(comment)
+                .notificationCreateTime(LocalDateTime.now())
                 .notificationRead(false)
                 .sendUserId(userRepository.findByUserId(sendId).get())
                 .receiveUserId(userRepository.findByUserId(receiveId).get())
@@ -99,14 +99,13 @@ public class NotificationServiceImpl implements NotificationService{
         String receiveNick = userRepository.findByUserId(receiveId).get().getUserNickname();
         String comment = sendNick + "가 팔로우 요청 하였습니다.";
         UserNotificationState userNotificationState = userNotificationStateRepository.findByUserId(userRepository.findByUserId(receiveId).get()).get();
-        if(!userNotificationState.getAllNotificationState()){
-            return;
-        }else if(!userNotificationState.getFollowNotificationState()){
+        if(!userNotificationState.getFollowNotificationState()){
             return;
         }
         Notification notification = Notification.builder()
                 .notificationType(4)
                 .notificationContents(comment)
+                .notificationCreateTime(LocalDateTime.now())
                 .notificationRead(false)
                 .sendUserId(userRepository.findByUserId(sendId).get())
                 .receiveUserId(userRepository.findByUserId(receiveId).get())
@@ -118,17 +117,8 @@ public class NotificationServiceImpl implements NotificationService{
     @Override
     public void notificationRead(long notificationId) throws Exception {
         Notification notification = notificationRepository.findById(notificationId).get();
-        Notification updateNotification = Notification.builder()
-                .notificationId(notificationId)
-                .notificationCreateTime(notification.getNotificationCreateTime())
-                .notificationType(notification.getNotificationType())
-                .notificationContents(notification.getNotificationContents())
-                .notificationRead(true)
-                .sendUserId(notification.getSendUserId())
-                .receiveUserId(notification.getReceiveUserId())
-                .voteId(notification.getVoteId())
-                .build();
-        notificationRepository.save(updateNotification);
+        notification.notificationReadUpdate(true);
+        notificationRepository.save(notification);
     }
 
     @Override
@@ -142,7 +132,12 @@ public class NotificationServiceImpl implements NotificationService{
             String notificationContents = notifications.get(i).getNotificationContents();
             long notificationId = notifications.get(i).getNotificationId();
             LocalDateTime notificationCreateTime = notifications.get(i).getNotificationCreateTime();
-            long voteId = notifications.get(i).getVoteId().getVoteId();
+            long voteId;
+            if(notifications.get(i).getVoteId()!=null){
+                voteId = notifications.get(i).getVoteId().getVoteId();
+            }else{
+                voteId = 0;
+            }
             Boolean notificationRead = notifications.get(i).getNotificationRead();
             int notificationType = notifications.get(i).getNotificationType();
 
@@ -156,83 +151,53 @@ public class NotificationServiceImpl implements NotificationService{
     public void allNotificationOn(String userId) throws Exception {
         User user = userRepository.findByUserId(userId).get();
         UserNotificationState userNotificationState = userNotificationStateRepository.findByUserId(user).get();
-        UserNotificationState updateUserNotificationState = UserNotificationState.builder()
-            .userNotificationStateId(userNotificationState.getUserNotificationStateId())
-            .userId(user)
-            .allNotificationState(true)
-            .followNotificationState(true)
-            .feedNotificationState(true)
-            .build();
-        userNotificationStateRepository.save(updateUserNotificationState);
+        userNotificationState.allNotificationUpdate(true);
+        userNotificationState.followNotificationUpdate(true);
+        userNotificationState.feedNotificationUpdate(true);
+        userNotificationStateRepository.save(userNotificationState);
     }
 
     @Override
     public void allNotificationOff(String userId) throws Exception {
         User user = userRepository.findByUserId(userId).get();
         UserNotificationState userNotificationState = userNotificationStateRepository.findByUserId(user).get();
-        UserNotificationState updateUserNotificationState = UserNotificationState.builder()
-                .userNotificationStateId(userNotificationState.getUserNotificationStateId())
-                .userId(user)
-                .allNotificationState(false)
-                .followNotificationState(false)
-                .feedNotificationState(false)
-                .build();
-        userNotificationStateRepository.save(updateUserNotificationState);
+        userNotificationState.allNotificationUpdate(false);
+        userNotificationState.followNotificationUpdate(false);
+        userNotificationState.feedNotificationUpdate(false);
+        userNotificationStateRepository.save(userNotificationState);
     }
 
     @Override
     public void followNotificationOn(String userId) throws Exception {
         User user = userRepository.findByUserId(userId).get();
         UserNotificationState userNotificationState = userNotificationStateRepository.findByUserId(user).get();
-        UserNotificationState updateUserNotificationState = UserNotificationState.builder()
-                .userNotificationStateId(userNotificationState.getUserNotificationStateId())
-                .userId(user)
-                .allNotificationState(userNotificationState.getAllNotificationState())
-                .followNotificationState(true)
-                .feedNotificationState(userNotificationState.getFeedNotificationState())
-                .build();
-        userNotificationStateRepository.save(updateUserNotificationState);
+        userNotificationState.followNotificationUpdate(true);
+        userNotificationStateRepository.save(userNotificationState);
     }
 
     @Override
     public void followNotificationOff(String userId) throws Exception {
         User user = userRepository.findByUserId(userId).get();
         UserNotificationState userNotificationState = userNotificationStateRepository.findByUserId(user).get();
-        UserNotificationState updateUserNotificationState = UserNotificationState.builder()
-                .userNotificationStateId(userNotificationState.getUserNotificationStateId())
-                .userId(user)
-                .allNotificationState(userNotificationState.getAllNotificationState())
-                .followNotificationState(false)
-                .feedNotificationState(userNotificationState.getFeedNotificationState())
-                .build();
-        userNotificationStateRepository.save(updateUserNotificationState);
+        userNotificationState.allNotificationUpdate(false);
+        userNotificationState.followNotificationUpdate(false);
+        userNotificationStateRepository.save(userNotificationState);
     }
 
     @Override
     public void feedNotificationOn(String userId) throws Exception {
         User user = userRepository.findByUserId(userId).get();
         UserNotificationState userNotificationState = userNotificationStateRepository.findByUserId(user).get();
-        UserNotificationState updateUserNotificationState = UserNotificationState.builder()
-                .userNotificationStateId(userNotificationState.getUserNotificationStateId())
-                .userId(user)
-                .allNotificationState(userNotificationState.getAllNotificationState())
-                .followNotificationState(userNotificationState.getFollowNotificationState())
-                .feedNotificationState(true)
-                .build();
-        userNotificationStateRepository.save(updateUserNotificationState);
+        userNotificationState.feedNotificationUpdate(true);
+        userNotificationStateRepository.save(userNotificationState);
     }
 
     @Override
     public void feedNotificationOff(String userId) throws Exception {
         User user = userRepository.findByUserId(userId).get();
         UserNotificationState userNotificationState = userNotificationStateRepository.findByUserId(user).get();
-        UserNotificationState updateUserNotificationState = UserNotificationState.builder()
-                .userNotificationStateId(userNotificationState.getUserNotificationStateId())
-                .userId(user)
-                .allNotificationState(userNotificationState.getAllNotificationState())
-                .followNotificationState(userNotificationState.getFollowNotificationState())
-                .feedNotificationState(false)
-                .build();
-        userNotificationStateRepository.save(updateUserNotificationState);
+        userNotificationState.allNotificationUpdate(false);
+        userNotificationState.feedNotificationUpdate(false);
+        userNotificationStateRepository.save(userNotificationState);
     }
 }

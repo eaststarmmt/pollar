@@ -3,6 +3,7 @@ package com.ssafy.pollar.jwt;
 import com.ssafy.pollar.jwt.service.JwtUserDetailsService;
 import io.jsonwebtoken.ExpiredJwtException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -40,12 +41,12 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             try {
                 username = jwtTokenProvider.getUserPk(jwtToken);
             } catch (IllegalArgumentException e) {
-//                throw new InvalidParameterException("Unable to get JWT Token");
+                response.sendError(HttpServletResponse.SC_UNAUTHORIZED," Error:Unable to get JWT Token");
+                return;
             } catch (ExpiredJwtException e) {
-//                throw new InvalidParameterException("JWT Token has expired");
+                response.sendError(HttpServletResponse.SC_UNAUTHORIZED," Error:JWT Token has expired");
+                return;
             }
-        } else {
-//            throw new InvalidParameterException("토큰 시작이 Bearer가 아닙니다.");
         }
 
         if(username != null && SecurityContextHolder.getContext().getAuthentication() == null) {

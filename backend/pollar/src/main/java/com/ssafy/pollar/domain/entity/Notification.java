@@ -46,4 +46,8 @@ public class Notification {
     @ManyToOne
     @JoinColumn(name = "voteId")
     private Vote voteId;
+
+    public void notificationReadUpdate(boolean notificationRead){
+        this.notificationRead = notificationRead;
+    }
 }
