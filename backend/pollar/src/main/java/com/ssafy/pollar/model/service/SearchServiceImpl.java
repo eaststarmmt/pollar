@@ -36,7 +36,14 @@ public class SearchServiceImpl implements SearchService{
         String userId;
         String searchUserNickname;
         String userProfile;
-        for(int i = 0 ; i < userList.size(); i++){
+        if(userNickname.trim().length()==0){
+            return userDtoList;
+        }
+        long userListLen = userList.size();
+        if(userList.size()>5){
+            userListLen = 5;
+        }
+        for(int i = 0 ; i < userListLen; i++){
             userId = userList.get(i).getUserId();
             searchUserNickname = userList.get(i).getUserNickname();
             userProfile = userList.get(i).getUserProfilePhoto();
