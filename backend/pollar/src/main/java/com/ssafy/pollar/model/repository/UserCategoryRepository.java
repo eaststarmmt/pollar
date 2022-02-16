@@ -11,6 +11,6 @@ import java.util.Optional;
 public interface UserCategoryRepository extends JpaRepository<UserCategory, Long>{
     @Modifying(clearAutomatically = true)
     @Transactional
-    @Query(value = "delete from usercategory as uc where uid = ?1",nativeQuery = true)
+    @Query(value = "delete from UserCategory as uc where uid = ?1",nativeQuery = true)
     int deleteUserCategories(String uid);
 }
