@@ -1,5 +1,15 @@
 import { Reply } from '@mui/icons-material';
-import { Button, Grid, Stack, TextField, Typography } from '@mui/material';
+import {
+  Button,
+  Grid,
+  Stack,
+  TextField,
+  Typography,
+  Avatar,
+  ImageListItem,
+  Card,
+  CardContent,
+} from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import { useEffect, useState, useCallback } from 'react';
 import { useParams } from 'react-router-dom';
@@ -32,33 +42,49 @@ export default function ReplyForm({ replies }) {
       alert('댓글 생성 실패');
     }
   };
+  console.log(reply);
 
   return (
     <>
-      <Typography variant="h4" paddingTop={1} marginBottom={2} marginLeft={4} marginTop={4}>
-        댓글 {replyMap.length}개
-      </Typography>
-      {replyMap.map((reply, index) => {
-        var a = <ReplyDetail key={index} reply={reply} />;
-        return a;
-      })}
-      <Grid container paddingTop={3}>
-        <Grid item xs={10} paddingLeft={1}>
-          <TextField
-            autoComplete="replyContent"
-            type="replyContent"
-            label="content"
-            fullWidth
-            onChange={onContentHandler}
-            value={reply.replyContent}
-          ></TextField>
-        </Grid>
-        <Grid item xs={1}>
-          <Button size="large" onClick={submitReply}>
-            작성
-          </Button>
-        </Grid>
-      </Grid>
+      <Card
+        sx={{
+          width: 500,
+          height: 550,
+          display: 'flex',
+          flexDirection: 'column',
+          justifyContent: 'space-between',
+        }}
+      >
+        <CardContent sx={{ overflowY: 'auto' }}>
+          <Typography variant="h6" sx={{ px: 3, mb: 1 }} color="primary">
+            총 댓글 {replyMap.length}개
+          </Typography>
+          {replyMap.map((reply, index) => {
+            var a = <ReplyDetail key={index} reply={reply} />;
+            return a;
+          })}
+        </CardContent>
+        <CardContent sx={{ py: 1 }}>
+          <Grid container>
+            <Grid item xs={10} paddingLeft={2} paddingRight={2}>
+              <TextField
+                variant="standard"
+                autoComplete="replyContent"
+                type="replyContent"
+                placeholder="댓글을 작성해주세요."
+                fullWidth
+                onChange={onContentHandler}
+                value={reply.replyContent}
+              ></TextField>
+            </Grid>
+            <Grid item xs={2}>
+              <Button variant="contained" onClick={submitReply}>
+                작성
+              </Button>
+            </Grid>
+          </Grid>
+        </CardContent>
+      </Card>
     </>
   );
 }

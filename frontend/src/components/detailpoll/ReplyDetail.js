@@ -1,4 +1,4 @@
-import { Button, Container, Grid, Stack, Typography, TextField, Avatar } from '@mui/material';
+import { Button,Divider, Container, Grid, Stack, Typography, TextField, Avatar, Link } from '@mui/material';
 import { useState } from 'react';
 import { replyDelete, replyUpdate } from '../../services/api/ReplyApi';
 import { getUserInfoUuid } from '../../services/api/UserApi';
@@ -47,23 +47,31 @@ export default function ReplyDetail({ reply }) {
 
   return (
     <>
-      <Stack direction="row">
-        <Grid item xs={2} paddingLeft={2} paddingTop={2}>
+      <Stack direction="row" >
+        {/* <Grid item xs={2} paddingLeft={2} paddingTop={2}> */}
+        <Stack sx={{ justifyContent: 'flex-start', alignItems: 'center', width: 80, py:2, }}>
           <Avatar
             src={reply.replyUserProfile}
             alt="Profile Photo"
             shadow="xl"
-            sx={{ width: '4rem', height: '4rem' }}
+            sx={{
+              width: '2rem',
+              height: '2rem',
+              border: 1,
+              borderColor: '#c5cae9',
+            }}
           />
-        </Grid>
-        <Grid item xs={8}>
-          <Stack>
-            <Typography variant="h4" paddingTop={1} marginLeft={5}>
-              {reply.replyUserNickname}
+        </Stack>
+        {/* </Grid> */}
+
+        <Grid item xs={8} sx={{ display:'flex', flexDirection:'column', justifyContent:'space-evenly', pt:1.5,}}>
+          <Typography color="primary" variant="overline" sx={{fontSize:14,}}>
+            {reply.replyUserNickname}
             </Typography>
+          <Stack>
             {!vis ? (
               <Grid item xs={12}>
-                <Typography variant="h4" paddingTop={1} marginBottom={2} marginLeft={5}>
+                <Typography variant="button" paddingTop={1} marginBottom={2}>
                   {reply.replyContent}
                 </Typography>
               </Grid>
@@ -83,21 +91,23 @@ export default function ReplyDetail({ reply }) {
             )}
           </Stack>
         </Grid>
+        <Stack sx={{ display:'flex', flexDirection:'column', justifyContent:'flex-end', pt:1.5,}}>
         {reply.replyUser == getLoggedUserId() ? (
           !vis ? (
             <>
-              <Button onClick={onUpdateFormHandler}>수정</Button>
-              <Button onClick={deleteReply}>삭제</Button>
+              <Button size="small" onClick={onUpdateFormHandler}>수정</Button>
+              <Button size="small"onClick={deleteReply}>삭제</Button>
             </>
           ) : (
             <>
-              <Button onClick={onUpdateReplySumit}>수정</Button>
-              <Button onClick={onUpdateFormHandler}>취소</Button>
+              <Button size="small" onClick={onUpdateReplySumit}>수정</Button>
+              <Button size="small" onClick={onUpdateFormHandler}>취소</Button>
             </>
           )
         ) : null}
+        </Stack>
       </Stack>
-      <hr></hr>
+      <Divider variant="middle" />
     </>
   );
 }

@@ -38,58 +38,62 @@ const InfoStyle = styled('div')(({ theme }) => ({
   color: theme.palette.text.disabled,
 }));
 
-export default function PollDetailForm({ poll, voteId }) {
+export default function PollDetailForm(props) {
+  const {vote}= props
   const navigate = useNavigate();
-
-  const {
-    voteName,
-    voteContent,
-    voteType,
-    voteCreateTime,
-    voteExpirationTime,
-    userAnonymousType,
-    voteAnonymousType,
-    voteCategoriesName,
-    // 투표 선택지
-    voteSelects,
-    userVoteSelection,
-    // 좋아요 누른 여부
-    isUserLiked,
-    // 투표했는지 여부
-    isUserVoted,
-    author,
-    userProfilePhoto,
-    voteReplyCount,
-    voteParticipateCount,
-    voteLikeCount,
-  } = poll;
+  useEffect(()=> {
+    console.log(vote)
+  },[])
+  // const {
+  //   vote.voteId,
+  //   vote.voteName,
+  //   vote.voteContent,
+  //   vote.voteType,
+  //   vote.voteCreateTime,
+  //   vote.voteExpirationTime,
+  //   vote.userAnonymousType,
+  //   vote.voteAnonymousType,
+  //   vote.voteCategoriesName,
+  //   // 투표 선택지
+  //   vote.voteSelects,
+  //   vote.userVoteSelection,
+  //   // 좋아요 누른 여부
+  //   vote.isUserLiked,
+  //   // 투표했는지 여부
+  //   vote.isUserVoted,
+  //   author,
+  //   vote.userProfilePhoto,
+  //   vote.voteReplyCount,
+  //   vote.voteParticipateCount,
+  //   vote.voteLikeCount,
+  // } = poll;
 
   // 로그인한 사용자가 해당 프로필의 '좋아요'목록에 대해서 '좋아요'를 눌렀는지 여부
-  const [isLiked, setIsLiked] = useState(isUserLiked);
+  const [isLiked, setIsLiked] = useState(vote.isUserLiked);
   // 공유하기 다이얼로그 창
   const [openShareDialog, setOpenShareDialog] = useState(false);
   // 해당 투표에 대해서 투표를 했는지 여부
-  const [isVoted, setIsVoted] = useState(isUserVoted);
+  const [isVoted, setIsVoted] = useState(vote.isUserVoted);
   // 로그인한 사용자가 해당 투표에 대해서 투표를 했을 경우, 투표 결과 데이터
   // (총 투표 수, 각 선택지별 투표 수)
   const [pollResult, setPollResult] = useState();
   // 현재 선택한 선택지 정보 (투표했을 경우)
-  const [selectedItem, setSelectedItem] = useState(userVoteSelection);
+  const [selectedItem, setSelectedItem] = useState(vote.userVoteSelection);
 
   const POLL_INFO = [
-    { number: voteReplyCount, icon: ChatOutlinedIcon },
-    { number: voteParticipateCount, icon: HowToVoteIcon },
-    { number: voteLikeCount, icon: FavoriteBorderIcon },
+    { number: vote.voteReplyCount, icon: ChatOutlinedIcon },
+    { number: vote.voteParticipateCount, icon: HowToVoteIcon },
+    { number: vote.voteLikeCount, icon: FavoriteBorderIcon },
   ];
 
   /* '자세히 보기'를 클릭 시 투표 상세페이지로 이동 */
   const handleCardClick = () => {
-    navigate(`/poll/${voteId}`);
+    navigate(`/poll/${vote.voteId}`);
   };
 
   /* '좋아요(좋아요해제)' 버튼 클릭시 */
   const handleToggleLikeClick = async () => {
-    const result = isLiked ? await requestPollUnlike(voteId) : await requestPollLike(voteId);
+    const result = isLiked ? await requestPollUnlike(vote.voteId) : await requestPollLike(vote.voteId);
     if (result === 'success') {
       setIsLiked((curr) => !curr);
     } else {
@@ -125,7 +129,7 @@ export default function PollDetailForm({ poll, voteId }) {
   /* selectionCountsList: (2) [0, 1]
     total: 1 */
   const getPollResult = async () => {
-    const data = await getPollSelectionStatus(voteId);
+    const data = await getPollSelectionStatus(vote.voteId);
     console.log(data);
     setPollResult(data);
   };
@@ -151,10 +155,10 @@ export default function PollDetailForm({ poll, voteId }) {
               <Grid item xs={12} md={12}>
                 <Typography variant="caption" color="text.disabled" gutterBottom>
                   {/* 작성일자 2020-12-09 ~ 마감시간 2020-12-29 */}
-                  {/* {voteCreateTime} ~ {voteExpirationTime} */}
-                  {fDateTimeSuffix(voteCreateTime)} ~ {fDateTimeSuffix(voteExpirationTime)}{' '}
+                  {/* {vote.voteCreateTime} ~ {vote.voteExpirationTime} */}
+                  {/* {fDateTimeSuffix(vote.voteCreateTime)} ~ {fDateTimeSuffix(vote.voteExpirationTime)}{' '} */}
                 </Typography>
-                {checkExpired(voteExpirationTime) ? (
+                {checkExpired(vote.voteExpirationTime) ? (
                   <Chip
                     label="마감됨"
                     color="default"
@@ -168,7 +172,7 @@ export default function PollDetailForm({ poll, voteId }) {
                       },
                     }}
                   />
-                ) : isUserVoted ? (
+                ) : vote.isUserVoted ? (
                   <Chip
                     label="투표완료"
                     color="primary"
@@ -201,12 +205,12 @@ export default function PollDetailForm({ poll, voteId }) {
                   {/* Poll Title */}
                   <Stack direction="row" alignItems="baseline" spacing={1}>
                     <Typography variant="h5" component="div">
-                      {voteName}
+                      {vote.voteName}
                     </Typography>
                     <Typography variant="caption" color="text.disabled">
-                      {userAnonymousType ? '작성자익명' : null}
-                      {userAnonymousType && voteAnonymousType ? ' | ' : null}
-                      {voteAnonymousType ? '투표자익명' : null}
+                      {vote.userAnonymousType ? '작성자익명' : null}
+                      {vote.userAnonymousType && vote.voteAnonymousType ? ' | ' : null}
+                      {vote.voteAnonymousType ? '투표자익명' : null}
                     </Typography>
                   </Stack>
 
@@ -224,27 +228,27 @@ export default function PollDetailForm({ poll, voteId }) {
                   </Box>
                 </Stack>
 
-                {voteCategoriesName.length > 0
-                  ? voteCategoriesName.map((item, index) => {
+                {vote.voteCategoriesName.length > 0
+                  ? vote.voteCategoriesName.map((item, index) => {
                       <Chip key={index} label={item} size="small" sx={{ fontSize: 12 }} />;
                     })
                   : null}
                 <Typography variant="body2" sx={{ fontSize: 14 }}>
                   {/* 투표내용... (최대 100자) */}
-                  {voteContent}
+                  {vote.voteContent}
                 </Typography>
               </Grid>
               <Grid item xs={12} md={12}>
-                {voteType ? (
+                {vote.voteType ? (
                   <Grid item xs={12} md={12}>
                     <Stack spacing={1}>
-                      {voteSelects.map((item, index) => (
+                      {vote.voteSelects.map((item, index) => (
                         <PollTextButton
                           key={item.selectionId}
                           selection={item}
-                          isVoted={isVoted || checkExpired(voteExpirationTime)}
+                          isVoted={isVoted || checkExpired(vote.voteExpirationTime)}
                           setPollVotedState={handleVoteClick}
-                          isSelectedVote={item.selectionId === userVoteSelection}
+                          isSelectedVote={item.selectionId === vote.userVoteSelection}
                           voteResultPercentage={
                             typeof pollResult !== 'undefined'
                               ? (pollResult.selectionCountsList[index] * 100) / pollResult.total
@@ -257,14 +261,14 @@ export default function PollDetailForm({ poll, voteId }) {
                 ) : (
                   <>
                     <Grid container spacing={1}>
-                      {voteSelects.map((item, index) => (
+                      {vote.voteSelects.map((item, index) => (
                         <Grid key={item.selectionId} item xs={6}>
                           <Card>
                             <PollImageButton
                               selection={item}
-                              isVoted={isVoted || checkExpired(voteExpirationTime)}
+                              isVoted={isVoted || checkExpired(vote.voteExpirationTime)}
                               setPollVotedState={handleVoteClick}
-                              isSelectedVote={item.selectionId === userVoteSelection}
+                              isSelectedVote={item.selectionId === vote.userVoteSelection}
                               // 투표 마감 상태의 경우에는 투표하지 않았을 경우 결과 보여주지 않음
                               voteResultPercentage={
                                 typeof pollResult !== 'undefined'
@@ -308,7 +312,7 @@ export default function PollDetailForm({ poll, voteId }) {
 
           {/* <CardActions sx={{ width: '100%' }}></CardActions> */}
         </Card>
-        <SharePollDialog pollId={voteId} openDialog={openShareDialog} />
+        <SharePollDialog pollId={vote.voteId} openDialog={openShareDialog} />
         {/* </Grid> */}
       </ImageListItem>
     </>
