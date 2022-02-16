@@ -1,6 +1,7 @@
 package com.ssafy.pollar.controller;
 
 import com.ssafy.pollar.model.dto.UserDto;
+import com.ssafy.pollar.model.dto.UserNotificationStateDto;
 import com.ssafy.pollar.model.service.*;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
@@ -20,6 +21,24 @@ public class SettingController {
     private final NotificationService notificationService;
     private static final String SUCCESS = "success";
     private static final String FAIL = "fail";
+
+    @ApiOperation(value = "유저 설정 상태 확인")
+    @GetMapping("/info")
+    public ResponseEntity<Map<String,Object>> allNotificationOn(@RequestParam @ApiParam(value = "로그인 아이디 정보 userId", required = true) String userId){
+        Map<String,Object> resultMap = new HashMap<>();
+        HttpStatus status = null;
+        try {
+            UserNotificationStateDto userNotificationStateDto = notificationService.getUserNotification(userId);
+            status = HttpStatus.OK;
+            resultMap.put("userNotificationState",userNotificationStateDto);
+            resultMap.put("message",SUCCESS);
+        }catch (Exception e){
+            status = HttpStatus.INTERNAL_SERVER_ERROR;
+            resultMap.put("message",FAIL);
+        }
+
+        return new ResponseEntity<>(resultMap,status);
+    }
 
     @ApiOperation(value = "유저 전체 키기")
     @PutMapping("/allon")

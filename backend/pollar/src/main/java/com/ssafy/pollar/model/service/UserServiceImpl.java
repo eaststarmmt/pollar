@@ -157,7 +157,7 @@ public class UserServiceImpl implements UserService{
     }
 
     @Override
-    public void modifyProfile(UserDto userDto, MultipartFile userProfilePhoto) throws Exception {
+    public String modifyProfile(UserDto userDto, MultipartFile userProfilePhoto) throws Exception {
         UUID uuid = UUID.randomUUID();
 
         User usercur = userRepository.findByUserId(userDto.getUserId()).get();
@@ -182,8 +182,10 @@ public class UserServiceImpl implements UserService{
                     .build();
 
             userRepository.save(user);
+            return imgPath;
         } catch (Exception e) {
             e.printStackTrace();
+            return "";
         }
     }
 

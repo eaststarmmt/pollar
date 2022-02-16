@@ -3,10 +3,7 @@ package com.ssafy.pollar.model.service;
 import com.ssafy.pollar.domain.entity.Notification;
 import com.ssafy.pollar.domain.entity.User;
 import com.ssafy.pollar.domain.entity.UserNotificationState;
-import com.ssafy.pollar.model.dto.FollowingDto;
-import com.ssafy.pollar.model.dto.NotificationDto;
-import com.ssafy.pollar.model.dto.ParticipateDto;
-import com.ssafy.pollar.model.dto.VoteDto;
+import com.ssafy.pollar.model.dto.*;
 import com.ssafy.pollar.model.repository.NotificationRepository;
 import com.ssafy.pollar.model.repository.UserNotificationStateRepository;
 import com.ssafy.pollar.model.repository.UserRepository;
@@ -32,11 +29,23 @@ public class NotificationServiceImpl implements NotificationService{
     private final UserNotificationStateRepository userNotificationStateRepository;
 
     @Override
+    public UserNotificationStateDto getUserNotification(String userId) throws Exception {
+        User user = userRepository.findByUserId(userId).get();
+        UserNotificationState userNotificationState = userNotificationStateRepository.findByUserId(user).get();
+        UserNotificationStateDto userNotificationStateDto = new UserNotificationStateDto(
+                userNotificationState.getAllNotificationState(),
+                userNotificationState.getFollowNotificationState(),
+                userNotificationState.getFeedNotificationState()
+        );
+        return userNotificationStateDto;
+    }
+
+    @Override
     public void feedLikeNotification(long voteId, String sendId, String receiveId) throws Exception {
         // voteId, sendId: 좋아요 누른사람, receiveId: 투표 생성자
         String sendNick = userRepository.findByUserId(sendId).get().getUserNickname();
         String voteName = voteService.detail(voteId).getVoteName();
-        String comment = "\\'"+sendNick +"\\'"+ "가 "+ voteName + "에 좋아요를 누르셨습니다.";
+        String comment = "'"+sendNick +"'"+ "가 "+ voteName + "에 좋아요를 누르셨습니다.";
         UserNotificationState userNotificationState = userNotificationStateRepository.findByUserId(userRepository.findByUserId(receiveId).get()).get();
         if(!userNotificationState.getFeedNotificationState()){
             return;
@@ -61,7 +70,7 @@ public class NotificationServiceImpl implements NotificationService{
     @Override
     public void followNotification(String sendId,String receiveId) throws Exception{
         String sendNick = userRepository.findByUserId(sendId).get().getUserNickname();
-        String comment = "\\'"+ sendNick +"\\'"+ "가 팔로우 요청 하였습니다.";
+        String comment = "'"+ sendNick +"'"+ "가 팔로우 요청 하였습니다.";
         UserNotificationState userNotificationState = userNotificationStateRepository.findByUserId(userRepository.findByUserId(receiveId).get()).get();
         if(!userNotificationState.getFollowNotificationState()){
             return;
@@ -97,6 +106,8 @@ public class NotificationServiceImpl implements NotificationService{
             long notificationId = notifications.get(i).getNotificationId();
             LocalDateTime notificationCreateTime = notifications.get(i).getNotificationCreateTime();
             long voteId;
+            String voteName = "";
+            String userProfilePhoto = "";
             if(notifications.get(i).getVoteId()!=null){
                 voteId = notifications.get(i).getVoteId().getVoteId();
             }else{
@@ -104,9 +115,14 @@ public class NotificationServiceImpl implements NotificationService{
             }
             Boolean notificationRead = notifications.get(i).getNotificationRead();
             int notificationType = notifications.get(i).getNotificationType();
-
+            if(notifications.get(i).getNotificationType()==2){
+                voteName = voteRepository.findByVoteId(voteId).get().getVoteName();
+            }else{
+                userProfilePhoto = userRepository.findByUserId(sendId).get().getUserProfilePhoto();
+            }
             notificationDtoList.add(new NotificationDto(notificationId,sendId,receiveId,notificationCreateTime
-                    ,voteId,notificationRead,notificationContents,notificationType));
+                    ,voteId,notificationRead,notificationContents,notificationType
+                    ,voteName,userProfilePhoto));
         }
         return notificationDtoList;
     }

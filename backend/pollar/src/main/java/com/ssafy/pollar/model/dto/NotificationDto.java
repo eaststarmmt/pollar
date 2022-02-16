@@ -33,9 +33,14 @@ public class NotificationDto {
     private String notificationContents;
     @ApiModelProperty(value = "알람 아이디 리스트")
     private List<Long> notificationIdList;
+    @ApiModelProperty(value = "피드 이름")
+    private String voteName;
+    @ApiModelProperty(value = "유저 사진")
+    private String userProfilePhoto;
 
     public NotificationDto(long notificationId, String sendId, String receiveId,LocalDateTime notificationCreateTime
-            ,long voteId,Boolean notificationRead, String notificationContents, int notificationType){
+            ,long voteId,Boolean notificationRead, String notificationContents, int notificationType
+            ,String voteName,String userProfilePhoto){
         this.notificationContents = notificationContents;
         this.notificationId = notificationId;
         this.sendId = sendId;
@@ -44,6 +49,8 @@ public class NotificationDto {
         this.voteId = voteId;
         this.notificationRead = notificationRead;
         this.notificationType = notificationType;
+        this.voteName = voteName;
+        this.userProfilePhoto = userProfilePhoto;
     }
 
 }

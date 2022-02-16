@@ -240,8 +240,8 @@ public class UserController {
         System.out.println("컨트롤러단: " + " 아이디 확인 : " + userDto.getUserId());
         System.out.println("사진 확인 : " + userProfilePhoto.toString());
         logger.info(userDto.getUserId());
-        userService.modifyProfile(userDto, userProfilePhoto);
-        return new ResponseEntity<String>(SUCCESS, HttpStatus.OK);
+        String resultPhoto = userService.modifyProfile(userDto, userProfilePhoto);
+        return new ResponseEntity<String>(resultPhoto, HttpStatus.OK);
     }
 
     @ApiOperation(value ="비밀번호 수정")
