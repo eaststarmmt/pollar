@@ -42,16 +42,23 @@ export default function ReplyForm({ replies }) {
         var a = <ReplyDetail key={index} reply={reply} />;
         return a;
       })}
-      <TextField
-        autoComplete="replyContent"
-        type="replyContent"
-        label="content"
-        onChange={onContentHandler}
-        value={reply.replyContent}
-      ></TextField>
-      <Button variant="contained" onClick={submitReply}>
-        작성
-      </Button>
+      <Grid container paddingTop={3}>
+        <Grid item xs={10} paddingLeft={1}>
+          <TextField
+            autoComplete="replyContent"
+            type="replyContent"
+            label="content"
+            fullWidth
+            onChange={onContentHandler}
+            value={reply.replyContent}
+          ></TextField>
+        </Grid>
+        <Grid item xs={1}>
+          <Button size="large" onClick={submitReply}>
+            작성
+          </Button>
+        </Grid>
+      </Grid>
     </>
   );
 }

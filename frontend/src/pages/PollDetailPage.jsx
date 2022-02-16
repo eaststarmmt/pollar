@@ -31,24 +31,21 @@ export default function PollDetailPage() {
   
   return (
     <>
-      <Stack
-        direction="row"
-      >
-      <Container>
-        <Card>
-          <PollDetail
-            voteInfo={voteInfo}
-            categories={categories}
-          />
-        </Card>
-        </Container>
-        <Container>
-        <Card>
+      <Stack direction="row">
+          <Card >
+          <Box component="div"
+            paddingBottom={3}
+            paddingLeft={2}
+            paddingRight={2}
+            style={{
+              overflowY: "scroll" // added scroll
+            }}
+          >
           <ReplyForm
             replies={replies}
           />
+        </Box>
         </Card>
-        </Container>
         </Stack>
     </>
   );

@@ -1,8 +1,9 @@
-import { Button, Container, Grid, Stack, Typography, TextField } from '@mui/material';
+import { Button, Container, Grid, Stack, Typography, TextField, Avatar } from '@mui/material';
 import { useState } from 'react';
 import { replyDelete, replyUpdate } from '../../services/api/ReplyApi';
 import { getUserInfoUuid } from '../../services/api/UserApi';
 import { getLoggedUserId } from '../../utils/loggedUser';
+import ProfileImageUploadButton from '../common/ProfileImageUploadButton';
 export default function ReplyDetail({ reply }) {
   let id = reply.replyId;
   const [vis, setVis] = useState(false);
@@ -47,33 +48,38 @@ export default function ReplyDetail({ reply }) {
   return (
     <>
       <Stack direction="row">
-        <Grid item xs={2}>
-          사진
+        <Grid item xs={2} paddingLeft={2} paddingTop={2}>
+          <Avatar
+            src={reply.replyUserProfile}
+            alt="Profile Photo"
+            shadow="xl"
+            sx={{ width: '4rem', height: '4rem' }}
+          />
         </Grid>
         <Grid item xs={8}>
           <Stack>
-            <Typography variant="h4" paddingTop={1} marginBottom={2} marginLeft={4}>
+            <Typography variant="h4" paddingTop={1} marginLeft={5}>
               {reply.replyUserNickname}
             </Typography>
             {!vis ? (
-              <>
-                <Typography variant="h4" paddingTop={1} marginBottom={2} marginLeft={4}>
+              <Grid item xs={12}>
+                <Typography variant="h4" paddingTop={1} marginBottom={2} marginLeft={5}>
                   {reply.replyContent}
                 </Typography>
-              </>
+              </Grid>
             ) : (
-              <Stack direction="row">
-                <TextField
-                  autoComplete="replyContent"
-                  type="replyContent"
-                  label="content"
-                  value={content}
-                  onChange={onContentHandler}
-                ></TextField>
-                {/* 위치 고민중이라 주석처리 */}
-                {/* <Button>수정</Button>
-                <Button onClick={onUpdateFormHandler}>취소</Button> */}
-              </Stack>
+              <Grid item xs={10} paddingLeft={3}>
+                <Stack direction="row">
+                  <TextField
+                    autoComplete="replyContent"
+                    fullWidth
+                    type="replyContent"
+                    label="content"
+                    value={content}
+                    onChange={onContentHandler}
+                  ></TextField>
+                </Stack>
+              </Grid>
             )}
           </Stack>
         </Grid>
