@@ -4,11 +4,17 @@ import { getLoggedUserId } from '../utils/loggedUser';
 import { getAllUsers } from '../services/api/SearchApi';
 import UserDetailCard from '../components/user/UserDetailCard';
 import { useNavigate } from 'react-router-dom';
+import { useRecoilValue } from 'recoil';
+import { isLoggedState } from '../atoms/atoms';
 
 function UserPage() {
   // 로그인되어있는 사용자의 Id
   const loggedUserId = getLoggedUserId();
   const [userInfo, setUserInfo] = useState([]);
+  // 로그인된 사용자인지 여부
+  const isLogged = useRecoilValue(isLoggedState);
+  const navigate = useNavigate();
+
   // const navigate = useNavigate();
   //전체 유저 불러오기
   const getAllUserInfo = async () => {
@@ -17,7 +23,13 @@ function UserPage() {
   };
 
   useEffect(() => {
-    getAllUserInfo();
+    if (!isLogged && getLoggedUserId() === null) {
+      // todo
+      alert('회원에게만 제공되는 서비스입니다. ');
+      navigate('/users/login');
+    } else {
+      getAllUserInfo();
+    }
   }, [loggedUserId]);
 
   return (

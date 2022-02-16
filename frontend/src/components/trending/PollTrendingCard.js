@@ -1,3 +1,59 @@
+// import * as React from 'react';
+// import Box from '@mui/material/Box';
+// import Card from '@mui/material/Card';
+// import CardActions from '@mui/material/CardActions';
+// import CardContent from '@mui/material/CardContent';
+// import Button from '@mui/material/Button';
+// import Typography from '@mui/material/Typography';
+// import { Grid, Stack } from '@mui/material';
+
+// const itemList = ['item1', 'item2', 'item3', 'item4'];
+
+// /* 상황별로 탭의 배경색을 변경한다 */
+// const pollBgCol = {
+//   closedPoll: '#000',
+//   default: '#fff',
+//   trending: '#219',
+// };
+
+// export default function PollTrendingCard() {
+//   return (
+//     // <Grid item xs={12} sm={12} md={6}>
+//     <Card sx={{ backgroundColor: '#826AF9', height: '100%' }}>
+//       <CardContent>
+//         <Grid container spacing={2}>
+//           <Grid item xs={6} md={6}>
+//             <Typography sx={{ fontSize: 14 }} color="white" gutterBottom>
+//               작성일자 2020-12-09
+//             </Typography>
+//             <Typography variant="h5" component="div">
+//               Poll Title
+//             </Typography>
+//             <Typography sx={{ mb: 1.5 }} color="text.disabled">
+//               poll author
+//             </Typography>
+//             <Typography variant="body2">투표내용... (최대 300자)</Typography>
+//           </Grid>
+//           <Grid item xs={6} md={6}>
+//             <Stack spacing={1}>
+//               {itemList.map((item, index) => (
+//                 <Button key={index} variant="contained">
+//                   {item}
+//                 </Button>
+//               ))}
+//             </Stack>
+//           </Grid>
+//         </Grid>
+//       </CardContent>
+//       <CardActions>
+//         <Button size="small" color="secondary">
+//           자세히 보기
+//         </Button>
+//       </CardActions>
+//     </Card>
+//     // </Grid>
+//   );
+// }
 import {
   Box,
   Button,
@@ -8,6 +64,7 @@ import {
   IconButton,
   Typography,
   Stack,
+  ImageListItem,
 } from '@mui/material';
 import PollImageButton from '../common/PollImageButton';
 import HowToVoteIcon from '@mui/icons-material/HowToVote';
@@ -111,8 +168,25 @@ export default function PollTrendingCard({ poll }) {
 
   /* 투표하기 */
   function handleVoteClick(state) {
+    console.log(state);
+    // 투표 선택 정보 전송
+    // const result = await requestPollVote(selectionId);
+    // console.log(result);
+    // if (result === 'success') setSelectedItem(selectionId);
+    // 투표 결과 디스플레이 요청
     setIsVoted(state);
   }
+
+  // /* 투표 취소 시 */
+  // const handleRetrieveVote = async () => {
+  //   // 투표 취소 정보 전송
+  //   const result = await cancelPollVote(selectedItem);
+  //   console.log(result);
+  //   if (result === 'success') setSelectedItem(0);
+  //   setIsVoted(false);
+  //   // 결과값 초기화
+  //   setPollResult();
+  // };
 
   /* 사용자가 해당 투표에 대해서 투표를 했을 경우, 투표 결과를 디스플레이 */
   /* selectionCountsList: (2) [0, 1]
@@ -134,12 +208,16 @@ export default function PollTrendingCard({ poll }) {
 
   return (
     <>
+      {/* <Grid item xs={12} sm={6} md={6}> */}
+      {/* <ImageListItem sx={{ width: '100%', paddingTop: 2, paddingX: 1 }}> */}
       <Card sx={{ backgroundColor: '#826AF9', height: '50vh' }}>
         {/* <Card sx={{ backgroundColor: '#fff' }}> */}
         <CardContent>
           <Grid container spacing={2}>
             <Grid item xs={12} md={12}>
               <Typography variant="caption" color="text.disabled" gutterBottom>
+                {/* 작성일자 2020-12-09 ~ 마감시간 2020-12-29 */}
+                {/* {voteCreateTime} ~ {voteExpirationTime} */}
                 {fDateTimeSuffix(voteCreateTime)} ~ {fDateTimeSuffix(voteExpirationTime)}{' '}
               </Typography>
               {checkExpired(voteExpirationTime) ? (
@@ -259,6 +337,7 @@ export default function PollTrendingCard({ poll }) {
                                 ? (pollResult.selectionCountsList[index] * 100) / pollResult.total
                                 : null
                             }
+                            //// sx={{ width: '100%', height: 'auto' }}
                           />
                         </Card>
                       </Grid>
@@ -292,8 +371,12 @@ export default function PollTrendingCard({ poll }) {
             </Button>
           </Stack>
         </CardContent>
+
+        {/* <CardActions sx={{ width: '100%' }}></CardActions> */}
       </Card>
       <SharePollDialog pollId={voteId} openDialog={openShareDialog} />
+      {/* </Grid> */}
+      {/* </ImageListItem> */}
     </>
   );
 }

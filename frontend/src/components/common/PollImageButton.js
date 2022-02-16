@@ -2,7 +2,7 @@ import { styled } from '@mui/material/styles';
 import ButtonBase from '@mui/material/ButtonBase';
 import Typography from '@mui/material/Typography';
 import { useState } from 'react';
-import { requestPollVote } from '../../services/api/PollApi';
+import { cancelPollVote, requestPollVote } from '../../services/api/PollApi';
 
 const ImageButton = styled(ButtonBase)(({ theme }) => ({
   position: 'relative',
@@ -104,12 +104,13 @@ export default function PollImageButton({
   /* 투표하기 */
   // 투표 선택지 클릭 시, 투표하기
   const handleClick = async () => {
-    // (디자인을 위해 선택한 항목일 경우 disabled를 해제해놔서 별도의 처리 필요)
+    //// (디자인을 위해 선택한 항목일 경우 disabled를 해제해놔서 별도의 처리 필요)
+    /* 투표하기 */
     if (!userVote) {
       // 서버로 해당 선택 데이터 전송
       const result = await requestPollVote(selection.selectionId);
-      console.log(result);
       if (result === 'success') {
+        // todo alert 다 대체
         alert('투표완료! 투표취소는 본인 프로필에서만 가능합니다');
         setPollVotedState(true);
         setUserVote(true);
@@ -118,6 +119,19 @@ export default function PollImageButton({
         alert('투표하기에 문제 발생. 잠시 후 다시 시도해주세요');
         setPollVotedState(false);
         setUserVote(false); // (필요없나)
+      }
+    }
+    /* 투표 취소 */
+    // 사용자가 투표한 항목을 다시 눌렀을 때 취소 처리
+    else {
+      // todo 대체
+      alert('투표를 취소하시겠습니까? :(');
+      const result = await cancelPollVote(selection.selectionId);
+      if (result === 'success') {
+        setPollVotedState(false);
+        setUserVote(false);
+      } else {
+        alert('투표 취소에 문제 발생. 잠시 후 다시 시도해주세요');
       }
     }
   };
@@ -140,7 +154,18 @@ export default function PollImageButton({
     >
       <ImageSrc style={{ backgroundImage: `url(${selection.content})` }} />
       <ImageBackdrop className="MuiImageBackdrop-root" />
+      {/* <Typography className="MuiImageMarked-root" sx={{ opacity: 1 }}>
+        {isVoted ? '취소하기' : '투표하기'}
+      </Typography> */}
       <Image>
+        {/* 투표 선택지 선택 시 결과 */}
+        {isVoted ? (
+          <ImageVoteResult sx={{ height: voteResultPercentage * 2 }}>
+            <Typography variant="subtitle2" color="black" sx={{ paddingTop: 2 }}>
+              {voteResultPercentage}%
+            </Typography>
+          </ImageVoteResult>
+        ) : null}
         <Typography
           component="span"
           variant="subtitle1"
@@ -152,19 +177,13 @@ export default function PollImageButton({
             pb: (theme) => `calc(${theme.spacing(1)} + 6px)`,
           }}
         >
-          {/* {selection.selectionTitle} */}
           {/* 선택지 hover 효과 */}
-          <ImageMarked className="MuiImageMarked-root">투표하기</ImageMarked>
+          <ImageMarked className="MuiImageMarked-root">
+            {isVoted ? '취소하기' : '투표하기'}
+          </ImageMarked>
         </Typography>
       </Image>{' '}
-      {/* 투표 선택지 선택 시 결과 */}
-      {isVoted ? (
-        <ImageVoteResult sx={{ height: voteResultPercentage * 2 }}>
-          <Typography variant="subtitle2" color="white" sx={{ paddingTop: 2 }}>
-            {voteResultPercentage}%
-          </Typography>
-        </ImageVoteResult>
-      ) : null}
+      {/* <ImageMarked className="MuiImageMarked-root">{isVoted ? '취소하기' : '투표하기'}</ImageMarked> */}
     </ImageButton>
     //   ))}
     // </Box>

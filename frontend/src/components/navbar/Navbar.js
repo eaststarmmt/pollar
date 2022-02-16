@@ -71,12 +71,12 @@ export default function Navbar({ onOpenSidebar, isFullLayout }) {
   // JWT 검사로 변경 필요
   const [loggedUserInfo, setLoggedUserInfo] = useState();
 
-  // 사용자 정보 변경 시 바로바로 반영되게끔 하기 위해 api를 매번 요청
-  const getUserAccountInfo = async () => {
-    const data = await getUserInfo(getLoggedUserId());
-    console.log(data);
-    setLoggedUserInfo(data);
-  };
+  // // 사용자 정보 변경 시 바로바로 반영되게끔 하기 위해 api를 매번 요청
+  // const getUserAccountInfo = async () => {
+  //   const data = await getUserInfo(getLoggedUserId());
+  //   console.log(data);
+  //   setLoggedUserInfo(data);
+  // };
 
   useEffect(() => {
     // localStorage에서 정보 가져옴

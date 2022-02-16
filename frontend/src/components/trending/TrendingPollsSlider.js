@@ -5,7 +5,7 @@ import { useState } from 'react';
 import './tempstyle.css';
 import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
-import PollTrendingCard from '../polls/PollTrendingCard';
+import PollTrendingCard from './PollTrendingCard';
 import { getTrendingPollList } from '../../services/api/PollApi';
 import { useEffect } from 'react';
 

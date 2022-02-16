@@ -47,7 +47,7 @@ export default function NotificationsPopover() {
 
   const getList = async () => {
     const data = await getNotificationList();
-    // console.log(data);
+    console.log(data);
     //// setNotifications(data.notificationList);
     // 전처리 후 저장) 알림 목록을 읽음 -> 안읽음 기준으로 정렬
     setNotifications(
@@ -90,7 +90,7 @@ export default function NotificationsPopover() {
           <Box sx={{ flexGrow: 1 }}>
             <Typography variant="subtitle1">Notifications</Typography>
             <Typography component="span" variant="body2" sx={{ color: 'text.secondary' }}>
-              You have{' '}
+              총{' '}
               <Typography
                 variant="body2"
                 display="inline"
@@ -99,7 +99,7 @@ export default function NotificationsPopover() {
               >
                 {totalUnRead}
               </Typography>{' '}
-              unread messages
+              개의 새로운 알림이 있습니다
             </Typography>
           </Box>
 

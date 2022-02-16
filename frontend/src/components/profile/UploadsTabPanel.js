@@ -1,4 +1,4 @@
-import PollDetailCard from '../polls/PollDetailCard';
+import PollDetailCard from './PollDetailCard';
 
 import { Grid, ImageList, Typography } from '@mui/material';
 import GradAnimatedButton from '../common/GradAnimatedButton';

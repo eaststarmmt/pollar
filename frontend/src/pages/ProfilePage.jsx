@@ -30,14 +30,6 @@ export default function ProfilePage() {
   const isLogged = useRecoilValue(isLoggedState);
   const navigate = useNavigate();
 
-  useEffect(() => {
-    if (!isLogged && getLoggedUserId() === null) {
-      // todo
-      alert('회원에게만 제공되는 서비스입니다. ');
-      navigate('/users/login');
-    }
-  }, []);
-
   let { userId } = useParams();
   const [profileId, setProfileId] = useState(userId);
 
@@ -78,6 +70,13 @@ export default function ProfilePage() {
   };
 
   useEffect(() => {
+    // 로그인된 사용자인지 검사
+    if (!isLogged && getLoggedUserId() === null) {
+      // todo
+      alert('회원에게만 제공되는 서비스입니다. ');
+      navigate('/users/login');
+    }
+    setProfileId(userId);
     checkIfOwnerAccount();
     // 사용자 계정정보 요청
     getAccountProfileInfo();

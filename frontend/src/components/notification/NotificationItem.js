@@ -15,12 +15,14 @@ import clockFill from '@iconify/icons-eva/clock-fill';
 import { readNotifications } from '../../services/api/NotificationApi';
 import stringToColor from '../../utils/stringToColor';
 
-function renderContent(notificationType, notificationContents, sendId, voteId) {
+function renderContent(notification) {
+  const { notificationType, notificationContents, sendId, userProfilePhoto, voteName } =
+    notification;
   const title = (
     <>
       <Typography variant="subtitle2">
-        {notificationType === 2 ? '좋아요 알림' : '팔로우 알림'}&nbsp;
-        <Typography component="span" variant="body2" sx={{ color: 'text.secondary' }}>
+        {notificationType === 2 ? '좋아요 알림' : '팔로우 알림'}&nbsp;&nbsp;
+        <Typography component="span" variant="body2" sx={{ color: 'text.secondary', fontSize: 13 }}>
           {notificationContents}
         </Typography>
       </Typography>
@@ -31,10 +33,7 @@ function renderContent(notificationType, notificationContents, sendId, voteId) {
   if (notificationType === 2) {
     return {
       avatar: (
-        <Avatar
-          alt={notificationContents}
-          sx={{ bgcolor: stringToColor(`${notificationContents}`) }}
-        />
+        <Avatar alt={voteName} src={voteName} sx={{ bgcolor: stringToColor(`${voteName}`) }} />
       ),
       title,
     };
@@ -43,11 +42,7 @@ function renderContent(notificationType, notificationContents, sendId, voteId) {
   if (notificationType === 4) {
     return {
       avatar: (
-        <Avatar
-          alt={sendId}
-          // src={sendId}
-          sx={{ bgcolor: stringToColor(`${sendId}`) }}
-        />
+        <Avatar alt={sendId} src={userProfilePhoto} sx={{ bgcolor: stringToColor(`${sendId}`) }} />
       ),
       title,
     };
@@ -73,7 +68,7 @@ export default function NotificationItem({ notification }) {
     sendId,
     voteId,
   } = notification;
-  const { avatar, title } = renderContent(notificationType, notificationContents, sendId, voteId);
+  const { avatar, title } = renderContent(notification);
   const navigate = useNavigate();
 
   /* 알림 클릭 시 읽음처리 + 관련 action 처리 */

@@ -1,7 +1,7 @@
 import { styled } from '@mui/material/styles';
 import Typography from '@mui/material/Typography';
 import { useState } from 'react';
-import { requestPollVote } from '../../services/api/PollApi';
+import { cancelPollVote, requestPollVote } from '../../services/api/PollApi';
 import { Button } from '@mui/material';
 
 const TextButton = styled(Button)(({ theme }) => ({
@@ -65,7 +65,8 @@ export default function PollTextButton({
   /* 투표하기 */
   // 투표 선택지 클릭 시, 투표하기
   const handleClick = async () => {
-    // (디자인을 위해 선택한 항목일 경우 disabled를 해제해놔서 별도의 처리 필요)
+    //// (디자인을 위해 선택한 항목일 경우 disabled를 해제해놔서 별도의 처리 필요)
+    /* 투표하기 */
     if (!userVote) {
       // 서버로 해당 선택 데이터 전송
       const result = await requestPollVote(selection.selectionId);
@@ -81,6 +82,19 @@ export default function PollTextButton({
         setUserVote(false); // (필요없나)
       }
     }
+    /* 투표 취소 */
+    // 사용자가 투표한 항목을 다시 눌렀을 때 취소 처리
+    else {
+      // todo 대체
+      alert('투표를 취소하시겠습니까? :(');
+      const result = await cancelPollVote(selection.selectionId);
+      if (result === 'success') {
+        setPollVotedState(false);
+        setUserVote(false);
+      } else {
+        alert('투표 취소에 문제 발생. 잠시 후 다시 시도해주세요');
+      }
+    }
   };
 
   return (
@@ -89,7 +103,7 @@ export default function PollTextButton({
       onClick={handleClick}
       // 투표완료 OR 마감된 투표일 경우 hover 막음
       disabled={isVoted && !userVote}
-      color={userVote ? 'success' : 'primary'}
+      color={userVote ? 'inherit' : 'primary'}
       style={{
         width: '100%',
       }}
@@ -102,7 +116,7 @@ export default function PollTextButton({
               width: `${voteResultPercentage}%`,
             }}
           >
-            <Typography variant="subtitle2">{voteResultPercentage}%</Typography>
+            <Typography variant="subtitle2">{`${voteResultPercentage}%`}</Typography>
           </TextVoteResult>
         </>
       ) : null}
@@ -112,7 +126,7 @@ export default function PollTextButton({
         zIndex={1}
         sx={{ fontWeight: userVote ? 600 : '' }}
       >
-        {selection.selectionTitle}
+        {selection.content}
       </Typography>
     </TextButton>
   );

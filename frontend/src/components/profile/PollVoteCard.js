@@ -244,7 +244,7 @@ export default function PollVoteCard({ poll, isOwner }) {
               </InfoStyle>
               {/* 사용자 본인의 프로필인 경우 && 마감되지 않은 투표일 경우에만 투표취소 가능  */}
               {isOwner && !checkExpired(voteExpiredTime) ? (
-                <Button
+                <Typography
                   variant="text"
                   color="error"
                   size="small"
@@ -252,7 +252,7 @@ export default function PollVoteCard({ poll, isOwner }) {
                   sx={{ padding: '0px', minWidth: 'fit-content', height: 'fit-content' }}
                 >
                   투표취소
-                </Button>
+                </Typography>
               ) : null}
             </Stack>
           </CardContent>

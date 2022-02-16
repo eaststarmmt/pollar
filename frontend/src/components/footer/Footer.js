@@ -39,7 +39,7 @@ function Footer() {
                   fontWeight="regular"
                   opacity={0.8}
                   component={Link}
-                  href="https://www.pollar.com"
+                  href="https://www.pollar.live"
                   underline="none"
                   target="_parent"
                   rel="noreferrer"
@@ -54,7 +54,7 @@ function Footer() {
                   fontWeight="regular"
                   opacity={0.8}
                   component={Link}
-                  href="https://www.creative-tim.com/presentation"
+                  href="https://project.ssafy.com/home"
                   underline="none"
                   target="_block"
                   rel="noreferrer"
@@ -69,9 +69,9 @@ function Footer() {
                   fontWeight="regular"
                   opacity={0.8}
                   component={Link}
-                  href="https://www.creative-tim.com/blog"
+                  href="/about"
                   underline="none"
-                  target="_blank"
+                  target="_parent"
                   rel="noreferrer"
                   color="text.disabled"
                 >
@@ -90,13 +90,13 @@ function Footer() {
                   rel="noreferrer"
                   color="text.disabled"
                 >
-                  Github
+                  Gitlab
                 </Typography>
               </Box>
             </Stack>
             <Typography variant="caption" opacity={0.8}>
               All rights reserved. Copyright ©{' '}
-              <script>document.write(new Date().getFullYear())</script>2022 Material Design.
+              <script>document.write(new Date().getFullYear())</script>2022 Material Design. A407
             </Typography>
           </Grid>
           <Grid item xs={12} lg={6} ml="auto" textAlign={{ xs: 'center', lg: 'right' }}>

@@ -1,5 +1,5 @@
 import { Container, Grid } from '@mui/material';
-import PollVoteCard from '../polls/PollVoteCard';
+import PollVoteCard from './PollVoteCard';
 import { useEffect, useState } from 'react';
 import { getUserVotesList } from '../../services/api/ProfileApi';
 import { getLoggedUserId } from '../../utils/loggedUser';
