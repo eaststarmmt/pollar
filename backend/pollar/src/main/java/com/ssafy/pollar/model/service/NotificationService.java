@@ -6,8 +6,6 @@ import com.ssafy.pollar.model.dto.NotificationDto;
 import java.util.List;
 
 public interface NotificationService {
-    void feedCreateNotification(String sendId,long voteId) throws Exception;
-    void feedFinishNotification(long voteId) throws Exception;
     void feedLikeNotification(long voteId, String sendId, String receiveId) throws Exception;
     void feedReplyNotification(long voteId, String sendId, String receiveId) throws Exception;
     void followNotification(String sendId,String receiveId) throws Exception;

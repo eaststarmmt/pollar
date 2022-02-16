@@ -33,8 +33,13 @@ public class feedSearchDto {
     private String userProfilePhoto;
     @ApiModelProperty(position = 10, value = "총 투표수")
     private long voteParticipateCount;
+    @ApiModelProperty(position = 11, value = "투표 익평 타입")
+    private Boolean voteAnonymousType;
+    @ApiModelProperty(position = 12, value = "유저 익명 타입")
+    private Boolean userAnonymousType;
     public feedSearchDto(long voteId, String voteName, String author, Boolean voteType, List<String> voteCategoriesName
-            , List<SelectionDto> voteSelects, long voteLikeCount, long voteReplyCount, String userProfilePhoto, long voteParticipateCount ){
+            , List<SelectionDto> voteSelects, long voteLikeCount, long voteReplyCount, String userProfilePhoto, long voteParticipateCount
+            , Boolean userAnonymousType,Boolean voteAnonymousType){
         this.voteId = voteId;
         this.voteName = voteName;
         this.author = author;
@@ -45,5 +50,7 @@ public class feedSearchDto {
         this.voteReplyCount = voteReplyCount;
         this.userProfilePhoto = userProfilePhoto;
         this.voteParticipateCount = voteParticipateCount;
+        this.userAnonymousType = userAnonymousType;
+        this.voteAnonymousType =voteAnonymousType;
     }
 }

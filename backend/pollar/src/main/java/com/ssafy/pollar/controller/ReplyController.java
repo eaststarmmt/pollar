@@ -14,7 +14,6 @@ import java.util.List;
 @RestController
 @RequestMapping("/reply")
 @RequiredArgsConstructor
-@CrossOrigin
 public class ReplyController {
 
     private final ReplyService replyService;

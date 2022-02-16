@@ -22,7 +22,6 @@ public class SearchServiceImpl implements SearchService{
     private final UserRepository userRepository;
     private final VoteRepository voteRepository;
     private final VoteCategoryRepository voteCategoryRepository;
-    private final CategoryRepository categoryRepository;
     private final VoteLikeRepository voteLikeRepository;
     private final ReplyRepository replyRepository;
     private final FollowingRepository followingRepository;
@@ -134,97 +133,11 @@ public class SearchServiceImpl implements SearchService{
             }
             if(searchFeedName.contains(feedName)){
                 voteDtoList.add(new feedSearchDto(feedId,searchFeedName,feedAuthorName,vote.getVoteType()
-                        ,voteCategoryDtoList,selectionDtoList,feedLikeCount,feedReplyCount,userPhoto,voteParticipateCount));
+                        ,voteCategoryDtoList,selectionDtoList,feedLikeCount,feedReplyCount,userPhoto,voteParticipateCount
+                        ,vote.getUserAnonymouseType(),vote.getVoteAnonymouseType()));
             }
         }
 
-        return voteDtoList;
-    }
-
-    @Override
-    public List<VoteDto> searchResultFeed(String userId, String feedName) throws Exception { // 검색 결과에 나오는 피드 정보
-        User user = userRepository.findByUserId(userId).get();
-        List<VoteDto> voteDtoList = new ArrayList<>();
-        List<Vote> voteList = voteRepository.findAll();
-        Vote vote = null;
-        long feedId;
-        String searchFeedName;
-        String feedAuthorName;
-        String feedContent;
-        long feedLikeCount;
-        long feedReplyCount;
-        long voteParticipateCount;
-        long userVoteSelection;
-        boolean isLiked = false;
-        boolean isVoted = false;
-        List<VoteCategory> voteCategoryList;
-        List<VoteSelect> voteSelectList;
-
-        for(int i = 0 ; i < voteList.size() ; i++){
-            vote = voteList.get(i);
-            voteCategoryList = voteCategoryRepository.findAllByVoteCategory(vote).get();
-            List<String> voteCategoryDtoList = new ArrayList<>();
-            for(int j = 0 ; j < voteCategoryList.size(); j++){
-                voteCategoryDtoList.add(voteCategoryList.get(j).getCategory().getCategoryNameSmall());
-            }
-            voteSelectList = voteSelectRepository.getAllByVoteSelect(vote);
-            List<SelectionDto> selectionDtoList = new ArrayList<>();
-            for(int j = 0 ; j < voteSelectList.size(); j++){
-                selectionDtoList.add(new SelectionDto(voteSelectList.get(j)));
-            }
-            feedId = vote.getVoteId();
-            searchFeedName = vote.getVoteName();
-            feedAuthorName = vote.getAuthor().getUserNickname();
-            feedContent = vote.getVoteContent();
-            feedLikeCount = voteLikeRepository.countLike(feedId);
-            feedReplyCount = replyRepository.countAllByVoteReply(vote);
-            isLiked = false;
-            isVoted = false;
-            voteParticipateCount = 0;
-            userVoteSelection = 0;
-            if(voteLikeRepository.findByUserVoteLikesAndVoteLikesByQuery(user,vote).isPresent()){
-                isLiked = true;
-            }
-            for(int j = 0 ; j < vote.getVoteSelects().size(); j++){
-                voteParticipateCount +=voteParticipateRepository.countAllByVoteParticipate(vote.getVoteSelects().get(j));
-                if(voteParticipateRepository.findByUserParticipateAndVoteParticipate(user,vote.getVoteSelects().get(j)).isPresent()){ // 로그인 유저가 투표에 참여한경우
-                    isVoted = true;
-                    break;
-                }
-                if(voteParticipateRepository.findByUserParticipateAndVoteParticipate(user,vote.getVoteSelects().get(j)).isPresent()){ // 로그인 유저가 투표에 참여한경우
-                    userVoteSelection = vote.getVoteSelects().get(j).getVoteSelectId();
-                }
-            }
-            voteDtoList.add(new VoteDto(feedId,searchFeedName,feedAuthorName,feedContent,vote.getVoteType(),vote.getVoteCreateTime()
-                    ,vote.getVoteExpirationTime(),vote.getUserAnonymouseType(),vote.getVoteAnonymouseType(),voteCategoryDtoList
-                    ,selectionDtoList,feedLikeCount,feedReplyCount,user.getUserProfilePhoto()
-                    ,voteParticipateCount,isVoted,isLiked,userVoteSelection));
-        }
-        return voteDtoList;
-    }
-
-    @Override
-    public List<VoteDto> searchCategory(String categoryName) throws Exception { // 카테고리 기준 피드 정보
-        List<VoteDto> voteDtoList = new ArrayList<>();
-        List<VoteCategory> voteCategoryList = voteCategoryRepository.findAllByCategory(categoryRepository.findByCategoryNameSmall(categoryName).get()).get();
-        Vote vote = null;
-        long feedId;
-        String searchFeedName;
-        String feedAuthorName;
-        String feedContent;
-        long feedLikeCount;
-        long feedReplyCount;
-
-        for(int i = 0 ; i < voteCategoryList.size() ; i++){
-           vote = voteRepository.findById(voteCategoryList.get(i).getVoteCategory().getVoteId()).get();
-           feedId = vote.getVoteId();
-           searchFeedName = vote.getVoteName();
-           feedAuthorName = vote.getAuthor().getUserNickname();
-           feedContent = vote.getVoteContent();
-           feedLikeCount = voteLikeRepository.countLike(feedId);
-           feedReplyCount = replyRepository.countAllByVoteReply(vote);
-           voteDtoList.add(new VoteDto(feedId,searchFeedName,feedAuthorName,feedContent,feedLikeCount,feedReplyCount));
-        }
         return voteDtoList;
     }
 

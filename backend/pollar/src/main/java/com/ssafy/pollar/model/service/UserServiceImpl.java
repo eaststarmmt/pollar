@@ -53,7 +53,6 @@ public class UserServiceImpl implements UserService{
     public void signup(UserDto userDto) throws Exception {
 
         User user = User.builder()
-//                .uid(userDto.getUid())
                 .userId(userDto.getUserId())
                 .password(passwordEncoder.encode(userDto.getPassword()))
                 .userNickname(userDto.getUserNickname())
@@ -63,6 +62,7 @@ public class UserServiceImpl implements UserService{
                 .build();
         // User에 user 정보 저장
         userRepository.save(user);
+        // User 알람 설정
         userNotificationStateRepository.save(UserNotificationState.builder().userId(user)
                 .allNotificationState(true)
                 .followNotificationState(true)
@@ -89,7 +89,7 @@ public class UserServiceImpl implements UserService{
 
     @Override
     public boolean nicknameCheck(String userNickname) throws Exception {
-        if(userRepository.findByUserNickname(userNickname).isPresent()){//아이디가 있는경우
+        if(userRepository.findByUserNickname(userNickname).isPresent()){//닉네임이 있는경우
             return false;
         }else{//닉네임이 없는경우
             return true;
@@ -98,7 +98,7 @@ public class UserServiceImpl implements UserService{
 
     @Override
     public boolean emailCheck(String userEmail) throws Exception {
-        if(userRepository.findByUserEmail(userEmail).isPresent()){//아이디가 있는경우
+        if(userRepository.findByUserEmail(userEmail).isPresent()){//이메일이 있는경우
             return false;
         }else{//이메일이 없는경우
             return true;

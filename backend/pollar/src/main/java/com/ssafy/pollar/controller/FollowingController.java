@@ -16,7 +16,6 @@ import java.util.Map;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/follow")
-@CrossOrigin
 public class FollowingController {
 
     private final FollowingService followingService;

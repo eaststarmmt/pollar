@@ -1,7 +1,5 @@
 package com.ssafy.pollar.controller;
 
-import com.ssafy.pollar.model.dto.CategoryDto;
-import com.ssafy.pollar.model.dto.FollowingDto;
 import com.ssafy.pollar.model.dto.UserDto;
 import com.ssafy.pollar.model.service.*;
 import io.swagger.annotations.ApiOperation;
@@ -12,19 +10,13 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 @RestController
 @RequestMapping("/setting")
 @RequiredArgsConstructor
-@CrossOrigin
 public class SettingController {
 
-    private final UserService userService;
-    private final FollowingService followingService;
-    private final CategoryService categoryService;
-    private final ProfileService profileService;
     private final NotificationService notificationService;
     private static final String SUCCESS = "success";
     private static final String FAIL = "fail";

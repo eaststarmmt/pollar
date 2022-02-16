@@ -24,7 +24,6 @@ import java.util.Map;
 //@Tag(name = "VoteController")
 @RequestMapping("/vote")
 @RequiredArgsConstructor
-@CrossOrigin
 public class VoteController {
 
     private final VoteService voteService;
