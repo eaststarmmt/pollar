@@ -1,7 +1,9 @@
 import { Stack, Avatar } from '@mui/material';
 import { modifyProfilePhoto } from '../../services/api/UserApi';
 import { useEffect, useState, useRef } from 'react';
-import { getLoggedUserId, setLoggedUserInfo } from '../../utils/loggedUser';
+import { getLoggedUserId, getLoggedUserInfo, setLoggedUserInfo } from '../../utils/loggedUser';
+import { isUserInfoUpdatedState } from '../../atoms/atoms';
+import { useSetRecoilState } from 'recoil';
 
 export default function ProfileImageUploadButton({ size, userId, prevImage }) {
   let loggedUserId = getLoggedUserId();
@@ -12,6 +14,9 @@ export default function ProfileImageUploadButton({ size, userId, prevImage }) {
   const fileInput = useRef(null);
   // 아래 주소 default로 넣어놔도 좋을듯
   // https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png
+
+  /* Recoil로 프로필 사진 변경 여부를 표현 */
+  const setIsUserInfoUpdated = useSetRecoilState(isUserInfoUpdatedState);
 
   const onChange = async (e) => {
     if (e.target.files[0]) {
@@ -24,10 +29,15 @@ export default function ProfileImageUploadButton({ size, userId, prevImage }) {
 
       // 서버 요청
       const result = await modifyProfilePhoto(formData);
-      if (result === 'success') {
+      if (result) {
+        // if (result !== '') {
         //todo localStorage에 갱신
-        // const updatedData = await getUser
-        // setLoggedUserInfo();
+        const updatedData = getLoggedUserInfo();
+        updatedData.userProfilePhoto = result;
+        setLoggedUserInfo(updatedData);
+
+        // recoil에 해당 정보 알림
+        setIsUserInfoUpdated((curr) => !curr);
       }
     } else {
       //업로드 취소할 시
@@ -38,7 +48,7 @@ export default function ProfileImageUploadButton({ size, userId, prevImage }) {
     const reader = new FileReader();
     reader.onload = () => {
       if (reader.readyState === 2) {
-        console.log(reader);
+        // console.log(reader);
         setImage(reader.result);
       }
     };

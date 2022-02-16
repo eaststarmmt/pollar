@@ -4,7 +4,7 @@ import eyeFill from '@iconify/icons-eva/eye-fill';
 import eyeOffFill from '@iconify/icons-eva/eye-off-fill';
 import CloseIcon from '@mui/icons-material/Close';
 import { useNavigate } from 'react-router-dom';
-import { getLoggedUserId, setLoggedUserInfo } from '../../utils/loggedUser';
+import { getLoggedUserId, getLoggedUserInfo, setLoggedUserInfo } from '../../utils/loggedUser';
 // material
 import {
   Stack,
@@ -26,12 +26,16 @@ import { getUserInfo } from '../../services/api/UserApi';
 
 import { checkNickname, modifyUserInfo, modifyUserPw } from '../../services/api/UserApi';
 import ProfileImageUploadButton from '../common/ProfileImageUploadButton';
+import { useSetRecoilState } from 'recoil';
+import { isUserInfoUpdatedState } from '../../atoms/atoms';
 
 // ----------------------------------------------------------------------
 
 export default function ProfileInfoSettings() {
   // 설정 성공적으로 반영 시 Alert
   const [openSuccessAlert, setOpenSuccessAlert] = useState(false);
+  // Recoil로 사용자 정보 (userNickname의 경우) 업데이트 여부를 표현
+  const setIsUserInfoUpdated = useSetRecoilState(isUserInfoUpdatedState);
 
   const [showPassword, setShowPassword] = useState(false);
   const [newPassword, setNewPassword] = useState('');
@@ -133,8 +137,13 @@ export default function ProfileInfoSettings() {
 
     if (result === 'success') {
       setOpenSuccessAlert(true);
-      const updatedInfo = await getUserInfo(getLoggedUserId());
+      //// const updatedInfo = await getUserInfo(getLoggedUserId());
+      const updatedInfo = getLoggedUserInfo();
+      updatedInfo.userNickname = newNickname;
+      console.log(updatedInfo);
       setLoggedUserInfo(updatedInfo);
+      // recoil로 사용자 정보 갱신 사실을 알림 -> Navbar에 변경사항 적용되게
+      setIsUserInfoUpdated((curr) => !curr);
     } else {
       alert('실패');
     }

@@ -1,5 +1,6 @@
-import { instance, createMultipartInstance, fileInstance } from '../../services/axios';
+import { fileInstance } from '../../services/axios';
 import { getLoggedUserId } from '../../utils/loggedUser';
+import instance from '../axiosInstance';
 
 // 공통되는 경로는 다음과 같이 별도로 정의해둠
 const COMMON = '/user';

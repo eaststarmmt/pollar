@@ -1,6 +1,11 @@
 import { Box, Card, Container, Typography } from '@mui/material';
 import { styled } from '@mui/system';
 import SettingsVerticalTab from '../components/settings/SettingsVerticalTab';
+import { isLoggedState } from '../atoms/atoms';
+import { useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { useRecoilValue } from 'recoil';
+import { getLoggedUserId } from '../utils/loggedUser';
 
 const ContentStyle = styled('div')(({ theme }) => ({
   maxWidth: 880,
@@ -13,6 +18,18 @@ const ContentStyle = styled('div')(({ theme }) => ({
 }));
 
 export default function SettingsPage() {
+  // 로그인된 사용자만 사용가능 (recoil state watch하자)
+  const isLogged = useRecoilValue(isLoggedState);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (!isLogged && getLoggedUserId() === null) {
+      // todo
+      alert('회원에게만 제공되는 서비스입니다. ');
+      navigate('/users/login');
+    }
+  }, []);
+
   return (
     <>
       <Container>

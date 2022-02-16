@@ -21,7 +21,7 @@ import MenuPopover from '../../components/MenuPopover';
 //// import account from '../../_mocks_/account';
 // Recoil
 import { useResetRecoilState } from 'recoil';
-import { loggedUserState } from '../../atoms/atoms';
+import { isLoggedState, loggedUserState } from '../../atoms/atoms';
 import { logout } from '../../services/api/AuthApi';
 
 // ----------------------------------------------------------------------
@@ -70,13 +70,13 @@ const StyledBadge = styled(Badge)(({ theme }) => ({
 
 // ----------------------------------------------------------------------
 
-export default function AccountPopover({ account, setLoggedUser }) {
+export default function AccountPopover({ account }) {
   const anchorRef = useRef(null);
   const [open, setOpen] = useState(false);
   const navigate = useNavigate();
 
   // 로그아웃 시 Recoil atom 초기화
-  const resetLoggedUser = useResetRecoilState(loggedUserState);
+  const resetIsLoggedState = useResetRecoilState(isLoggedState);
 
   const handleOpen = () => {
     setOpen(true);
@@ -88,13 +88,13 @@ export default function AccountPopover({ account, setLoggedUser }) {
   // 로그아웃 버튼 클릭 시
   const handleLogout = () => {
     // update Recoil atom data
-    resetLoggedUser();
+    //// resetLoggedUser();
+    resetIsLoggedState();
     // remove JWT
     logout();
     // redirect to 'HomePage'
     navigate('/', { replace: true });
     setOpen(false);
-    setLoggedUser();
   };
 
   return (

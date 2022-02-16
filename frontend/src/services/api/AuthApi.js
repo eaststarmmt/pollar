@@ -1,4 +1,4 @@
-import { instance, instanceWithAuth } from '../../services/axios';
+import instance from '../axiosInstance';
 
 const USER = '/user';
 

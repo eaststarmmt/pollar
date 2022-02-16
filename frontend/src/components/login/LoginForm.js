@@ -24,7 +24,7 @@ import { LoadingButton } from '@mui/lab';
 // api
 import { login } from '../../services/api/AuthApi';
 import { useSetRecoilState } from 'recoil';
-import { loggedUserState } from '../../atoms/atoms';
+import { isLoggedState, loggedUserState } from '../../atoms/atoms';
 
 // ----------------------------------------------------------------------
 
@@ -34,7 +34,10 @@ export default function LoginForm() {
   // 로그인 실패 시 Alert
   const [openAlert, setOpenAlert] = useState(false);
 
-  const setLoggedUserState = useSetRecoilState(loggedUserState);
+  // todo 삭제
+  //// const setLoggedUserState = useSetRecoilState(loggedUserState);
+  // 이것으로 대체 (사용자 정보는 localStorage(or sessionStorage)에서 꺼내올 것)
+  const setIsLoggedState = useSetRecoilState(isLoggedState);
 
   const LoginSchema = Yup.object().shape({
     userId: Yup.string().required('Username is required'),
@@ -64,13 +67,15 @@ export default function LoginForm() {
       const result = await login(loginInfo);
       console.log(result);
       if (result.message == 'success') {
-        // 로그인 성공한 userId와, response로 온 userNickname을 atom에 저장
-        setLoggedUserState({
-          userId: loginInfo.userId,
-          userNickname: result.userNickname,
-        });
-        //// navigate('/');
-        navigate('/', { replace: true });
+        // // 로그인 성공한 userId와, response로 온 userNickname을 atom에 저장
+        // setLoggedUserState({
+        //   userId: loginInfo.userId,
+        //   userNickname: result.userNickname,
+        // });
+        setIsLoggedState(true);
+        // 이전으로 돌아갈 수 있어야 하므로 history 유지
+        navigate('/');
+        //// navigate('/', { replace: true });
       } else {
         setOpenAlert(true);
       }

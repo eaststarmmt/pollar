@@ -10,8 +10,8 @@ import MobileHidden from '../common/MobileHidden';
 import Searchbar from './Searchbar';
 import AccountPopover from './AccountPopover';
 // recoil
-import { useRecoilState } from 'recoil';
-import { loggedUserState } from '../../atoms/atoms';
+import { useRecoilState, useRecoilValue } from 'recoil';
+import { isLoggedState, isUserInfoUpdatedState, loggedUserState } from '../../atoms/atoms';
 
 import { NavLogo } from './Logo';
 
@@ -21,10 +21,11 @@ import sidebarConfig from './SidebarConfig';
 import NavSection from './NavSection';
 import { Link } from 'react-router-dom';
 import { useEffect, useState } from 'react';
-import { getLoggedUserInfo } from '../../utils/loggedUser';
+import { getLoggedUserId, getLoggedUserInfo } from '../../utils/loggedUser';
 import NotificationsPopover from '../notification/NotificationsPopover';
 import SearchDrawer from './SearchDrawer';
 import GradAnimatedButton from '../common/GradAnimatedButton';
+import { getUserInfo } from '../../services/api/UserApi';
 
 // ----------------------------------------------------------------------
 
@@ -58,25 +59,51 @@ Navbar.propTypes = {
 };
 
 export default function Navbar({ onOpenSidebar, isFullLayout }) {
-  const [loggedUser, setLoggedUser] = useRecoilState(loggedUserState);
-  // 문제점: 새로고침 시 recoil state 날라감 (line 90)
+  // todo 삭제
+  // const [loggedUser, setLoggedUser] = useRecoilState(loggedUserState);
+  // 아래로 대체
+  const isLogged = useRecoilValue(isLoggedState);
+  // const [isUserInfoUpdated, setIsUserInfoUpdated] = useRecoilState(isUserInfoUpdatedState);
+  const isUserInfoUpdated = useRecoilValue(isUserInfoUpdatedState);
+
+  // (해결)
+  //// 문제점: 새로고침 시 recoil state 날라감 (line 90)
   // JWT 검사로 변경 필요
   const [loggedUserInfo, setLoggedUserInfo] = useState();
 
+  // 사용자 정보 변경 시 바로바로 반영되게끔 하기 위해 api를 매번 요청
+  const getUserAccountInfo = async () => {
+    const data = await getUserInfo(getLoggedUserId());
+    console.log(data);
+    setLoggedUserInfo(data);
+  };
+
   useEffect(() => {
+    // localStorage에서 정보 가져옴
     const localStorageUserInfo = getLoggedUserInfo();
-    setLoggedUserInfo(localStorageUserInfo);
-  }, [loggedUser]); //? 로그아웃 시, 감지를 하기 위해서 recoil을 deps에 추가하는 방식으로 설계함
+    // 로그인 상태라면, 사용자 정보를 가져옴
+    //? recoil만 사용했을 경우, 새로고침 시 데이터가 초기화되기 때문에, localstorage도 함께 검사
+    if (isLogged || localStorageUserInfo !== null) {
+      // localStorage에서 정보 반영
+      setLoggedUserInfo(localStorageUserInfo);
+      //// 갱신된 사용자정보 반영 후 check
+      //// setIsUserInfoUpdated(false);
+    } else {
+      // 로그아웃된 상태라면, 사용자 정보 초기화
+      setLoggedUserInfo();
+    }
+    // getUserAccountInfo();
+  }, [isLogged, isUserInfoUpdated]); //? 로그아웃 시, 감지를 하기 위해서 recoil을 deps에 추가하는 방식으로 설계함
 
   return (
     <RootStyle sx={isFullLayout ? { backgroundColor: 'transparent' } : null}>
       <Container maxWidth="lg">
         <ToolbarStyle>
-          <MobileHidden width="lgUp">
+          {/* <MobileHidden width="lgUp">
             <IconButton onClick={onOpenSidebar} sx={{ mr: 1, color: 'text.primary' }}>
               <Icon icon={menu2Fill} />
             </IconButton>
-          </MobileHidden>
+          </MobileHidden> */}
 
           <Box sx={{ flexGrow: 1 }}>
             <AppBar
@@ -95,14 +122,14 @@ export default function Navbar({ onOpenSidebar, isFullLayout }) {
                   </Typography>
                 </NavLogo>
                 <NavSection navConfig={sidebarConfig} mr={10} />
-                <SearchDrawer user={loggedUserInfo} />
-                <Box sx={{ flexGrow: 1 }} />
 
+                <Searchbar />
+                <Box sx={{ flexGrow: 1 }} />
                 {/* loggedUserId 가 undefined인지 여부에 따라서 Navbar 구성 변경 */}
                 {loggedUserInfo ? (
                   <>
                     <NotificationsPopover />
-                    <AccountPopover account={loggedUserInfo} setLoggedUser={setLoggedUser} />
+                    <AccountPopover account={loggedUserInfo} />
                   </>
                 ) : (
                   <>

@@ -16,14 +16,12 @@ function UserPage() {
     setUserInfo(data.allUserList);
   };
 
-
-
   useEffect(() => {
     getAllUserInfo();
   }, [loggedUserId]);
 
   return (
-    <Box sx={{ width: '100%', typography: 'body1',  }}>
+    <Box sx={{ width: '100%', typography: 'body1' }}>
       <Card
         sx={{
           px: 14,
@@ -34,13 +32,13 @@ function UserPage() {
           overflow: 'visible',
           height: 500,
           bgcolor: '#f1f3fa',
-          flexGrow:1,
+          flexGrow: 1,
         }}
       >
         <Typography variant="h3" gutterBottom color="primary">
           Pollar User
         </Typography>
-        <Grid container spacing={2}> 
+        <Grid container spacing={2}>
           {userInfo.map((user, index) => (
             <UserDetailCard key={index} user={user} />
           ))}

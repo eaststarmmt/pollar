@@ -9,6 +9,8 @@ import Profile from '../components/profile/Profile';
 import { getProfileInfo } from '../services/api/ProfileApi';
 import { getLoggedUserId } from '../utils/loggedUser';
 import { getTotalUploadsCount, getTotalVotesCount } from '../services/api/PollApi';
+import { useRecoilValue } from 'recoil';
+import { isLoggedState } from '../atoms/atoms';
 
 const style = {
   p: 2,
@@ -24,7 +26,18 @@ const style = {
 };
 
 export default function ProfilePage() {
+  // 로그인된 사용자만 사용가능 (recoil state watch하자)
+  const isLogged = useRecoilValue(isLoggedState);
   const navigate = useNavigate();
+
+  useEffect(() => {
+    if (!isLogged && getLoggedUserId() === null) {
+      // todo
+      alert('회원에게만 제공되는 서비스입니다. ');
+      navigate('/users/login');
+    }
+  }, []);
+
   let { userId } = useParams();
   const [profileId, setProfileId] = useState(userId);
 
@@ -44,9 +57,9 @@ export default function ProfilePage() {
         setProfileId(loggedUserId);
         setIsOwnerAccount(true);
       } else {
-        alert('잘못된 접근입니다. 로그인하세요');
+        // alert('잘못된 접근입니다. 로그인하세요');
         // 에러페이지로 이동
-        navigate('/error', { replace: true });
+        // navigate('/error', { replace: true });
       }
     } else setIsOwnerAccount(false);
   };
