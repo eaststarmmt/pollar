@@ -121,9 +121,9 @@ public class VoteServiceImpl implements VoteService {
     }
 
     @Override
-    public VoteDto detail(Long voteId) throws Exception {   // 피드 상세보기
+    public VoteDto detail(Long voteId,String userId) throws Exception {   // 피드 상세보기
         Vote vote = voteRepository.findById(voteId).get();  // 아이디로 해당 투표 찾기
-        User user = userRepository.findByUserNickname(vote.getVoteName()).get();
+        User user = userRepository.findByUserId(userId).get();
         long likeCount =countLike(vote.getVoteId());
         long parCount = getVoteUserList(vote.getVoteId()).size();
         List<VoteCategory> voteCategoryList = voteCategoryRepository.findAllByVoteCategory(vote).get();

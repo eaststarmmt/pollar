@@ -20,6 +20,4 @@ public class CategoryDto {
         this.categoryNameBig=category.getCategoryNameBig();
         this.categoryNameSmall=category.getCategoryNameSmall();
     }
-
-
 }

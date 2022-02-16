@@ -68,7 +68,4 @@ public class CategoryController {
         return new ResponseEntity<List<CategoryDto>> (categoryService.getVoteCategories(voteId),HttpStatus.OK);
 
     }
-
-
-
 }

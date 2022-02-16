@@ -116,12 +116,10 @@ public class UserController {
     @GetMapping("/confirmemail")
     public ResponseEntity<Map<String,Object>> sendEmail(@RequestParam @ApiParam(value = "이메일 정보") String userEmail)throws Exception{
         Map<String,Object> resultMap = new HashMap<>();
-        String emailToken = "";
         HttpStatus status = null;
         try {
             if(userService.emailCheck(userEmail)){
-                emailToken = emailConfirmationService.createEmailConfirmationToken(userEmail);
-                resultMap.put("confirmToken",emailToken);
+                emailConfirmationService.createEmailConfirmationToken(userEmail);
                 resultMap.put("message",SUCCESS);
             }else{
                 resultMap.put("message", FAIL);
@@ -174,7 +172,7 @@ public class UserController {
         return new ResponseEntity<>(message,status);
     }
 
-    @ApiOperation(value ="회원전보 삭제", notes = "회원정보 삭제")
+    @ApiOperation(value ="회원정보 삭제", notes = "회원정보 삭제")
     @DeleteMapping
     public ResponseEntity<String> deleteUserInfo(@RequestParam @ApiParam(value = "삭제할 유저 id", required = true)String userId)throws Exception{
 
@@ -215,12 +213,10 @@ public class UserController {
     @GetMapping("/findid")
     public ResponseEntity<Map<String,Object>> findId(@RequestParam @ApiParam(value = "이메일 정보") String userEmail) throws Exception {
         Map<String,Object> resultMap = new HashMap<>();
-        String emailToken = "";
         HttpStatus status = null;
         try {
             if(!userService.emailCheck(userEmail)){//이메일이 존재하는 경우
-                emailToken = emailConfirmationService.createEmailConfirmationToken(userEmail);
-                resultMap.put("confirmToken",emailToken);
+                emailConfirmationService.createEmailConfirmationToken(userEmail);
                 resultMap.put("message",SUCCESS);
                 resultMap.put("userId",userService.findId(userEmail));
             }else{

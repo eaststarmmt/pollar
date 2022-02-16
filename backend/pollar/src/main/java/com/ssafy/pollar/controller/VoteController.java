@@ -48,8 +48,8 @@ public class VoteController {
 
     @ApiOperation(value = "피드 상세 페이지", notes = "해당 피드 상세정보를 불러온다.")
     @GetMapping("/{voteId}")
-    public ResponseEntity<VoteDto> detailVote(@PathVariable @ApiParam(value = "피드의 id", required = true) Long voteId) throws Exception {
-        return new ResponseEntity<VoteDto>(voteService.detail(voteId), HttpStatus.OK);
+    public ResponseEntity<VoteDto> detailVote(@PathVariable @ApiParam(value = "피드의 id", required = true) Long voteId,@RequestParam @ApiParam(value = "로그인 유저 id", required = true) String userId) throws Exception {
+        return new ResponseEntity<VoteDto>(voteService.detail(voteId,userId), HttpStatus.OK);
     }
 
     @ApiOperation(value = "피드 전체목록")
@@ -66,7 +66,7 @@ public class VoteController {
         int voteId = (int) map.get("voteId");
         voteService.insertLike(userId, (long)voteId);
         // 좋아요 알림
-        String receiveId = voteService.detail((long)voteId).getAuthor();
+        String receiveId = voteService.detail((long)voteId,userId).getAuthor();
         notificationService.feedLikeNotification((long)voteId,(String)map.get("userId"),receiveId);
         return new ResponseEntity<>(SUCCESS,HttpStatus.OK);
     }
