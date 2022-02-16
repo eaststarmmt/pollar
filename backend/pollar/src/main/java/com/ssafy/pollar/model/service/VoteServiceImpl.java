@@ -123,9 +123,41 @@ public class VoteServiceImpl implements VoteService {
     @Override
     public VoteDto detail(Long voteId) throws Exception {   // 피드 상세보기
         Vote vote = voteRepository.findById(voteId).get();  // 아이디로 해당 투표 찾기
+        User user = userRepository.findByUserNickname(vote.getVoteName()).get();
         long likeCount =countLike(vote.getVoteId());
         long parCount = getVoteUserList(vote.getVoteId()).size();
-        return new VoteDto(vote,likeCount,parCount);     // 해당 투표를 dto로 변환 후 리턴
+        List<VoteCategory> voteCategoryList = voteCategoryRepository.findAllByVoteCategory(vote).get();
+        List<String> voteCategoryDtoList = new ArrayList<>();
+        List<VoteSelect> voteSelectList = voteSelectRepository.getAllByVoteSelect(vote);
+        List<SelectionDto> selectionDtoList = new ArrayList<>();
+        long voteReplyCount = replyRepository.countAllByVoteReply(vote);
+        long userVoteSelection =0; // 투표한 선택지
+        Boolean isLiked = false;
+        Boolean isVoted = false;
+
+        if(voteLikeRepository.findByUserVoteLikesAndVoteLikesByQuery(user,vote).isPresent()){ // 로그인 유저가 투표에 참여한경우
+            isLiked = true;
+        }
+
+        for(int j = 0 ; j < vote.getVoteSelects().size(); j++){
+            if(voteParticipateRepository.findByUserParticipateAndVoteParticipate(user,vote.getVoteSelects().get(j)).isPresent()){ // 로그인 유저가 투표에 참여한경우
+                isVoted = true;
+                userVoteSelection = vote.getVoteSelects().get(j).getVoteSelectId();
+            }
+        }
+
+        for(int j = 0 ; j < voteCategoryList.size(); j++){ // 카테고리 이름 추가
+            voteCategoryDtoList.add(voteCategoryList.get(j).getCategory().getCategoryNameSmall());
+        }
+
+        for(int j = 0 ; j < voteSelectList.size(); j++){ // 선택지 내용 추가
+            selectionDtoList.add(new SelectionDto(voteSelectList.get(j)));
+        }
+
+        return new VoteDto(vote.getVoteId(),vote.getVoteName(),vote.getAuthor().getUsername(),vote.getVoteContent()
+                ,vote.getVoteType(),vote.getVoteCreateTime(),vote.getVoteExpirationTime(),vote.getUserAnonymouseType()
+                ,vote.getVoteAnonymouseType(),voteCategoryDtoList,selectionDtoList,likeCount,voteReplyCount
+                ,user.getUserProfilePhoto(),parCount,isVoted,isLiked,userVoteSelection); // 해당 투표를 dto로 변환 후 리턴
     }
 
     @Override

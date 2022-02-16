@@ -20,7 +20,6 @@ import java.util.List;
 @ApiModel(value = "VoteDto : 피드정보", description = "피드의 상세 정보를 나타낸다.")
 public class VoteDto {
 
-
     public VoteDto(Vote vote,long likeCount ,long parCount,long replyCount,String userProfilePhoto,boolean isVoted,boolean isLiked, List<String> voteCategoriesName, List<SelectionDto> voteSelections, long selectionId) {     // vote entity 받아와서 vote dto로 변환. list로 딸려있는 애들은 따로 요청해서 보내야 될거 같음
         this.voteId = vote.getVoteId();
         this.voteName = vote.getVoteName();
@@ -40,38 +39,26 @@ public class VoteDto {
         this.isUserVoted=isVoted;//
         this.isUserLiked=isLiked;//
         this.userVoteSelection=selectionId;//
-
     }
-public VoteDto(Vote vote,long likeCount ,long parCount) {     // vote entity 받아와서 vote dto로 변환. list로 딸려있는 애들은 따로 요청해서 보내야 될거 같음
-    this.voteId = vote.getVoteId();
-    this.voteName = vote.getVoteName();
-    this.author=vote.getAuthor().getUserId();
-    this.voteContent = vote.getVoteContent();
-    this.voteType = vote.getVoteType();
-    this.voteCreateTime = vote.getVoteCreateTime();
-    this.voteExpirationTime = vote.getVoteExpirationTime();
-    this.userAnonymousType = vote.getUserAnonymouseType();
-    this.voteAnonymousType = vote.getVoteAnonymouseType();
-    this.voteLikeCount=likeCount;
-    this.voteParticipateCount=parCount;
-
-
-}
+    
+    public VoteDto(Vote vote,long likeCount ,long parCount) {     // vote entity 받아와서 vote dto로 변환. list로 딸려있는 애들은 따로 요청해서 보내야 될거 같음
+        this.voteId = vote.getVoteId();
+        this.voteName = vote.getVoteName();
+        this.author=vote.getAuthor().getUserId();
+        this.voteContent = vote.getVoteContent();
+        this.voteType = vote.getVoteType();
+        this.voteCreateTime = vote.getVoteCreateTime();
+        this.voteExpirationTime = vote.getVoteExpirationTime();
+        this.userAnonymousType = vote.getUserAnonymouseType();
+        this.voteAnonymousType = vote.getVoteAnonymouseType();
+        this.voteLikeCount=likeCount;
+        this.voteParticipateCount=parCount;
+    }
 
     public VoteDto(long voteId, String voteName,String author,String userProfilePhoto, long voteLikeCount, long voteReplyCount){// 피드 검색용
         this.voteId = voteId;
         this.voteName =voteName;
         this.author = author;
-        this.userProfilePhoto = userProfilePhoto;
-        this.voteLikeCount = voteLikeCount;
-        this.voteReplyCount = voteReplyCount;
-    }
-
-    public VoteDto(long voteId, String voteName, String author, String voteContent,String userProfilePhoto, long voteLikeCount, long voteReplyCount){// 피드 카테고리 검색
-        this.voteId = voteId;
-        this.voteName = voteName;
-        this.author = author;
-        this.voteContent = voteContent;
         this.userProfilePhoto = userProfilePhoto;
         this.voteLikeCount = voteLikeCount;
         this.voteReplyCount = voteReplyCount;
