@@ -9,13 +9,14 @@ export default function RecentsTabPanel() {
   /* 최신순 (전체) 투표 목록 요청 */
   const getPollList = async () => {
     const list = await getRecentPollList();
-    // console.log(list);
+    console.log(list);
     setPollList(list);
   };
 
   useEffect(() => {
     getPollList();
   }, []);
+
 
   return (
     <ImageList

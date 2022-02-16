@@ -8,6 +8,7 @@ import { getPollCategory } from '../services/api/CategoryApi';
 import { getRelies } from '../services/api/ReplyApi';
 import ReplyForm from '../components/detailpoll/ReplyForm';
 import { Link as RouterLink, useNavigate } from 'react-router-dom';
+import PollDetailCard from '../components/detailpoll/PollDetailForm';
 
 export default function PollDetailPage() {
   let { id } = useParams();     // url에 있는 path variable을 가져옴
@@ -18,12 +19,13 @@ export default function PollDetailPage() {
   const getVote = async () => {   // voteInfo랑 categories 가져오기
     const data = await getVoteInfo(id);
     setVoteInfo(data);
+    console.log(data)
   };
   const loadReply = async () => {
     const replyList = await getRelies(id);
     setReplies(replyList)
   }
-  
+  console.log(id)
   useEffect(() => {
     getVote();
     loadReply();
@@ -41,6 +43,7 @@ export default function PollDetailPage() {
               overflowY: "scroll" // added scroll
             }}
           >
+            <PollDetailCard poll={voteInfo} voteId={id}/>
           <ReplyForm
             replies={replies}
           />

@@ -18,7 +18,7 @@ export default function PollCreatePage() {
             }}
           >
             <Typography variant="h3" gutterBottom color="primary">
-              Create Poll 투표 생성 글씨체 변경 
+              Create Poll
             </Typography>
             <CreateForm />
           </Card>

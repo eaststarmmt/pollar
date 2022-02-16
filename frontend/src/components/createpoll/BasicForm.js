@@ -114,7 +114,7 @@ function BasicForm(props) {
           <Stack justifyContent="center" alignItems="center" direction={{ xs: 'column', sm: 'row' }}>
             <Stack direction={{ xs: 'column', sm: 'row', }}>
               {voteInterest.map((item, index) => (
-                <Chip key={index} label={item} variant="filled" sx={{ mx:0.3}} />
+                <Chip key={index} label={item.categoryNameSmall} variant="filled" sx={{ mx:0.3}} />
               ))}
             </Stack>
             <Button onClick={handleOpen} variant="contained" sx={{ mx:3,}}>

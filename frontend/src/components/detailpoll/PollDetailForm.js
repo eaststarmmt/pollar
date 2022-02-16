@@ -38,11 +38,10 @@ const InfoStyle = styled('div')(({ theme }) => ({
   color: theme.palette.text.disabled,
 }));
 
-export default function PollDetailCard({ poll }) {
+export default function PollDetailForm({ poll, voteId }) {
   const navigate = useNavigate();
 
   const {
-    voteId,
     voteName,
     voteContent,
     voteType,

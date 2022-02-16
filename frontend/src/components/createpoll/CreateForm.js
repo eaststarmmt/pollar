@@ -103,6 +103,7 @@ function CreateForm() {
     } catch (error) {
       alert('투표 생성에 실패하였습니다.');
     }
+
   };
   return (
     <>
@@ -120,7 +121,7 @@ function CreateForm() {
             />
           </>
         )}
-        {!vote.voteName || !vote.voteContent ? (
+        {!vote.voteName || !vote.voteContent || !vote.voteCategories ? (
           <>
             <Button variant="contained" disabled>
               Create

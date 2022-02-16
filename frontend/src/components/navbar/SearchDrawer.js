@@ -139,7 +139,6 @@ export default function SearchDrawer(user) {
     if (location.pathname.length == 7) {
       var path = location.pathname.slice(0, 7);
       if (path === '/polls/') {
-
         navigate(e, { replace: true });
       } else {
         navigate(e, { replace: true });
@@ -210,41 +209,71 @@ export default function SearchDrawer(user) {
               }}
               key={index}
             >
-              <Stack sx={{ justifyContent: 'center', alignItems: 'center' }}>
-                <Avatar
-                  src={vote.userProfilePhoto}
-                  alt="Profile Photo"
-                  shadow="xl"
-                  sx={{
-                    width: '1.5rem',
-                    height: '1.5rem',
-                    border: 1,
-                    borderColor: '#c5cae9',
-                  }}
-                />
-                <Typography
-                  sx={{
-                    fontSize: '8px',
-                    textAlign: 'center',
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                    paddingRight: 1,
-                  }}
-                  color="text.secondary"
-                >
-                  &nbsp;&nbsp;{vote.author}
-                </Typography>
+              <Stack sx={{ justifyContent: 'center', alignItems: 'center', width:80,}}>
+                {vote.userAnonymousType ? (
+                  <>
+                  <Avatar
+                    shadow="xl"
+                    sx={{
+                      width: '2rem',
+                      height: '2rem',
+                      border: 1,
+                      borderColor: '#c5cae9',
+                    }}
+                  >
+                    ?
+                  </Avatar>
+
+                    <Typography
+                      sx={{
+                        fontSize: '8px',
+                        textAlign: 'center',
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                        paddingRight: 1,
+                      }}
+                      color="text.secondary"
+                    >
+                      &nbsp;&nbsp;익명 투표
+                    </Typography>
+                  </>
+                ) : (
+                  <>
+                    <Avatar
+                      src={vote.userProfilePhoto}
+                      shadow="xl"
+                      sx={{
+                        width: '2rem',
+                        height: '2rem',
+                        border: 1,
+                        borderColor: '#c5cae9',
+                      }}
+                    />
+                    <Typography
+                      sx={{
+                        fontSize: '8px',
+                        textAlign: 'center',
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                        paddingRight: 1,
+                      }}
+                      color="text.secondary"
+                    >
+                      &nbsp;&nbsp;{vote.author}
+                    </Typography>
+                  </>
+                )}
               </Stack>
               {vote.voteType ? (
-                <TextSnippetIcon sx={{ fontSize: '1.5rem', ml: 1 }}/>
+                <TextSnippetIcon sx={{ fontSize: '1.5rem', ml: 1 }} />
               ) : (
                 <ImageIcon sx={{ fontSize: '1.5rem', ml: 2 }} />
               )}
               <Typography component="span" variant="subtitle1">
                 &nbsp;&nbsp;{vote.voteName}&nbsp;&nbsp;
               </Typography>
-              {vote.voteCategoriesName.map((item, index)=> (
-                <Chip label={item} />
+              {vote.voteCategoriesName.map((item, index) => (
+                <Chip label={item} sx={{ ml:0.5,}} />
               ))}
             </Button>
           ))}

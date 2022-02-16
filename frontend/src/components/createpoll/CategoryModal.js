@@ -98,7 +98,7 @@ export default function CategoryModal(props) {
 
   return (
     <>
-      <Stack sx={{ width: 960, overflow:'scroll', height:460,}} >
+      <Stack sx={{ width: 800, height:500, margin:0,}} >
         <Collapse in={openLimitedAlert}>
           <Alert
             severity="error"
@@ -141,7 +141,7 @@ export default function CategoryModal(props) {
             이미 선택한 관심분야입니다.
           </Alert>
         </Collapse>
-        <Typography variant="body1" align="left" sx={{ color: 'text.secondary', mb: 1 }}>
+        <Typography variant="body1" align="left" sx={{ color: 'text.secondary', mt: 3, mb: 1 }}>
           선택한 관심분야
         </Typography>
         <Stack direction="row" spacing={1}>
@@ -164,7 +164,9 @@ export default function CategoryModal(props) {
           ))}
         </Stack>
         <br />
-        <Button onClick={handleCommit} variant="contained" sx={{ mb:3, }}>저장</Button>
+        <Button onClick={handleCommit} variant="contained">
+          저장
+        </Button>
       </Stack>
     </>
   );
