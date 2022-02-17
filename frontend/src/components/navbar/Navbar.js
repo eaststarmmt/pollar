@@ -107,7 +107,7 @@ export default function Navbar({ onOpenSidebar, isFullLayout }) {
                   </Typography>
                 </NavLogo>
                 <NavSection navConfig={sidebarConfig} mr={10} />
-                <SearchDrawer user={loggedUserInfo} />
+                <SearchDrawer user={loggedUserInfo} isUserLogged={isLogged || checkUserLogged()} />
                 <Box sx={{ flexGrow: 1 }} />
                 {loggedUserInfo ? (
                   <>

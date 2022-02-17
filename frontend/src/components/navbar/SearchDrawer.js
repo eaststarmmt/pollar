@@ -52,7 +52,7 @@ const SearchbarStyle = styled('div')(({ theme }) => ({
 }));
 
 //------------------------------------------------------------
-export default function SearchDrawer(user) {
+export default function SearchDrawer({ user, isUserLogged }) {
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -311,7 +311,12 @@ export default function SearchDrawer(user) {
             autoFocus
             fullWidth
             disableUnderline
-            placeholder="검색 카테고리를 설정후 검색어를 입력해주세요."
+            placeholder={
+              isUserLogged
+                ? '검색 카테고리를 설정후 검색어를 입력해주세요'
+                : '로그인 후 이용가능합니다'
+            }
+            disabled={!isUserLogged}
             startAdornment={
               <InputAdornment position="start">
                 <Box
