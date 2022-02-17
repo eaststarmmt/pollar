@@ -4,12 +4,20 @@ import { Box, Grid, Container, Typography, Stack, Button } from '@mui/material';
 import Page from '../components/Page';
 import homeImg from '../assets/images/grad_img.png';
 import GradAnimatedButton from '../components/common/GradAnimatedButton';
-import { useRecoilState } from 'recoil';
-import { loggedUserState } from '../atoms/atoms';
+import { useRecoilState, useRecoilValue } from 'recoil';
+import { isLoggedState, loggedUserState } from '../atoms/atoms';
+import { useEffect, useState } from 'react';
+import { checkUserLogged } from '../utils/loggedUser';
 // ----------------------------------------------------------------------
 
 export default function HomePage() {
-  const [loggedUser, setLoggedUser] = useRecoilState(loggedUserState);
+  const isLogged = useRecoilValue(isLoggedState);
+
+  const [isLoggedUser, setIsLoggedUser] = useState(false);
+
+  useEffect(() => {
+    setIsLoggedUser(isLogged || checkUserLogged());
+  }, [isLogged]);
 
   return (
     <Page title="Home">
@@ -22,21 +30,21 @@ export default function HomePage() {
                 <br />
                 Anywhere
               </Typography>
-              <Typography variant="h6" color="text.disabled">
+              <Typography variant="h6" color="text.disabled" fontWeight={500}>
                 투표를 만들어 고민을 나누고,
                 <br />
-                투표를 하면서 의견을 나눠주세요.
+                투표를 하면서 의견을 공유하세요
               </Typography>
             </Stack>
 
-            {!loggedUser ? (
+            {!isLoggedUser ? (
               <GradAnimatedButton href="/users/signup">
-                <Typography variant="body1" color="inline">
+                <Typography variant="subtitle2" color="inline">
                   Get Started
                 </Typography>
               </GradAnimatedButton>
             ) : (
-              <GradAnimatedButton href="/polls/create" sx={{ width: 'max-content',}}>
+              <GradAnimatedButton href="/polls/create" sx={{ width: 'max-content' }}>
                 <Typography variant="subtitle2">&nbsp;+&nbsp;Create A Poll&nbsp;&nbsp;</Typography>
               </GradAnimatedButton>
             )}
