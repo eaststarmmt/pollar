@@ -1,59 +1,3 @@
-// import * as React from 'react';
-// import Box from '@mui/material/Box';
-// import Card from '@mui/material/Card';
-// import CardActions from '@mui/material/CardActions';
-// import CardContent from '@mui/material/CardContent';
-// import Button from '@mui/material/Button';
-// import Typography from '@mui/material/Typography';
-// import { Grid, Stack } from '@mui/material';
-
-// const itemList = ['item1', 'item2', 'item3', 'item4'];
-
-// /* 상황별로 탭의 배경색을 변경한다 */
-// const pollBgCol = {
-//   closedPoll: '#000',
-//   default: '#fff',
-//   trending: '#219',
-// };
-
-// export default function PollTrendingCard() {
-//   return (
-//     // <Grid item xs={12} sm={12} md={6}>
-//     <Card sx={{ backgroundColor: '#826AF9', height: '100%' }}>
-//       <CardContent>
-//         <Grid container spacing={2}>
-//           <Grid item xs={6} md={6}>
-//             <Typography sx={{ fontSize: 14 }} color="white" gutterBottom>
-//               작성일자 2020-12-09
-//             </Typography>
-//             <Typography variant="h5" component="div">
-//               Poll Title
-//             </Typography>
-//             <Typography sx={{ mb: 1.5 }} color="text.disabled">
-//               poll author
-//             </Typography>
-//             <Typography variant="body2">투표내용... (최대 300자)</Typography>
-//           </Grid>
-//           <Grid item xs={6} md={6}>
-//             <Stack spacing={1}>
-//               {itemList.map((item, index) => (
-//                 <Button key={index} variant="contained">
-//                   {item}
-//                 </Button>
-//               ))}
-//             </Stack>
-//           </Grid>
-//         </Grid>
-//       </CardContent>
-//       <CardActions>
-//         <Button size="small" color="secondary">
-//           자세히 보기
-//         </Button>
-//       </CardActions>
-//     </Card>
-//     // </Grid>
-//   );
-// }
 import {
   Box,
   Button,
@@ -141,11 +85,21 @@ export default function PollDetailCard({ poll, isLoggedUser }) {
   // 현재 선택한 선택지 정보 (투표했을 경우)
   const [selectedItem, setSelectedItem] = useState(userVoteSelection);
 
-  const POLL_INFO = [
+  // count들이 바로 반영되게끔 state로 선언
+  const [replyCount, setReplyCount] = useState(voteReplyCount);
+  const [voteCount, setVoteCount] = useState(voteParticipateCount);
+  const [likeCount, setLikeCount] = useState(voteLikeCount);
+  const [pollCountInfo, setPollCountInfo] = useState([
     { number: voteReplyCount, icon: ChatOutlinedIcon },
     { number: voteParticipateCount, icon: HowToVoteIcon },
     { number: voteLikeCount, icon: FavoriteBorderIcon },
-  ];
+  ]);
+
+  // let POLL_INFO = [
+  //   { number: voteReplyCount, icon: ChatOutlinedIcon },
+  //   { number: voteParticipateCount, icon: HowToVoteIcon },
+  //   { number: voteLikeCount, icon: FavoriteBorderIcon },
+  // ];
 
   const chipStyle = {
     fontSize: 10,
@@ -176,7 +130,12 @@ export default function PollDetailCard({ poll, isLoggedUser }) {
   const handleToggleLikeClick = async () => {
     const result = isLiked ? await requestPollUnlike(voteId) : await requestPollLike(voteId);
     if (result === 'success') {
+      if (isLiked) setLikeCount((curr) => curr++);
+      else setLikeCount((curr) => curr--);
+      // setLikeCount(isLiked ? (curr) => curr++ : (curr) => curr--);
       setIsLiked((curr) => !curr);
+
+      // POLL_INFO[2].number = isLiked ? POLL_INFO[2].number++ : POLL_INFO[2].number--;
     } else {
       // todo 에러처리
       alert('처리에 문제가 있었습니다. 다시 요청해주세요');
@@ -190,9 +149,6 @@ export default function PollDetailCard({ poll, isLoggedUser }) {
 
   /* 작성자 프로필 클릭 시 */
   const handleProfileClick = () => {
-    console.log(isLoggedUser);
-    // console.log(state);
-    // setIsVoted(state);
     if (isLoggedUser) navigate(`/users/profile/${author}`);
   };
 
@@ -256,15 +212,20 @@ export default function PollDetailCard({ poll, isLoggedUser }) {
               <Grid item xs={12} md={12}>
                 <Stack
                   direction="row"
-                  onClick={handleProfileClick}
+                  // onClick={handleProfileClick}
                   alignItems="center"
                   justifyContent="space-between"
                 >
-                  <Stack direction="row" alignItems="center" spacing={1}>
+                  <Stack
+                    direction="row"
+                    alignItems="center"
+                    spacing={1}
+                    onClick={handleProfileClick}
+                  >
                     <Avatar
                       alt={userProfilePhoto}
                       src={userProfilePhoto}
-                      // onClick={handleProfileClick}
+                      //
                     />
                     <Typography variant="body1" color="primary">
                       {author}
@@ -386,7 +347,7 @@ export default function PollDetailCard({ poll, isLoggedUser }) {
 
             <Stack direction="row" justifyContent="space-between" sx={{ pt: 3 }}>
               <InfoStyle sx={{ width: '100%' }}>
-                {POLL_INFO.map((info, index) => (
+                {pollCountInfo.map((info, index) => (
                   <Box
                     key={index}
                     sx={{
@@ -397,7 +358,16 @@ export default function PollDetailCard({ poll, isLoggedUser }) {
                     }}
                   >
                     <Box component={info.icon} sx={{ width: 16, height: 16, mr: 0.5 }} />
-                    <Typography variant="caption">{info.number}</Typography>
+                    {index === 0 ? (
+                      <Typography variant="caption">{replyCount}</Typography>
+                    ) : index === 1 ? (
+                      <Typography variant="caption">{voteCount}</Typography>
+                    ) : (
+                      <Typography variant="caption">{likeCount}</Typography>
+                    )}
+                    {/* <Typography variant="caption">
+                      {index === 0 ? replyCount : index === 1 ? voteCount : likeCount}
+                    </Typography> */}
                   </Box>
                 ))}
               </InfoStyle>
