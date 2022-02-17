@@ -61,7 +61,7 @@ function BasicForm(props) {
             sx={{ fontSize: 22, fontWeight: 'bold', color: 'text.secondary' }}
             paddingTop={1}
           >
-            투표 제목
+            투표 제목 *
           </Typography>
           <TextField
             id="voteName"
@@ -84,7 +84,7 @@ function BasicForm(props) {
             sx={{ fontSize: 22, fontWeight: 'bold', color: 'text.secondary' }}
             paddingTop={1}
           >
-            투표 내용
+            투표 내용 *
           </Typography>
           <TextField
             id="voteContent"
@@ -109,7 +109,7 @@ function BasicForm(props) {
             paddingTop={1}
             sx={{ fontSize: 22, fontWeight: 'bold', color: 'text.secondary' }}
           >
-            투표 카테고리
+            투표 카테고리 *
           </Typography>
           <Stack justifyContent="center" alignItems="center" direction={{ xs: 'column', sm: 'row' }}>
             <Stack direction={{ xs: 'column', sm: 'row', }}>

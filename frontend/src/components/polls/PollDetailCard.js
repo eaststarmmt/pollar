@@ -74,7 +74,7 @@ export default function PollDetailCard({ poll }) {
     voteParticipateCount,
     voteLikeCount,
   } = poll;
-  console.log(poll)
+
   // 로그인한 사용자가 해당 프로필의 '좋아요'목록에 대해서 '좋아요'를 눌렀는지 여부
   const [isLiked, setIsLiked] = useState(isUserLiked);
   // 공유하기 다이얼로그 창
@@ -151,7 +151,7 @@ export default function PollDetailCard({ poll }) {
     total: 1 */
   const getPollResult = async () => {
     const data = await getPollSelectionStatus(voteId);
-    console.log(data);
+
     setPollResult(data);
   };
 

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Box, Button, Typography, Card } from '@mui/material';
+import { Box, Button, Typography, Card, Snackbar } from '@mui/material';
 import Container from '@mui/material/Container';
 
 import { voteCreate, voteImageCreate } from '../../services/api/PollApi';
@@ -28,8 +28,32 @@ function CreateForm() {
     voteSelects: [],
   });
 
+  // alert
+  const [alert, setAlert] = useState({
+    open: false,
+    vertical: 'center',
+    horizontal: 'center',
+  });
+  const { vertical, horizontal, open } = alert;
+
+  const openAlert = () => {
+    setAlert({
+      ...alert,
+      open: true,
+    });
+  };
+  const closeAlert = () => {
+    setAlert({
+      ...alert,
+      open: false,
+    });
+  };
+
   // submit
   const handleCreate = async () => {
+    if (!vote.voteCategories.length){
+      openAlert()
+    } else{
     try {
       if (vote.voteType === 'true') {
         // 텍스트 formData 생성
@@ -60,7 +84,8 @@ function CreateForm() {
         if (result.message == 'success') {
           navigate(`/polls/${result.voteId}`);
         } else {
-          alert('투표 생성 실패');
+          openAlert();
+          navigate(`/polls`);
         }
       } else {
         // 이미지 formData 생성
@@ -101,12 +126,27 @@ function CreateForm() {
         }
       }
     } catch (error) {
-      alert('투표 생성에 실패하였습니다.');
-    }
+      openAlert();
+      navigate(`/polls`);
+    }}
 
   };
+  useEffect(()=> {
+    console.log(!vote.voteName && !vote.voteContent )
+    console.log(!vote.voteCategories.length)
+  },[vote.voteCategories])
   return (
     <>
+      {alert.open && (
+        <Snackbar
+          anchorOrigin={{ vertical, horizontal }}
+          open={open}
+          onClose={closeAlert}
+          message="투표 생성에 실패하였습니다. 필수 정보를 모두 입력하세요. "
+          autoHideDuration={2000}
+        />
+      )}
+
       <Box>
         <BasicForm vote={vote} setVote={setVote} />
         {vote.voteType === 'true' ? (
@@ -121,10 +161,10 @@ function CreateForm() {
             />
           </>
         )}
-        {!vote.voteName || !vote.voteContent || !vote.voteCategories ? (
+        {(!vote.voteName && !vote.voteContent ) ? (
           <>
-            <Button variant="contained" disabled>
-              Create
+            <Button variant="contained" disabled size="large">
+              투표 생성하기 
             </Button>
             <br />
             <Typography variant="caption" sx={{ color: 'red' }}>
@@ -133,12 +173,12 @@ function CreateForm() {
           </>
         ) : imageList.length >= 2 || vote.voteSelects.length >= 2 ? (
           <Button variant="contained" onClick={handleCreate}>
-            create
+            투표 생성하기 
           </Button>
         ) : (
           <>
             <Button variant="contained" disabled>
-              Create
+              투표 생성하기 
             </Button>
             <br />
             <Typography variant="caption" sx={{ color: 'red' }}>

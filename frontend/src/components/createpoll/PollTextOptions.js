@@ -24,32 +24,9 @@ function PollTextOptions(props) {
 
   return (
     <>
-      <Typography variant="caption" paddingTop={1}>
+      <Typography variant="caption" paddingTop={1} color="text.secondary">
         &nbsp;&nbsp;투표 선택지는 1~20자 까지 작성이 가능합니다.
-      </Typography>{' '}
-      <br />
-      {textList.length < 4 && (
-        <Button
-          variant="contained"
-          className="option-button"
-          onClick={createTextList}
-          sx={{ margin: 1 }}
-        >
-          + 선택지 추가하기
-        </Button>
-      )}
-      {textList.length > 2 && (
-        <Button
-          onClick={(e) => {
-            setVote({
-              ...vote,
-              textList: textList.pop(),
-            });
-          }}
-        >
-          - 선택지 삭제
-        </Button>
-      )}
+      </Typography>
       <br />
       {textList &&
         textList.map((item, i) => (
@@ -69,8 +46,33 @@ function PollTextOptions(props) {
               });
               changeList();
             }}
-          />
+            />
         ))}
+            {textList.length < 4 && (
+              <Button
+                variant="contained"
+                onClick={createTextList}
+                sx={{ mt: 2 }}
+                size="small"
+              >
+                + 선택지 추가하기
+              </Button>
+            )}
+            {textList.length > 2 && (
+              <Button
+              size="small"
+              variant="outlined"
+              sx={{ mt: 2, ml:1 }}
+                onClick={(e) => {
+                  setVote({
+                    ...vote,
+                    textList: textList.pop(),
+                  });
+                }}
+              >
+                - 선택지 삭제
+              </Button>
+            )}
       <br />
       <br />
     </>

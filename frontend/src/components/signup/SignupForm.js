@@ -506,8 +506,8 @@ function SignupForm(props) {
                   })
                 }
               >
-                <FormControlLabel value={false} control={<Radio />} label="Male" />
-                <FormControlLabel value={true} control={<Radio />} label="Female" />
+                <FormControlLabel value={false} control={<Radio />} label="남성" />
+                <FormControlLabel value={true} control={<Radio />} label="여성" />
               </RadioGroup>
             </Stack>
           </Stack>

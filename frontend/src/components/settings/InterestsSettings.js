@@ -2,7 +2,7 @@ import SelectInterests from '../signup/SelectInterests';
 import { useEffect, useState } from 'react';
 import { setUserInterests, getUserInterests } from '../../services/api/CategoryApi';
 import { getLoggedUserId } from '../../utils/loggedUser';
-import { Box } from '@mui/material';
+import { Box, Snackbar } from '@mui/material';
 
 export default function InterestsSettings() {
   const [user, setUser] = useState({
@@ -21,11 +21,53 @@ export default function InterestsSettings() {
     const result = await setUserInterests(categories);
     if (result === 'success') {
       // todo
-      alert('성공적으로 반영되었습니다.');
+      setAlertState({
+        ...alertState,
+        success: true,
+      });
+      openSuccessAlert();
     } else {
       // todo
-      alert('오류가 발생했습니다. 잠시 후 시도해주세요 ');
+      setAlertState({
+        ...alertState,
+        fail: true,
+      });
+      openSuccessAlert();
     }
+  };
+
+  // snackbar
+  const [alert, setAlert] = useState({
+    open: false,
+    vertical: 'bottom',
+    horizontal: 'left',
+  });
+
+  const { vertical, horizontal, open } = alert;
+  const [alertState, setAlertState] = useState({
+    success: false,
+    fail: false,
+  });
+
+  const alertMsg= {
+    success:'성공적으로 반영되었습니다.',
+    fail: '오류가 발생했습니다. 잠시 후 시도해주세요 '
+  }
+  const openSuccessAlert = () => {
+    setAlert({
+      ...alert,
+      open: true,
+    });
+  };
+  const closeSuccessAlert = () => {
+    setAlert({
+      ...alert,
+      open: false,
+    });
+    setAlertState({
+      successs: false,
+      fail: false,
+    });
   };
 
   useEffect(() => {
@@ -33,8 +75,27 @@ export default function InterestsSettings() {
   }, []);
 
   return (
+    <>
+    {alertState.success ? (
+      <Snackbar
+        anchorOrigin={{ vertical, horizontal }}
+        open={open}
+        onClose={closeSuccessAlert}
+        message={alertMsg.success}
+        autoHideDuration={2000}
+      />
+    ) : alertState.fail && (
+      <Snackbar
+        anchorOrigin={{ vertical, horizontal }}
+        open={open}
+        onClose={closeSuccessAlert}
+        message={alertMsg.fail}
+        autoHideDuration={2000}
+      />
+    ) }
     <Box overflow="auto" sx={{ maxWidth: '600px' }}>
       <SelectInterests setConfirm={handleUpdateInterests} setUser={setUser} user={user} />
     </Box>
+    </>
   );
 }

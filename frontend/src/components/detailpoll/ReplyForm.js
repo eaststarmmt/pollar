@@ -17,6 +17,7 @@ import ReplyDetail from './ReplyDetail';
 import { getLoggedUserId } from '../../utils/loggedUser';
 import { replyCreate } from '../../services/api/ReplyApi';
 
+
 export default function ReplyForm({ replies }) {
   let replyMap = []; // 댓글 map 으로 변환하기 위한 빈 배열 선언
   replies && (replyMap = replies); // replies 객체가 있을때만 복사

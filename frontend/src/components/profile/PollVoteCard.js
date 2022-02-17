@@ -10,7 +10,7 @@ import {
   Avatar,
   Typography,
   CardContent,
-  Button,
+  Snackbar,
   CardActionArea,
   Stack,
 } from '@mui/material';
@@ -30,14 +30,6 @@ const CardMediaStyle = styled('div')({
   position: 'relative',
   paddingTop: 'calc(100% * 3 / 4)',
 });
-
-// const TitleStyle = styled(Link)({
-//   height: 44,
-//   overflow: 'hidden',
-//   WebkitLineClamp: 2,
-//   display: '-webkit-box',
-//   WebkitBoxOrient: 'vertical',
-// });
 
 const AvatarStyle = styled(Avatar)(({ theme }) => ({
   zIndex: 9,
@@ -135,6 +127,40 @@ export default function PollVoteCard({ poll, isOwner }) {
     navigate(`/poll/${voteId}`);
   };
 
+    // snackbar
+    const [alert, setAlert] = useState({
+      open: false,
+      vertical: 'top',
+      horizontal: 'center',
+    });
+  
+    const { vertical, horizontal, open } = alert;
+    const [alertState, setAlertState] = useState({
+      success: false,
+      fail: false,
+    });
+  
+    const alertMsg= {
+      success:'투표 취소됨. 새로고침해주세요',
+      fail: '처리에 문제가 있었습니다. 다시 요청해주세요 '
+    }
+    const openSuccessAlert = () => {
+      setAlert({
+        ...alert,
+        open: true,
+      });
+    };
+    const closeSuccessAlert = () => {
+      setAlert({
+        ...alert,
+        open: false,
+      });
+      setAlertState({
+        successs: false,
+        fail: false,
+      });
+    };
+
   const handleVoteCancelClick = async (event) => {
     // 뒤의 Card의 onClick 이벤트가 발생하지 않도록 막음
     event.stopPropagation();
@@ -144,14 +170,40 @@ export default function PollVoteCard({ poll, isOwner }) {
     if (result === 'success') {
       // setIsLiked((curr) => !curr);
       // todo 리스트 갱신
-      alert('투표 취소됨. 새로고침해주세요');
+      setAlertState({
+        ...alertState,
+        success: true,
+      });
+      openSuccessAlert();
     } else {
       // todo 에러처리
-      alert('처리에 문제가 있었습니다. 다시 요청해주세요');
+      setAlertState({
+        ...alertState,
+        fail: true,
+      });
+      openSuccessAlert();
     }
   };
 
   return (
+    <>
+    {alertState.success ? (
+      <Snackbar
+        anchorOrigin={{ vertical, horizontal }}
+        open={open}
+        onClose={closeSuccessAlert}
+        message={alertMsg.success}
+        autoHideDuration={2000}
+      />
+    ) : alertState.fail && (
+      <Snackbar
+        anchorOrigin={{ vertical, horizontal }}
+        open={open}
+        onClose={closeSuccessAlert}
+        message={alertMsg.fail}
+        autoHideDuration={2000}
+      />
+    ) }
     <Grid item xs={12} sm={6} md={4}>
       <Card sx={{ position: 'relative' }}>
         <CardActionArea disableRipple onClick={handleCardClick}>
@@ -259,5 +311,6 @@ export default function PollVoteCard({ poll, isOwner }) {
         </CardActionArea>
       </Card>
     </Grid>
+    </>
   );
 }

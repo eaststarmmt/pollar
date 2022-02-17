@@ -97,7 +97,6 @@ export default function ProfileInfoSettings() {
         ...errorState,
         nickNameUnique: false,
       });
-      // alert('사용 가능한 닉네임입니다!');
     } else {
       setErrorState({
         ...errorState,

@@ -29,10 +29,6 @@ function PollImageOptions(props) {
     counter += 1;
 
     voteArr.push(counter);
-    // console.log('=============votearr================');
-    // console.log(voteArr);
-    // console.log('=============imageList================');
-    // console.log(imageList);
     setImageList(voteArr);
   };
 
@@ -54,10 +50,6 @@ function PollImageOptions(props) {
     })
     // fileInput= fileInput.current.value(-1)
   };
-
-  // useEffect(() => {
-
-  // },[fileInput]);
 
   const uploadImage = (e) => {
     // const fileArr = e.target.files[0]; // 여기서 하나씩만 추가하지 않나
@@ -87,27 +79,6 @@ function PollImageOptions(props) {
         &nbsp;&nbsp; 이미지 파일은 .jpg, .png, .jpeg의 형식으로 5mb이하의 크기만 업로드 가능합니다.
       </Typography>
       <br />
-      {imageList.length < 4 && (
-        <Button
-          variant="contained"
-          className="option-button"
-          sx={{ margin: 1 }}
-          onClick={createimageList}
-        >
-          + Add more options
-        </Button>
-      )}
-      <Button
-        onClick={deleteImageList}
-        // onClick={(e) => {
-        //   setVote({
-        //     ...vote,
-        //     imageList: imageList.splice(-1, 1),
-        //   });
-        // }}
-      >
-        Delete Options
-      </Button>
       <Stack direction={{ lg: 'row' }} sx={{ marginTop: 3 }}>
         {imageList &&
           imageList.map((item, i) => (
@@ -138,9 +109,26 @@ function PollImageOptions(props) {
                 />
               </ImageDiv>
           ))}
-        <br />
-        <br />
       </Stack>
+      {imageList.length < 4 && (
+        <Button
+          variant="contained"
+          className="option-button"
+          sx={{ mt: 2 }}
+          size="small"
+          onClick={createimageList}
+        >
+          + 이미지 추가하기 
+        </Button>
+      )}
+      <Button
+        onClick={deleteImageList}
+        size="small"
+        variant="outlined"
+        sx={{ mt: 2, ml:1 }}
+      >
+        - 이미지 삭제 
+      </Button>
       <br /> <br />
     </>
   );
