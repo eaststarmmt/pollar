@@ -4,7 +4,7 @@ import TrendingPollsSlider from '../components/trending/TrendingPollsSlider';
 export default function TrendingPage() {
   return (
     <>
-      <Container maxWidth="lg" sx={{ height: '70vh' }}>
+      <Container maxWidth="lg" sx={{ height: 'auto' }}>
         <Grid
           container
           item

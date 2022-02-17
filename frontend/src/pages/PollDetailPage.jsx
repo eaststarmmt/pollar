@@ -75,7 +75,7 @@ export default function PollDetailPage() {
           </Button>
         </DialogActions>
       </Dialog>
-      <Stack direction="row" spacing={5}>
+      <Stack direction="row" spacing={1}>
         {/* <Detail vote={voteInfo} /> */}
         {/* <PollDetailForm vote={voteInfo} /> */}
         {voteInfo ? (

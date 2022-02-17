@@ -225,20 +225,27 @@ export default function PollDetailCard({ poll, isLoggedUser }) {
           </Button>
         </DialogActions>
       </Dialog>
-      <ImageListItem
+      {/* <ImageListItem
         sx={{
-          width: '100%',
+          width:'auto',
+          display:'flex',
+          flexDirection: 'column',
+          flexdirection: 'column',
         }}
-      >
+        
+      > */}
         <Card
           onClick={handleUnloggedUserClick}
           sx={{
             backgroundColor: checkExpired(voteExpirationTime)
               ? pollBgCol.closedPoll
               : pollBgCol.default,
+              minHeight:550,
+              width:1000,
+              padding:4,
           }}
         >
-          <CardContent>
+          <CardContent >
             <Grid container spacing={2}>
               <Grid item xs={12} md={12}>
                 <Stack
@@ -425,7 +432,7 @@ export default function PollDetailCard({ poll, isLoggedUser }) {
         </Card>
         <SharePollDialog pollId={voteId} openDialog={openShareDialog} />
         {/* </Grid> */}
-      </ImageListItem>
+      {/* </ImageListItem> */}
     </>
   );
 }

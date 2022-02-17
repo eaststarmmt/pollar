@@ -55,7 +55,7 @@ export default function ReplyForm({ replies }) {
         }}
       >
         <CardContent sx={{ overflowY: 'auto' }}>
-          <Typography variant="h6" sx={{ px: 3, mb: 1 }} color="primary">
+          <Typography variant="h6" sx={{ px: 3, mb: 1, mt:2 }} color="primary">
             총 댓글 {replyMap.length}개
           </Typography>
           {replyMap.map((reply, index) => {

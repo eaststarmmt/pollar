@@ -261,22 +261,15 @@ export default function PollTrendingCard({ poll, isLoggedUser }) {
           </Button>
         </DialogActions>
       </Dialog>
-      <ImageListItem
-        sx={{
-          width: '100%',
-          height: '100%',
-          // paddingTop: 2,
-          // paddingX: 1,
-          // backgroundColor: '#826AF9',
-          // height: '50vh',
-        }}
-      >
+
+
         <Card
           onClick={handleUnloggedUserClick}
           sx={{
             paddingTop: 2,
             paddingX: 1,
-            backgroundColor: '#826AF9',
+            backgroundColor: '#c5cae9',
+            minHeight:450
             // backgroundColor: checkExpired(voteExpirationTime)
             //   ? pollBgCol.closedPoll
             //   : pollBgCol.default,
@@ -443,7 +436,7 @@ export default function PollTrendingCard({ poll, isLoggedUser }) {
         </Card>
         <SharePollDialog pollId={voteId} openDialog={openShareDialog} />
         {/* </Grid> */}
-      </ImageListItem>
+
     </>
   );
 }
