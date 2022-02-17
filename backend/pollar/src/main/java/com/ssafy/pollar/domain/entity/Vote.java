@@ -44,19 +44,19 @@ public class Vote {
     @CreationTimestamp  // 현재시간 입력
     private LocalDateTime voteCreateTime;
 
-    @OneToMany(mappedBy = "voteCategory")   // 투표에 포함된 카테고리 리스트
+    @OneToMany(mappedBy = "voteCategory",cascade = CascadeType.REMOVE)   // 투표에 포함된 카테고리 리스트
     private List<VoteCategory> voteCategories = new ArrayList<>();
 
 //    @OneToMany(mappedBy = "voteParticipate")    // 투표 참여자 리스트
 //    private List<VoteParticipate> voteParticipates = new ArrayList<>();
 
-    @OneToMany(mappedBy = "voteLike")   // 좋아요 한 사람 리스트
+    @OneToMany(mappedBy = "voteLike",cascade = CascadeType.REMOVE)   // 좋아요 한 사람 리스트
     private List<VoteLike> voteLikes = new ArrayList<>();
 
-    @OneToMany(mappedBy = "voteReply")  // 댓글 리스트
+    @OneToMany(mappedBy = "voteReply",cascade = CascadeType.REMOVE)  // 댓글 리스트
     private List<Reply> voteReplys = new ArrayList<>();
 
-    @OneToMany(mappedBy = "voteSelect") // 선택된 항목 리스트
+    @OneToMany(mappedBy = "voteSelect",cascade = CascadeType.REMOVE) // 선택된 항목 리스트
     private List<VoteSelect> voteSelects =new ArrayList<>();
 
 //    @OneToMany(mappedBy = "voteselectId")

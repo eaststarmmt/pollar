@@ -157,7 +157,7 @@ public class VoteServiceImpl implements VoteService {
         return new VoteDto(vote.getVoteId(),vote.getVoteName(),vote.getAuthor().getUsername(),vote.getVoteContent()
                 ,vote.getVoteType(),vote.getVoteCreateTime(),vote.getVoteExpirationTime(),vote.getUserAnonymouseType()
                 ,vote.getVoteAnonymouseType(),voteCategoryDtoList,selectionDtoList,likeCount,voteReplyCount
-                ,user.getUserProfilePhoto(),parCount,isVoted,isLiked,userVoteSelection); // 해당 투표를 dto로 변환 후 리턴
+                ,vote.getAuthor().getUserProfilePhoto(),parCount,isVoted,isLiked,userVoteSelection); // 해당 투표를 dto로 변환 후 리턴
     }
 
     @Override
