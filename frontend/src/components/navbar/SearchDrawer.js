@@ -104,7 +104,6 @@ export default function SearchDrawer(user) {
     } else if (option === 2) {
       const data = await getFeedSearchBar(param);
       setSearchList(data.feedList);
-      console.log(searchList);
     } else {
       setSearchList([]);
     }

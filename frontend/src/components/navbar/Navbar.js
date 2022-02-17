@@ -65,12 +65,12 @@ export default function Navbar({ onOpenSidebar, isFullLayout }) {
   const isLogged = useRecoilValue(isLoggedState);
 
   const isUserInfoUpdated = useRecoilValue(isUserInfoUpdatedState);
-
   // (해결)
   //// 문제점: 새로고침 시 recoil state 날라감 (line 90)
   // JWT 검사로 변경 필요
   const [loggedUserInfo, setLoggedUserInfo] = useState();
 
+  console.log(loggedUserInfo.userId)
   useEffect(() => {
     // localStorage에서 정보 가져옴
     const localStorageUserInfo = getLoggedUserInfo();
@@ -108,11 +108,10 @@ export default function Navbar({ onOpenSidebar, isFullLayout }) {
                   </Typography>
                 </NavLogo>
                 <NavSection navConfig={sidebarConfig} mr={10} />
-
+                <SearchDrawer user={loggedUserInfo}/>
                 <Box sx={{ flexGrow: 1 }} />
                 {loggedUserInfo ? (
                   <>
-                    <SearchDrawer />
                     <NotificationsPopover />
                     <AccountPopover account={loggedUserInfo} />
                   </>
