@@ -331,7 +331,9 @@ export default function PollTrendingCard({ poll, isLoggedUser }) {
                           voteResultPercentage={
                             //? 총 투표수가 0인 경우 오류 방지
                             typeof pollResult !== 'undefined' && pollResult.total > 0
-                              ? (pollResult.selectionCountsList[index] * 100) / pollResult.total
+                              ? parseInt(
+                                  (pollResult.selectionCountsList[index] * 100) / pollResult.total
+                                )
                               : 0
                           }
                         />
@@ -353,7 +355,10 @@ export default function PollTrendingCard({ poll, isLoggedUser }) {
                               voteResultPercentage={
                                 //? 총 투표수가 0인 경우 오류 방지
                                 typeof pollResult !== 'undefined' && pollResult.total > 0
-                                  ? (pollResult.selectionCountsList[index] * 100) / pollResult.total
+                                  ? parseInt(
+                                      (pollResult.selectionCountsList[index] * 100) /
+                                        pollResult.total
+                                    )
                                   : 0
                               }
                               //// sx={{ width: '100%', height: 'auto' }}

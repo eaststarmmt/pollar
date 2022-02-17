@@ -140,7 +140,7 @@ export default function PollDetailCard({ poll }) {
     console.log();
   }, [pollResult]);
 
-  console.log(isLiked)
+  console.log(isLiked);
 
   return (
     <>
@@ -248,7 +248,9 @@ export default function PollDetailCard({ poll }) {
                           isSelectedVote={item.selectionId === userVoteSelection}
                           voteResultPercentage={
                             typeof pollResult !== 'undefined'
-                              ? (pollResult.selectionCountsList[index] * 100) / pollResult.total
+                              ? parseInt(
+                                  (pollResult.selectionCountsList[index] * 100) / pollResult.total
+                                )
                               : null
                           }
                         />
@@ -269,7 +271,10 @@ export default function PollDetailCard({ poll }) {
                               // 투표 마감 상태의 경우에는 투표하지 않았을 경우 결과 보여주지 않음
                               voteResultPercentage={
                                 typeof pollResult !== 'undefined'
-                                  ? (pollResult.selectionCountsList[index] * 100) / pollResult.total
+                                  ? parseInt(
+                                      (pollResult.selectionCountsList[index] * 100) /
+                                        pollResult.total
+                                    )
                                   : null
                               }
                               //// sx={{ width: '100%', height: 'auto' }}

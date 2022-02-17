@@ -39,11 +39,11 @@ const InfoStyle = styled('div')(({ theme }) => ({
 }));
 
 export default function PollDetailForm(props) {
-  const {vote}= props
+  const { vote } = props;
   const navigate = useNavigate();
-  useEffect(()=> {
-    console.log(vote)
-  },[])
+  useEffect(() => {
+    console.log(vote);
+  }, []);
   // const {
   //   vote.voteId,
   //   vote.voteName,
@@ -93,7 +93,9 @@ export default function PollDetailForm(props) {
 
   /* '좋아요(좋아요해제)' 버튼 클릭시 */
   const handleToggleLikeClick = async () => {
-    const result = isLiked ? await requestPollUnlike(vote.voteId) : await requestPollLike(vote.voteId);
+    const result = isLiked
+      ? await requestPollUnlike(vote.voteId)
+      : await requestPollLike(vote.voteId);
     if (result === 'success') {
       setIsLiked((curr) => !curr);
     } else {
@@ -143,7 +145,7 @@ export default function PollDetailForm(props) {
     console.log();
   }, [pollResult]);
 
-  console.log(isLiked)
+  console.log(isLiked);
 
   return (
     <>
@@ -251,7 +253,9 @@ export default function PollDetailForm(props) {
                           isSelectedVote={item.selectionId === vote.userVoteSelection}
                           voteResultPercentage={
                             typeof pollResult !== 'undefined'
-                              ? (pollResult.selectionCountsList[index] * 100) / pollResult.total
+                              ? parseInt(
+                                  (pollResult.selectionCountsList[index] * 100) / pollResult.total
+                                )
                               : null
                           }
                         />
@@ -272,7 +276,10 @@ export default function PollDetailForm(props) {
                               // 투표 마감 상태의 경우에는 투표하지 않았을 경우 결과 보여주지 않음
                               voteResultPercentage={
                                 typeof pollResult !== 'undefined'
-                                  ? (pollResult.selectionCountsList[index] * 100) / pollResult.total
+                                  ? parseInt(
+                                      (pollResult.selectionCountsList[index] * 100) /
+                                        pollResult.total
+                                    )
                                   : null
                               }
                               //// sx={{ width: '100%', height: 'auto' }}

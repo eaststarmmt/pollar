@@ -55,7 +55,7 @@ export default function TrendingPollsSlider() {
     //   console.log('로그인한 사용자. 투표 가능');
     //   setIsLoggedUser(true);
     // }
-    // getPollList();
+    getPollList();
   }, [isLogged]);
 
   return (
