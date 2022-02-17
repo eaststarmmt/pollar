@@ -87,6 +87,13 @@ import {
 import SharePollDialog from '../common/SharePollDialog';
 import PollTextButton from '../common/PollTextButton';
 
+/* 상황별로 탭의 배경색을 변경한다 */
+const pollBgCol = {
+  closedPoll: '#DFE3Ef',
+  default: '#fff',
+  trending: '#219',
+};
+
 const InfoStyle = styled('div')(({ theme }) => ({
   display: 'flex',
   flexWrap: 'wrap',
@@ -95,10 +102,8 @@ const InfoStyle = styled('div')(({ theme }) => ({
   color: theme.palette.text.disabled,
 }));
 
-export default function PollTrendingCard({ poll, isLoggedUser }) {
+export default function PollDetailCard({ poll, isLoggedUser }) {
   const navigate = useNavigate();
-
-  console.log(isLoggedUser);
 
   const {
     voteId,
@@ -185,6 +190,7 @@ export default function PollTrendingCard({ poll, isLoggedUser }) {
 
   /* 작성자 프로필 클릭 시 */
   const handleProfileClick = () => {
+    console.log(isLoggedUser);
     // console.log(state);
     // setIsVoted(state);
     if (isLoggedUser) navigate(`/users/profile/${author}`);
@@ -235,34 +241,51 @@ export default function PollTrendingCard({ poll, isLoggedUser }) {
       <ImageListItem
         sx={{
           width: '100%',
-          height: '100%',
-          // paddingTop: 2,
-          // paddingX: 1,
-          // backgroundColor: '#826AF9',
-          // height: '50vh',
         }}
       >
         <Card
           onClick={handleUnloggedUserClick}
           sx={{
-            paddingTop: 2,
-            paddingX: 1,
-            backgroundColor: '#826AF9',
-            // backgroundColor: checkExpired(voteExpirationTime)
-            //   ? pollBgCol.closedPoll
-            //   : pollBgCol.default,
+            backgroundColor: checkExpired(voteExpirationTime)
+              ? pollBgCol.closedPoll
+              : pollBgCol.default,
           }}
         >
           <CardContent>
             <Grid container spacing={2}>
               <Grid item xs={12} md={12}>
+                <Stack
+                  direction="row"
+                  onClick={handleProfileClick}
+                  alignItems="center"
+                  justifyContent="space-between"
+                >
+                  <Stack direction="row" alignItems="center" spacing={1}>
+                    <Avatar
+                      alt={userProfilePhoto}
+                      src={userProfilePhoto}
+                      // onClick={handleProfileClick}
+                    />
+                    <Typography variant="body1" color="primary">
+                      {author}
+                    </Typography>
+                  </Stack>
+                  <Box>
+                    <IconButton aria-label="share" onClick={handleShareClick}>
+                      <ShareIcon sx={{ fontSize: '0.8em', color: 'text.disabled' }} />
+                    </IconButton>
+                    <IconButton aria-label="add to favorites" onClick={handleToggleLikeClick}>
+                      {isLiked ? (
+                        <FavoriteRoundedIcon sx={{ fontSize: '1em' }} color="error" />
+                      ) : (
+                        <FavoriteBorderRoundedIcon sx={{ fontSize: '1em' }} color="disabled" />
+                      )}
+                    </IconButton>
+                  </Box>
+                </Stack>
+
                 <Stack direction="row" justifyContent="space-between">
-                  <Avatar
-                    alt={userProfilePhoto}
-                    src={userProfilePhoto}
-                    onClick={handleProfileClick}
-                  />
-                  <Stack direction="row" spacing={0.5} justifyContent="center" mb={1}>
+                  <Stack direction="row" spacing={0.5} justifyContent="center" mb={1} mt={1}>
                     {voteCategoriesName.length > 0
                       ? voteCategoriesName.map((item, index) => (
                           <Chip
@@ -283,39 +306,26 @@ export default function PollTrendingCard({ poll, isLoggedUser }) {
                         ))
                       : null}
                   </Stack>
-
-                  <Box>
-                    <IconButton aria-label="share" onClick={handleShareClick}>
-                      <ShareIcon sx={{ fontSize: '0.8em', color: '#cccc' }} />
-                    </IconButton>
-                    <IconButton aria-label="add to favorites" onClick={handleToggleLikeClick}>
-                      {isLiked ? (
-                        <FavoriteRoundedIcon sx={{ fontSize: '1em' }} color="error" />
-                      ) : (
-                        <FavoriteBorderRoundedIcon sx={{ fontSize: '1em' }} color="disabled" />
-                      )}
-                    </IconButton>
-                  </Box>
                 </Stack>
 
-                <CardActionArea onClick={handleCardClick}>
-                  <Stack direction="column" alignItems="baseline" spacing={0}>
-                    <Typography variant="h5" component="div" textAlign="center" width="100%">
-                      {voteName}
-                    </Typography>
-                    {/*//! 여기 부분은 다르게! 익명투표 여부만 표현하자. */}
-                    <Typography variant="caption" color="#ccc" width="100%" mb={2}>
-                      {/* {userAnonymousType ? '작성자익명' : null} */}
-                      {/* {userAnonymousType && voteAnonymousType ? ' | ' : null} */}
-                      {voteAnonymousType ? '익명투표' : null}
-                    </Typography>
-                  </Stack>
-
-                  <Typography variant="body2" sx={{ fontSize: 14, textAlign: 'left' }}>
-                    {/* 투표내용... (최대 100자) */}
-                    {voteContent}
+                {/* <CardActionArea onClick={handleCardClick}> */}
+                <Stack direction="column" alignItems="baseline" spacing={0}>
+                  <Typography variant="h5" component="div" textAlign="center" width="100%">
+                    {voteName}
                   </Typography>
-                </CardActionArea>
+                  {/*//! 여기 부분은 다르게! 익명투표 여부만 표현하자. */}
+                  <Typography variant="caption" color="text.disabled" width="100%" mb={2}>
+                    {/* {userAnonymousType ? '작성자익명' : null} */}
+                    {/* {userAnonymousType && voteAnonymousType ? ' | ' : null} */}
+                    {voteAnonymousType ? '익명투표' : null}
+                  </Typography>
+                </Stack>
+
+                <Typography variant="body2" sx={{ fontSize: 14, textAlign: 'left' }}>
+                  {/* 투표내용... (최대 100자) */}
+                  {voteContent}
+                </Typography>
+                {/* </CardActionArea> */}
               </Grid>
               <Grid item xs={12} md={12}>
                 {voteType ? (
@@ -378,7 +388,7 @@ export default function PollTrendingCard({ poll, isLoggedUser }) {
                       display: 'flex',
                       alignItems: 'center',
                       ml: index === 0 ? 0 : 1.5,
-                      color: '#ccc',
+                      color: 'text.disabled',
                     }}
                   >
                     <Box component={info.icon} sx={{ width: 16, height: 16, mr: 0.5 }} />
@@ -387,7 +397,7 @@ export default function PollTrendingCard({ poll, isLoggedUser }) {
                 ))}
               </InfoStyle>
               <Stack direction="row" alignItems="baseline">
-                <Typography variant="caption" color="white" gutterBottom>
+                <Typography variant="caption" color="text.disabled" gutterBottom>
                   {fToNow(voteExpirationTime).replace('후', '남음')}
                   {/* {fDateTimeSuffix(voteCreateTime)} ~ {fDateTimeSuffix(voteExpirationTime)}{' '} */}
                 </Typography>

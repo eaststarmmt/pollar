@@ -89,7 +89,6 @@ export default function Navbar({ onOpenSidebar, isFullLayout }) {
       //// 갱신된 사용자정보 반영 후 check
       //// setIsUserInfoUpdated(false);
     } else {
-      console.log('sldfkj');
       // 로그아웃된 상태라면, 사용자 정보 초기화
       setLoggedUserInfo();
     }

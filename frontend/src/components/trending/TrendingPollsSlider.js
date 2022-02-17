@@ -45,7 +45,7 @@ export default function TrendingPollsSlider() {
 
   useEffect(() => {
     // todo 콘솔 찍어보는 용으로 아래 쓰고, 이 아래부분으로 간결하게 대체
-    setIsLoggedUser(isLogged || !checkUserLogged());
+    setIsLoggedUser(isLogged || checkUserLogged());
     // if (!isLogged && !checkUserLogged()) {
     //   console.log(
     //     '로그인안한 사용자. 투표 불가능 / 좋아요 불가능 / 클릭 시 로그인 창으로 redirect'
@@ -55,7 +55,7 @@ export default function TrendingPollsSlider() {
     //   console.log('로그인한 사용자. 투표 가능');
     //   setIsLoggedUser(true);
     // }
-    getPollList();
+    // getPollList();
   }, [isLogged]);
 
   return (

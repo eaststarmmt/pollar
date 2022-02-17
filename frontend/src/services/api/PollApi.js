@@ -118,11 +118,13 @@ export const getPollSelectionStatus = async (voteId) => {
 };
 
 export const getVoteInfo = async (voteId) => {
+  const userId = getLoggedUserId();
+  let params;
+  if (typeof userId !== 'undefined') {
+    params = { params: { userId } };
+  }
   // voteId를 pathvariable로 보내서 vote dto를 받아옴
-  const response = await instance.get(COMMON + `/${voteId}`, {
-    params: {
-      voteId,
-    },
-  });
+  const response = await instance.get(COMMON + `/${voteId}`, params);
+  console.log(response.data);
   return response.data;
 };

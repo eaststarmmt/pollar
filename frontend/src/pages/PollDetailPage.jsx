@@ -13,6 +13,7 @@ import { isLoggedState } from '../atoms/atoms';
 import { checkUserLogged, getLoggedUserId } from '../utils/loggedUser';
 import PollDetailForm from '../components/detailpoll/PollDetailForm';
 import Detail from '../components/detailpoll/Detail';
+import PollDetailCard from '../components/detailpoll/PollDetailCard';
 
 export default function PollDetailPage() {
   // 로그인된 사용자만 사용가능 (recoil state watch하자)
@@ -48,7 +49,15 @@ export default function PollDetailPage() {
 
   return (
     <>
-      <Stack direction="row">
+      <Stack direction="row" spacing={5}>
+        {/* <Detail vote={voteInfo} /> */}
+        {/* <PollDetailForm vote={voteInfo} /> */}
+        {voteInfo ? (
+          <PollDetailCard poll={voteInfo} isLoggedUser={isLogged || checkUserLogged()} />
+        ) : null}
+        {replies ? <ReplyForm replies={replies} /> : null}
+      </Stack>
+      {/* <Stack direction="row">
         <Card>
           <Box
             component="div"
@@ -61,13 +70,13 @@ export default function PollDetailPage() {
           >
             {voteInfo ? (
               <>
-                {/* <PollDetailForm vote={voteInfo} /> */}
+                <PollDetailForm vote={voteInfo} />
                 <ReplyForm replies={replies} />
               </>
             ) : null}
           </Box>
         </Card>
-      </Stack>
+      </Stack> */}
     </>
   );
 }
