@@ -16,10 +16,10 @@ public class Category {
     @Column(name = "categoryId")
     private long categoryId;
 
-    @OneToMany(mappedBy = "category")
+    @OneToMany(mappedBy = "category",cascade = CascadeType.REMOVE)
     private List<UserCategory> UserCategories = new ArrayList<>();
 
-    @OneToMany(mappedBy = "category")
+    @OneToMany(mappedBy = "category",cascade = CascadeType.REMOVE)
     private List<VoteCategory> voteCategories = new ArrayList<>();
 
     @Column(name = "categoryNameBig" ,length = 20)

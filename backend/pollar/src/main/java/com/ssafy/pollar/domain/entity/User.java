@@ -49,22 +49,22 @@ public class User implements UserDetails {
     @Column(name = "userProfilePhoto" ,length = 1000)
     private String userProfilePhoto;
 
-    @OneToOne(mappedBy = "userId")
+    @OneToOne(mappedBy = "userId" ,cascade = CascadeType.REMOVE)
     private UserNotificationState userNotificationState;
 
-    @OneToMany(mappedBy = "userCategory")
+    @OneToMany(mappedBy = "userCategory",cascade = CascadeType.REMOVE)
     private List<UserCategory> UserCategories = new ArrayList<>();
 
-    @OneToMany(mappedBy = "userParticipate")
+    @OneToMany(mappedBy = "userParticipate",cascade = CascadeType.REMOVE)
     private List<VoteParticipate> userParticipates = new ArrayList<>();
 
-    @OneToMany(mappedBy = "userVoteLike")
+    @OneToMany(mappedBy = "userVoteLike",cascade = CascadeType.REMOVE)
     private  List<VoteLike> userVoteLikes = new ArrayList<>();
 
-    @OneToMany(mappedBy = "replyUser")
+    @OneToMany(mappedBy = "replyUser",cascade = CascadeType.REMOVE)
     private List<Reply> userReplys = new ArrayList<>();
 
-    @OneToMany(mappedBy = "author")
+    @OneToMany(mappedBy = "author",cascade = CascadeType.REMOVE)
     private List<Vote> voteCreates = new ArrayList<>();
 
     // user안에 update메소드를 만들어서 request를 param으로 바꿔서
