@@ -343,10 +343,11 @@ public class VoteServiceImpl implements VoteService {
             boolean isVoted=false;
             String userprofilePhoto = null;
             long userselect = 0;
+            User author = entity.getAuthor();
+            if(author.getUserProfilePhoto()!=null)
+                userprofilePhoto = author.getUserProfilePhoto();
             if(userId!=null){
                 User user = userRepository.findByUserId(userId).get();
-                if(user.getUserProfilePhoto()!=null)
-                    userprofilePhoto = user.getUserProfilePhoto();
                 if(voteLikeRepository.findByUserVoteLikesAndVoteLikesByQuery(user,entity).isPresent())
                     isLiked=true;
 

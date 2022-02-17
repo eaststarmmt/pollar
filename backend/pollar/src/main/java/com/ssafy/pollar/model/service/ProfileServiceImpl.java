@@ -70,10 +70,11 @@ public class ProfileServiceImpl implements ProfileService{
                     userVoteSelection = vote.getVoteSelects().get(j).getVoteSelectId();
                 }
             }
+            String authorProfilePhoto = voteList.get(i).getAuthor().getUserProfilePhoto();
             voteDtoList.add(new VoteDto(
                     vote.getVoteId(),vote.getVoteName(),vote.getAuthor().getUsername(),vote.getVoteContent(),vote.getVoteType(),vote.getVoteCreateTime()
                     ,vote.getVoteExpirationTime(),vote.getUserAnonymouseType(),vote.getVoteAnonymouseType()
-                    ,voteCategoryDtoList,selectionDtoList,voteLikesCount,voteReplyCount,profileUser.getUserProfilePhoto()
+                    ,voteCategoryDtoList,selectionDtoList,voteLikesCount,voteReplyCount,authorProfilePhoto
                     ,voteParticipateCount,isVoted,isLiked,userVoteSelection
             ));
         }
@@ -123,10 +124,11 @@ public class ProfileServiceImpl implements ProfileService{
                     break;
                 }
             }
+            String authorProfilePhoto = vote.getAuthor().getUserProfilePhoto();
             voteDtoList.add(new VoteDto(
                     vote.getVoteId(),vote.getVoteName(),vote.getAuthor().getUsername(),vote.getVoteContent(),vote.getVoteType(),vote.getVoteCreateTime()
                     ,vote.getVoteExpirationTime(),vote.getUserAnonymouseType(),vote.getVoteAnonymouseType()
-                    ,voteCategoryDtoList,selectionDtoList,voteLikesCount,voteReplyCount,profileUser.getUserProfilePhoto()
+                    ,voteCategoryDtoList,selectionDtoList,voteLikesCount,voteReplyCount,authorProfilePhoto
                     ,voteParticipateCount,isVoted,isLiked,0
             ));
         }
@@ -180,10 +182,11 @@ public class ProfileServiceImpl implements ProfileService{
                     userVoteSelection = vote.getVoteSelects().get(j).getVoteSelectId();
                 }
             }
+            String authorProfilePhoto = vote.getAuthor().getUserProfilePhoto();
             voteDtoList.add(new VoteDto(
                     vote.getVoteId(),vote.getVoteName(),vote.getAuthor().getUsername(),vote.getVoteContent(),vote.getVoteType(),vote.getVoteCreateTime()
                     ,vote.getVoteExpirationTime(),vote.getUserAnonymouseType(),vote.getVoteAnonymouseType()
-                    ,voteCategoryDtoList,selectionDtoList,voteLikesCount,voteReplyCount,profileUser.getUserProfilePhoto()
+                    ,voteCategoryDtoList,selectionDtoList,voteLikesCount,voteReplyCount,authorProfilePhoto
                     ,voteParticipateCount,isVoted,isLiked,userVoteSelection
             ));
         }
