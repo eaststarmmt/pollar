@@ -37,7 +37,7 @@ export default function PollCreatePage() {
       // setInterval(()=> {
       //   openAlert();
       // },2000)
-      // navigate('/users/login');
+      navigate('/users/login');
     }
   }, []);
 

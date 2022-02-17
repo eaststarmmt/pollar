@@ -134,7 +134,7 @@ export default function SignupWizard() {
             </Typography>
             <Stack direction="row" justifyContent="space-between">
               <Typography variant="body2" color="text.secondary" sx={{ textAlign: 'center' }}>
-                Already have an account?&nbsp;
+                이미 회원이신가요?&nbsp;
               </Typography>
               <Typography variant="subtitle2">
                 <Link to="../login" component={RouterLink}>

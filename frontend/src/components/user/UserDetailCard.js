@@ -43,7 +43,7 @@ export default function UserDetailCard(props) {
                 />
               </Grid>
               <Grid item xs={12} justify="center">
-                <Typography component="subtitle2" variant="overline" textAlign="center">
+                <Typography sx={{ fontSize: 15}} variant="overline" textAlign="center">
                   <p>{user.userNickname}</p>
                 </Typography>
                 <Typography component="caption" variant="caption" color="text.secondary">

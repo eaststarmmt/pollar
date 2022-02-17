@@ -22,9 +22,7 @@ export default function HomePage() {
                 <br />
                 Anywhere
               </Typography>
-              <Typography variant="h6" color="primary.light">
-                선택이 두려우시면 투표로 결정하세요를레히
-                <br />
+              <Typography variant="h6" color="text.disabled">
                 투표를 만들어 고민을 나누고,
                 <br />
                 투표를 하면서 의견을 나눠주세요.

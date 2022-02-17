@@ -12,11 +12,11 @@ import alertTriangleFill from '@iconify/icons-eva/alert-triangle-fill';
 const getIcon = (name) => <Icon icon={name} width={22} height={22} />;
 
 const sidebarConfig = [
-  {
-    title: 'About',
-    path: '/about',
-    icon: getIcon(pieChart2Fill),
-  },
+  // {
+  //   title: 'About',
+  //   path: '/about',
+  //   icon: getIcon(pieChart2Fill),
+  // },
   {
     title: 'Trending',
     path: '/trending',
@@ -28,7 +28,7 @@ const sidebarConfig = [
     icon: getIcon(shoppingBagFill),
   },
   {
-    title: '전체유저',
+    title: 'Members',
     path: '/users/all',
     icon: getIcon(shoppingBagFill),
   },

@@ -324,8 +324,8 @@ export default function SearchDrawer(user) {
             sx={{ mr: 1, fontWeight: 'fontWeightBold' }}
             onChange={handleInput}
           />
-          <Button variant="contained" onClick={handleSearch}>
-            Search
+          <Button variant="contained" onClick={toggleDrawer('top', false)}>
+            Close
           </Button>
         </SearchbarStyle>
         {option === 1 ? <>{userlist()}</> : <>{feedlist()}</>}

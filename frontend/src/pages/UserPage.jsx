@@ -46,7 +46,7 @@ function UserPage() {
         }}
       >
         <Typography variant="h3" gutterBottom color="primary">
-          Pollar User
+          Pollar Members
         </Typography>
         <Grid container spacing={2}>
           {userInfo.map((user, index) => (

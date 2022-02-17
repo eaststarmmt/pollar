@@ -303,7 +303,7 @@ function SignupForm(props) {
               fullWidth
               autoComplete="userId"
               type="text"
-              label="Username(ID)"
+              label="아이디"
               value={user.userId}
               onChange={(e) =>
                 setUser({
@@ -329,7 +329,7 @@ function SignupForm(props) {
                   fullWidth
                   autoComplete="email"
                   type="email"
-                  label="Email address"
+                  label="이메일"
                   value={user.userEmail}
                   onChange={(e) =>
                     setUser({
@@ -410,7 +410,7 @@ function SignupForm(props) {
               fullWidth
               autoComplete="userNickname"
               type="text"
-              label="Nickname"
+              label="닉네임 "
               value={user.userNickname}
               onChange={(e) =>
                 setUser({
@@ -435,7 +435,7 @@ function SignupForm(props) {
             fullWidth
             autoComplete="password"
             type={showPassword ? 'text' : 'password'}
-            label="Password"
+            label="비밀번호"
             value={user.password}
             InputProps={{
               endAdornment: (
@@ -458,7 +458,7 @@ function SignupForm(props) {
           />
           <Stack direction={{ xs: 'column', md: 'row' }} spacing={2}>
             <Stack direction={{ xs: 'column', sm: 'row' }} alignItems="center" spacing={1}>
-              <FormLabel id="gender-radio-group">Birthday</FormLabel>
+              <FormLabel id="gender-radio-group">생일</FormLabel>
               <TextField
                 required
                 id="date"
@@ -477,7 +477,7 @@ function SignupForm(props) {
               />
             </Stack>
             <Stack direction={{ xs: 'column', sm: 'row' }} alignItems="center" spacing={2}>
-              <FormLabel id="gender-radio-group">Gender</FormLabel>
+              <FormLabel id="gender-radio-group">성별</FormLabel>
               <RadioGroup
                 row
                 aria-labelledby="demo-controlled-radio-buttons-group"

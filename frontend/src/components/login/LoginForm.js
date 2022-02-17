@@ -37,8 +37,8 @@ export default function LoginForm() {
   const setIsLoggedState = useSetRecoilState(isLoggedState);
 
   const LoginSchema = Yup.object().shape({
-    userId: Yup.string().required('Username is required'),
-    password: Yup.string().required('Password is required'),
+    userId: Yup.string().required('아이디는 필수 입력 항목입니다. '),
+    password: Yup.string().required('비밀번호는 필수 입력 항목입니다.'),
   });
 
   const formik = useFormik({
@@ -104,9 +104,9 @@ export default function LoginForm() {
           <Stack spacing={2}>
             <TextField
               fullWidth
-              autoComplete="username"
+              autoComplete="userId"
               type="userId"
-              label="Username"
+              label="아이디"
               {...getFieldProps('userId')}
               error={Boolean(touched.userId && errors.userId)}
               helperText={touched.userId && errors.userId}
@@ -121,7 +121,7 @@ export default function LoginForm() {
               fullWidth
               autoComplete="current-password"
               type={showPassword ? 'text' : 'password'}
-              label="Password"
+              label="비밀번호"
               {...getFieldProps('password')}
               InputProps={{
                 endAdornment: (
@@ -153,11 +153,7 @@ export default function LoginForm() {
             Login
           </LoadingButton>
 
-          <Stack direction="row" alignItems="center" justifyContent="space-between">
-            {/* <FormControlLabel
-              control={<Checkbox {...getFieldProps('remember')} checked={values.remember} />}
-              label="Remember me"
-            /> */}
+          {/* <Stack direction="row" alignItems="center" justifyContent="space-between">
             <Typography variant="body2" color="text.secondary">
               Forgot{' '}
               <Link component={RouterLink} variant="subtitle2" to="#">
@@ -169,7 +165,7 @@ export default function LoginForm() {
               </Link>
               ?
             </Typography>
-          </Stack>
+          </Stack> */}
         </Form>
       </FormikProvider>
     </>

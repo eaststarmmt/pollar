@@ -59,14 +59,14 @@ export default function Login() {
                 <Typography variant="h3" gutterBottom color="primary">
                   Login
                 </Typography>
-                <Typography sx={{ color: 'text.secondary' }}>Welcome back!</Typography>
+                <Typography sx={{ color: 'text.secondary' }}>로그인하고 투표에 참여해보세요!</Typography>
               </Stack>
               <LoginForm />
-              <AuthSocial />
-              <Typography variant="body2" align="center" sx={{ mt: 3 }}>
-                Don’t have an account?&nbsp;
+              {/* <AuthSocial /> */}
+              <Typography variant="body2" align="center" sx={{ mt: 3 }} color="primary.light">
+                아직 회원이 아니신가요?&nbsp;
                 <Link variant="subtitle2" component={RouterLink} to="../signup">
-                  Get started
+                  Signup
                 </Link>
               </Typography>
             </Card>
