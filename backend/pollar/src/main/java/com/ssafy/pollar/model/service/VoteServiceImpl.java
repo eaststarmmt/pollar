@@ -168,10 +168,14 @@ public class VoteServiceImpl implements VoteService {
     }
 
     @Override
-    public void insertLike(String userId, Long voteId) throws Exception{    //좋아요 누르기
+    public boolean insertLike(String userId, Long voteId) throws Exception{    //좋아요 누르기
         User user = userRepository.findByUserId(userId).get();
         Vote vote = voteRepository.findById(voteId).get();
-        voteLikeRepository.save( VoteLike.builder().userVoteLike(user).voteLike(vote).build());
+        if(voteLikeRepository.countVoteLikeByQuery(user,vote)==0){
+            voteLikeRepository.save( VoteLike.builder().userVoteLike(user).voteLike(vote).build());
+            return true;
+        }
+        else return false;
     }
     @Override
     public void cancelLike(String userId, Long voteId) throws Exception{    //좋아요 취소
@@ -205,12 +209,19 @@ public class VoteServiceImpl implements VoteService {
     }
 
     @Override
-    public void userVoteSelection(String userId, Long selectionId) throws Exception {   //유저가 선택지에 투표
-        VoteParticipate voteParticipate = VoteParticipate.builder()
-                .userParticipate(userRepository.findByUserId(userId).get())
-                .voteParticipate(voteSelectRepository.findById(selectionId).get())
-                .build();
-        voteParticipateRepository.save(voteParticipate);
+    public boolean userVoteSelection(String userId, Long selectionId) throws Exception {   //유저가 선택지에 투표
+
+        User user = userRepository.findByUserId(userId).get();
+        VoteSelect voteSelect = voteSelectRepository.findById(selectionId).get();
+        if(voteParticipateRepository.countAllByUserParticipateAndVoteParticipate(user,voteSelect)==0) {
+
+            voteParticipateRepository.save(VoteParticipate.builder()
+                    .userParticipate(user)
+                    .voteParticipate(voteSelect)
+                    .build());
+            return true;
+        }
+        else return false;
     }
 
     @Override

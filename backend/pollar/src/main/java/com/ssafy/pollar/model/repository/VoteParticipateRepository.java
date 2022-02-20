@@ -18,4 +18,6 @@ public interface VoteParticipateRepository extends JpaRepository<VoteParticipate
 
     @Query(value = "select u from VoteParticipate vp join vp.userParticipate u where vp.voteParticipate=?1")
     List<User> getUserList(VoteSelect select);
+
+    int countAllByUserParticipateAndVoteParticipate(User user, VoteSelect voteSelect);
 }

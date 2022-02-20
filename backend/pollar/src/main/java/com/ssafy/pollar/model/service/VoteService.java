@@ -12,12 +12,12 @@ public interface VoteService {
     void delete(Long voteId) throws Exception;  // 게시글 삭제
     VoteDto detail(Long voteId,String userId) throws Exception;                // 게시글 상세보기
     List<VoteDto> getVoteList(String userId) throws Exception;
-    void insertLike(String userId, Long voteId)throws Exception;
+    boolean insertLike(String userId, Long voteId)throws Exception;
     void cancelLike(String userId , Long voteId)throws Exception;
     int countLike(Long voteId)throws Exception;
     List<String> getLikeList(Long voteId)throws Exception;
     List<SelectionDto> getVoteSelectionList(Long voteId)throws Exception;
-    void userVoteSelection(String userId, Long selectionId)throws Exception;
+    boolean userVoteSelection(String userId, Long selectionId)throws Exception;
     void cancelUserVoteSelection(String userId, Long selectionId)throws Exception;
     List<ParticipateDto> getVoteUserList(Long voteId)throws Exception;
     List<VoteDto> getUserMadeVoteList(String userId)throws Exception;

@@ -21,4 +21,7 @@ public interface VoteLikeRepository extends JpaRepository<VoteLike,Long> {
 
     @Query(value = "select vl from VoteLike vl where vl.userVoteLike=?1")
     Optional<List<VoteLike>> findAllByUserVoteLikesByQuery(User user);
+
+    @Query(value ="select count(vl) from VoteLike vl where vl.userVoteLike =?1 and vl.voteLike=?2")
+    int countVoteLikeByQuery(User user, Vote vote);
 }

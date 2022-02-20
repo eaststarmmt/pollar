@@ -29,6 +29,7 @@ public class VoteController {
     private final VoteService voteService;
     private final NotificationService notificationService; // 알람 서비스
     private static final String SUCCESS = "success";
+    private static final String FAIL = "fail";
     @ApiOperation(value = "피드생성", notes = "피드 정보를 입력한다.")
     @PostMapping("/create")
     public ResponseEntity<Map<String,Object>> createVote(@RequestPart(value = "voteDto") VoteDto voteDto, @RequestPart(value = "votePhotos", required = false) List<MultipartFile> votePhotos) throws Exception {
@@ -64,11 +65,13 @@ public class VoteController {
     public ResponseEntity<String> likeVote(@RequestBody @ApiParam(value ="좋아요 누른 유저 id , 피드 id")Map<String,Object> map)throws Exception{
         String userId =(String) map.get("userId");
         int voteId = (int) map.get("voteId");
-        voteService.insertLike(userId, (long)voteId);
-        // 좋아요 알림
-        String receiveId = voteService.detail((long)voteId,userId).getAuthor();
-        notificationService.feedLikeNotification((long)voteId,(String)map.get("userId"),receiveId);
-        return new ResponseEntity<>(SUCCESS,HttpStatus.OK);
+        if(voteService.insertLike(userId, (long)voteId)) {
+            // 좋아요 알림
+            String receiveId = voteService.detail((long) voteId, userId).getAuthor();
+            notificationService.feedLikeNotification((long) voteId, (String) map.get("userId"), receiveId);
+            return new ResponseEntity<>(SUCCESS, HttpStatus.OK);
+        }
+        else return new ResponseEntity<>(FAIL,HttpStatus.CONFLICT);
     }
 
     @ApiOperation(value = "좋아요 취소")
@@ -104,8 +107,9 @@ public class VoteController {
     @ApiOperation(value = "유저가 선택지에 투표")
     @PostMapping("{userId}/{selectionId}")
     public ResponseEntity<String> userVoteSelection(@PathVariable @ApiParam(value = "유저아이디") String userId, @PathVariable @ApiParam(value = "투표할 선택지 아이디")Long selectionId) throws Exception{
-        voteService.userVoteSelection(userId,selectionId);
-        return new ResponseEntity<>(SUCCESS,HttpStatus.OK);
+        if(voteService.userVoteSelection(userId,selectionId))
+            return new ResponseEntity<>(SUCCESS,HttpStatus.OK);
+        else return new ResponseEntity<>(FAIL,HttpStatus.CONFLICT);
     }
 
     @ApiOperation(value = "유저가 선택지에 투표 취소")
