@@ -1,6 +1,6 @@
 # Pollar
 
-![01_폴라사진](/uploads/daa9214f87584b05a6cf92f904ce21b7/01_폴라사진.png)
+![image](https://user-images.githubusercontent.com/52435869/162627758-e2ab8462-08c7-46fc-bdd6-1cbd725899e8.png)
 
 **Poll Whatever, Anywhere 폴라! 몰라? 골라!**
 
